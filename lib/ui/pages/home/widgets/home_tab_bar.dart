@@ -12,7 +12,7 @@ class HomeTabBar extends StatefulWidget {
 
 class _HomeTabBarState extends State<HomeTabBar> {
   final int lendCount = 3;
-  final int borrowCount = 3;
+  final int borrowCount = 51;
   /* TODO: loanCount 기능 개발 필요
     - lend/borrow Person이 몇 명인지 Count하여 뷰에 표시해야 함
   */

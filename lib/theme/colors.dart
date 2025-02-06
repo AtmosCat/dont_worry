@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 @immutable
 class MyColor extends ThemeExtension<MyColor> {
   final Map<String, Color> colors;
@@ -54,8 +55,8 @@ class AppColors {
 
   static final darkColorScheme = MyColor(
     colors: {
-      'primaryBlue': Color(0xFF007AFF),
-      'primaryRed': Color(0xFFF2616A),
+      'primaryBlue': Color(0xFF7CA7D5),
+      'primaryRed': Color(0xFFDD7980),
       'onPrimaryWhite': Colors.white,
       'backgroundWhite': Color(0xFF1E1E1E),
       'black': Colors.white,

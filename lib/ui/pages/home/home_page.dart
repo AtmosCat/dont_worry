@@ -1,7 +1,11 @@
+import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
-import 'package:dont_worry/ui/pages/loan_list/loan_list_page.dart';
+import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:flutter/material.dart';
 
 /*  TabBar + 애니메이션을 위해 세팅
@@ -53,7 +57,7 @@ class _HomePageState extends State<HomePage>
                       showHomeAppBarBottomSheet(context); // more 버튼 바텀시트 호출 메서드
                     })
               ],
-              expandedHeight: 200.0, //플렉서블 헤더의 최대 Height
+              expandedHeight: 240.0, //플렉서블 헤더의 최대 Height
               flexibleSpace: HomeFlexibleHeader(_tabController), // 플레서블 헤더 위젯
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(50.0), // 앱바의 최소 Height
@@ -65,15 +69,15 @@ class _HomePageState extends State<HomePage>
 
         // TabBar 위치에 따라 하단 위젯 세팅
         body: TabBarView(controller: _tabController, children: const [
-          LendTabView(), // 빌려간 돈 위젯
-          BorrowTabView(), // 빌린 돈 위젯
+          PersonTabView(myAction: MyAction.lend), // 빌려간 돈 위젯
+          PersonTabView(myAction: MyAction.borrow), // 빌린 돈 위젯
         ]),
       ),
     );
   }
 
   // more 버튼 바텀시트 호출 메서드
-  Future<dynamic> showHomeAppBarBottomSheet(BuildContext context) {    
+  Future<dynamic> showHomeAppBarBottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -122,46 +126,66 @@ class CreateLoanFloatingActionButton extends StatelessWidget {
   }
 }
 
-// '빌려준 돈' 탭의 View
-class LendTabView extends StatelessWidget {
-  const LendTabView({
+// '빌려준 돈', '빌린 돈' 탭의 View
+class PersonTabView extends StatelessWidget {
+  final MyAction myAction;
+  const PersonTabView({
+    required this.myAction,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     /* TODO: '빌려준 돈' Person List 구현 */
-    return ListView(
-      padding: EdgeInsets.all(14),
-      children: [
-        GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoanListPage(MyAction.lent, Category.person)),
-          ),
-          child: Container(
-            height: 140,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.red,
-            ),
-            
-          ),
-        )
-      ]
-    );
-  }
-}
-
-// '빌린 돈' 탭의 View
-class BorrowTabView extends StatelessWidget {
-  const BorrowTabView({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    /* TODO: '빌려준 돈' Person List 구현 */
-    return Center(child: Text('빌려간 돈 Content', style: TextStyle(fontSize: 24)));
+    return ListView(padding: EdgeInsets.all(4), children: [
+      ListHeader(myAction: myAction),
+      PersonCard(
+          myAction: myAction,
+          person: Person(
+            name: '홍길동',
+            loans: [
+              Loan(
+                isLending: true, // 빌려준 돈
+                person: Person(
+                  name: '김철수',
+                  loans: [],
+                  memo: '친구',
+                ),
+                initialAmount: 10000, // 1만원
+                repayments: [
+                  Repayment(amount: 5000, date: DateTime(2024, 10, 26)),
+                ], // 5천원 상환
+                loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
+                dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
+                title: '간식값',
+                memo: '내일까지 갚아라',
+              )
+            ], // 빈 리스트
+            memo: '특이사항 없음',
+          )),
+      ListHeader(),
+      PersonCard(
+          myAction: myAction,
+          person: Person(
+            name: '다가픔',
+            loans: [], // 빈 리스트
+            memo: '특이사항 없음',
+          )),
+      PersonCard(
+          myAction: myAction,
+          person: Person(
+            name: '홍길동123214214214',
+            loans: [], // 빈 리스트
+            memo: '특이사항 없음',
+          )),
+      PersonCard(
+          myAction: myAction,
+          person: Person(
+            name: '홍길동',
+            loans: [], // 빈 리스트
+            memo: '특이사항 없음',
+          )),
+      SizedBox(height: 200)
+    ]);
   }
 }

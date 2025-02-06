@@ -1,8 +1,7 @@
 import 'package:dont_worry/theme/colors.dart';
 import 'package:flutter/material.dart';
 
-enum MyAction { lent, borrowed }
-
+enum MyAction { lend, borrow }
 enum Category { person, loan }
 
 class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -15,8 +14,8 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(category == Category.person
-          ? (myAction == MyAction.lent ? '내가 빌려준 사람' : '내가 빌린 사람')
-          : (myAction == MyAction.lent ? '내가 빌려준 돈' : '내가 빌린 돈')),
+          ? (myAction == MyAction.lend ? '내가 빌려준 사람' : '내가 빌린 사람')
+          : (myAction == MyAction.lend ? '내가 빌려준 돈' : '내가 빌린 돈')),
       centerTitle: true,
       leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -69,7 +68,7 @@ class DetailAppBarBottomSheet extends StatelessWidget {
                 title: Text(
                   '전액 상환 완료',
                   style: TextStyle(
-                      color: getColor('primaryColor'),
+                      color: getColor('primaryBlue'),
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
