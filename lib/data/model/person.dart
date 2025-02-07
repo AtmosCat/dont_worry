@@ -22,3 +22,7 @@ List<Loan> borrowingLoans(List<Loan> loans) {
   return loans.where((loan) => !loan.isLending).toList();
 }
 
+// 변제일까지의 D-day
+int daysUntilUpcomingDueDatedaysUntilDueDate(List<Loan> loans) {
+  return 30;
+}
