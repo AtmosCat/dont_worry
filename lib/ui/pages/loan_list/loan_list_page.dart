@@ -15,11 +15,6 @@ class LoanListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(String colorName) {
-      final theme = Theme.of(context).extension<MyColor>();
-      return theme?.getColor(colorName) ??
-          Colors.transparent; // null일 경우 fallback 값 지정
-    }
 
     int totalAmount = 30000000;
     String name = '김철수 선생님(Android 4기)';
@@ -31,7 +26,7 @@ class LoanListPage extends StatelessWidget {
         body: ListView(
           children: [
             Container(
-              color: getColor('backgroundWhite'),
+              color: AppColor.containerWhite.of(context),
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
@@ -49,7 +44,7 @@ class LoanListPage extends StatelessWidget {
                       Text(
                         memo,
                         style: TextStyle(
-                            fontSize: 14, color: getColor('deactivatedGrey')),
+                            fontSize: 14, color: AppColor.disabled.of(context)),
                       ),
                       SizedBox(
                         height: 10,
@@ -62,7 +57,7 @@ class LoanListPage extends StatelessWidget {
                             '남은 금액',
                             style: TextStyle(
                                 fontSize: 16,
-                                color: getColor('deactivatedGrey')),
+                                color: AppColor.disabled.of(context)),
                           ),
                           SizedBox(
                             width: 14,
@@ -71,7 +66,7 @@ class LoanListPage extends StatelessWidget {
                             NumberUtils.formatWithCommas(totalAmount),
                             style: TextStyle(
                               letterSpacing: -0.7,
-                              color: getColor('black'),
+                              color: AppColor.deepBlack.of(context),
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
                             ),

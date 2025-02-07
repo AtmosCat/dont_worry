@@ -17,11 +17,6 @@ class PersonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(String colorName) {
-      final theme = Theme.of(context).extension<MyColor>();
-      return theme?.getColor(colorName) ??
-          Colors.transparent; // null일 경우 fallback 값 지정
-    }
 
     int amount = 145603000;
     int dDay = daysUntilUpcomingDueDatedaysUntilDueDate(person.loans);
@@ -62,7 +57,7 @@ class PersonCard extends StatelessWidget {
                               ? '완료'
                               : '${person.loans.length}건',
                           style: TextStyle(
-                              color: getColor('deactivatedGrey'),
+                              color: AppColor.disabled.of(context),
                               fontSize: 12,
                               fontWeight: FontWeight.bold)),
                       SizedBox(
@@ -70,7 +65,7 @@ class PersonCard extends StatelessWidget {
                       ),
                       Icon(
                         Icons.arrow_forward_ios,
-                        color: getColor('deactivatedGrey'),
+                        color: AppColor.disabled.of(context),
                         size: 16,
                       ),
                     ],
@@ -103,7 +98,7 @@ class PersonCard extends StatelessWidget {
                         : 'D-$dDay',
                     style: TextStyle(
                         fontSize: 12,
-                        color: getColor('primaryBlue'),
+                        color: AppColor.primaryBlue.of(context),
                         fontWeight: FontWeight.bold)),
               ],
             ),

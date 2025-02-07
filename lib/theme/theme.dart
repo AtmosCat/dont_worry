@@ -14,7 +14,8 @@ final ThemeData lightTheme = ThemeData(
 
   // 팝업메뉴 설정
   popupMenuTheme: PopupMenuThemeData(
-    color: Colors.white
+    color: Colors.white,
+    textStyle: TextStyle(color: Color(0xFF333333)),
   ),
 
   // 카드 설정
@@ -85,7 +86,8 @@ titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
 
 // 팝업메뉴 설정
   popupMenuTheme: PopupMenuThemeData(
-    color: Color(0xFF1E1E1E)
+    color: Color(0xFF1E1E1E),
+    textStyle: TextStyle(color: Colors.white),
   ),
 
   // 카드 설정

@@ -48,11 +48,6 @@ class DetailAppBarBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(String colorName) {
-      final theme = Theme.of(context).extension<MyColor>();
-      return theme?.getColor(colorName) ??
-          Colors.transparent; // null일 경우 fallback 값 지정
-    }
 
     return Padding(
         padding: const EdgeInsets.all(14.0),
@@ -63,12 +58,12 @@ class DetailAppBarBottomSheet extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Icons.task_alt,
-                  color: getColor('primaryBlue'),
+                  color: AppColor.primaryBlue.of(context),
                 ),
                 title: Text(
                   '전액 상환 완료',
                   style: TextStyle(
-                      color: getColor('primaryBlue'),
+                      color: AppColor.primaryBlue.of(context),
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
