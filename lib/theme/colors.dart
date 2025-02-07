@@ -11,6 +11,9 @@ enum AppColor {
   containerGray30,
   containerGray20,
   containerGray10,
+  containerLightGray30,
+  containerLightGray20,
+  containerLightGray10,
   containerRed30,
   containerRed20,
   containerRed10,
@@ -44,6 +47,9 @@ class AppColors {
       AppColor.containerGray30: Color(0xFFAAAAAA), // 회색 10-30 
       AppColor.containerGray20: Color(0xFFCCCCCC), 
       AppColor.containerGray10: Color(0xFFEEEEEE), 
+      AppColor.containerLightGray30: Color(0xFFF7F7F7), // 연회색 10-30
+      AppColor.containerLightGray20: Color(0xFFF9F9F9), 
+      AppColor.containerLightGray10: Color(0xFFFBFBFB), 
       AppColor.containerRed30: Color(0xFFE8878E), // 레드 10-30 (강조, 경고, 손해 등)
       AppColor.containerRed20: Color(0xFFF1B1B9),  
       AppColor.containerRed10: Color(0xFFF9E0E5), 
@@ -75,6 +81,9 @@ class AppColors {
       AppColor.containerGray30: Color(0xFF555555),
       AppColor.containerGray20: Color(0xFF777777),
       AppColor.containerGray10: Color(0xFF999999),
+      AppColor.containerLightGray30: Color(0xFF1E1E1E),
+      AppColor.containerLightGray20: Color(0xFF333333),
+      AppColor.containerLightGray10: Color(0xFF555555),
       AppColor.containerRed30: Color(0xFF7A5053),
       AppColor.containerRed20: Color(0xFFB77073),
       AppColor.containerRed10: Color(0xFFDC8A91),
