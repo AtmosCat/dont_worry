@@ -63,8 +63,7 @@ class PersonCard extends StatelessWidget {
             builder: (context) => LoanListPage(myAction, person: person)),
       ),
       child: Card(
-        // 상환여부 따라 배경색 변경
-        color: amount != 0
+        color: amount != 0 // 상환여부 따라 배경색 변경
             ? AppColor.containerWhite.of(context)
             : AppColor.containerLightGray20.of(context),
         child: Padding(
@@ -79,7 +78,7 @@ class PersonCard extends StatelessWidget {
                       color: amount != 0 // 상환여부 따라 글씨색상 변경
                           ? AppColor.defaultBlack.of(context)
                           : AppColor.disabled.of(context),
-                      fontSize: 18),
+                      fontSize: 16),
                 ),
                 Spacer(),
                 // 디데이 날짜 위젯 : 상환 여부에 따라 amount 또는 totalRepayment 표시
@@ -125,14 +124,14 @@ class PersonCard extends StatelessWidget {
                         text: NumberUtils.formatWithCommas(
                             amount != 0 ? amount : totalRepayment), // 상환 여부에 따라 amount 또는 totalRepayment
                         style: const TextStyle(
-                          fontSize: 28,
+                          fontSize: 24,
                           fontWeight: FontWeight.w500,
                           letterSpacing: -0.7,
                         ),
                       ),
                       const TextSpan(
                         text: ' 원',
-                        style: TextStyle(fontSize: 20),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ],
                   ),

@@ -36,12 +36,6 @@ final ThemeData lightTheme = ThemeData(
 
   // 플로팅 액션 버튼 설정
   floatingActionButtonTheme: FloatingActionButtonThemeData(
-    shape: CircleBorder(),
-    sizeConstraints: BoxConstraints(
-      minWidth: 70.0,
-      minHeight: 70.0,
-    ),
-    iconSize: 30,
     backgroundColor: Color(0xFF007AFF), // 파란색 배경
     foregroundColor: Colors.white, // 하얀색 아이콘 및 글씨
   ),
@@ -109,16 +103,12 @@ titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
 
   // 플로팅 액션 버튼 설정
   floatingActionButtonTheme: FloatingActionButtonThemeData(
-    shape: CircleBorder(),
-    sizeConstraints: BoxConstraints(
-      minWidth: 70.0,
-      minHeight: 70.0,
-    ),
-    iconSize: 30,
     backgroundColor: Colors.white, // 파란색 배경
     foregroundColor: Color(0xFF7CA7D5), // 하얀색 아이콘 및 글씨
   ),
 
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+  ),
   // 텍스트 관련 설정
   textTheme: TextTheme(
     bodyMedium: TextStyle(color: Color(0xFFDDDDDD)), // 부드러운 흰색 텍스트

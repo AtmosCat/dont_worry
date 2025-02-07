@@ -1,10 +1,12 @@
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
+import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/ui/widgets/home_bottom_app_bar.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +40,17 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: CreateLoanFloatingActionButton(), //플로팅버튼
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton:
+      //     CreateLoanFloatingActionButton(_tabController), //플로팅버튼
+      bottomNavigationBar: AnimatedBuilder(
+          animation: _tabController.animation!,
+          builder: (context, child) {
+            final double value = _tabController.animation!.value;
+            final int currentIndex = (value + 0.5).floor();
+            return HomeBottomAppBar(
+              myAction: currentIndex == 0 ? MyAction.lend : MyAction.borrow);
+          }),
       body: NestedScrollView(
         /* 상하 스크롤 시, 헤더 숨기기 + 탭바 고정을 위해 세팅
         - NestedScrollView
@@ -107,22 +119,51 @@ class _HomePageState extends State<HomePage>
 }
 
 // 플로팅버튼
-class CreateLoanFloatingActionButton extends StatelessWidget {
-  const CreateLoanFloatingActionButton({
+class CreateLoanFloatingActionButton extends StatefulWidget {
+  final TabController tabController;
+
+  const CreateLoanFloatingActionButton(
+    this.tabController, {
     super.key,
   });
 
   @override
+  State<CreateLoanFloatingActionButton> createState() =>
+      _CreateLoanFloatingActionButtonState();
+}
+
+class _CreateLoanFloatingActionButtonState
+    extends State<CreateLoanFloatingActionButton> {
+  @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        /* TODO: 플로팅버튼 액션
-          - CreateLoanPage로 이동
-          - 현재 TabBar가 lend인지 borrow인지 함께 전달 필요
-        */
-      },
-      child: const Icon(Icons.add),
-    );
+    return AnimatedBuilder(
+        animation: widget.tabController.animation!,
+        builder: (context, child) {
+          final double value = widget.tabController.animation!.value;
+          final int currentIndex = (value + 0.5).floor();
+          return FloatingActionButton.extended(
+              onPressed: () {
+                /* TODO: 플로팅버튼 액션
+            - CreateLoanPage로 이동
+            - 현재 TabBar가 lend인지 borrow인지 함께 전달 필요
+          */
+              },
+              backgroundColor: currentIndex == 0
+                  ? AppColor.primaryBlue.of(context)
+                  : AppColor.primaryRed.of(context), // TabBar 위치 감지
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // 더 부드러운 모양
+              ),
+              label: Row(children: [
+                Icon(Icons.add, size: 20),
+                SizedBox(width: 10),
+                Text(
+                    currentIndex == 0
+                        ? '빌려준 돈 기록  '
+                        : '빌린 돈 기록  ', // TabBar 위치 감지, style: TextStyle(fontSize: 16)),
+                    style: TextStyle(fontSize: 16)),
+              ]));
+        });
   }
 }
 
@@ -146,11 +187,6 @@ class PersonTabView extends StatelessWidget {
             loans: [
               Loan(
                 isLending: true, // 빌려준 돈
-                person: Person(
-                  name: '김철수',
-                  loans: [],
-                  memo: '친구',
-                ),
                 initialAmount: 10000, // 1만원
                 repayments: [
                   Repayment(amount: 5000, date: DateTime(2024, 10, 26)),

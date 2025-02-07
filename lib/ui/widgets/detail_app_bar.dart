@@ -2,7 +2,7 @@ import 'package:dont_worry/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 enum MyAction { lend, borrow }
-enum Category { person, loan }
+enum Category { person, loan, repayment, home }
 
 class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   final MyAction myAction;
