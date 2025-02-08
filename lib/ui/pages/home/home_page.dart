@@ -191,24 +191,26 @@ class PersonTabView extends StatelessWidget {
     return ListView(padding: EdgeInsets.all(4), children: [
       ListHeader(myAction: myAction),
       PersonCard(
-          myAction: myAction,
-          person: Person(
-            name: '홍길동',
-            loans: [
-              Loan(
-                isLending: true, // 빌려준 돈
-                initialAmount: 10000, // 1만원
-                repayments: [
-                  Repayment(amount: 5000, date: DateTime(2024, 10, 26)),
-                ], // 5천원 상환
-                loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
-                dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
-                title: '간식값',
-                memo: '내일까지 갚아라',
-              )
-            ], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
+        myAction: myAction,
+        person: Person(
+          name: '홍길동',
+          loans: [
+            Loan(
+              isLending: true, // 빌려준 돈
+              person: Person(name: "홍길동", loans: []),
+              initialAmount: 10000, // 1만원
+              repayments: [
+                Repayment(amount: 5000, date: DateTime(2024, 10, 26)),
+              ], // 5천원 상환
+              loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
+              dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
+              title: '간식값',
+              memo: '내일까지 갚아라',
+            )
+          ],
+          memo: '특이사항 없음',
+        ),
+      ),
       ListHeader(),
       PersonCard(
           myAction: myAction,

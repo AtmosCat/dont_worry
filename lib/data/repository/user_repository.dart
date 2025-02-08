@@ -112,6 +112,27 @@ class UserRepository {
       return false;
     }
   }
+
+  Future<List<Loan>?> getLoans() async {
+    final user = auth.currentUser;
+    try {
+      final collectionRef = firestore.collection('users');
+      final docRef = collectionRef.doc(user!.uid);
+      final doc = await docRef.get();
+      final data = doc.data();
+      if (data == null) {
+        return null;
+      }
+      final loans = data['loans'];
+      if (loans == null) {
+        return null;
+      }
+      return loans.map<Loan>((e) => Loan.fromJson(e)).toList();
+    } catch (e) {
+      print("오류: $e");
+      return null;
+    }
+  }
 }
 // class PostRepository {
 //   Future<List<Post>?> getAll() async {

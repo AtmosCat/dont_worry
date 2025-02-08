@@ -26,8 +26,11 @@ class LoanListPage extends StatelessWidget {
               myAction: myAction,
               loan: Loan(
                 isLending: true, // 빌려주는 돈
+                person: Person(name: "김철수", loans: []),
                 initialAmount: 100000,
-                repayments: [Repayment(amount: 300, date: DateTime(2024, 2, 1))],
+                repayments: [
+                  Repayment(amount: 300, date: DateTime(2024, 2, 1))
+                ],
                 loanDate: DateTime(2024, 2, 1),
                 dueDate: DateTime(2024, 4, 1),
                 title: '김철수에게 빌려준 돈',

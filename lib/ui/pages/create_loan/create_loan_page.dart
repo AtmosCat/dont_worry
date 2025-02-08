@@ -1,4 +1,5 @@
 import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/user_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
@@ -70,6 +71,7 @@ class CreateLoanPage extends StatelessWidget {
 Loan createTestLendingLoan() {
   Loan testLendingLoan = Loan(
     isLending: true,
+    person: Person(name: "수진", loans: []),
     initialAmount: 2000000,
     dueDate: DateTime(2025, 10, 31),
     loanDate: DateTime.now(),
@@ -83,6 +85,7 @@ Loan createTestLendingLoan() {
 Loan createTestBorrowingLoan() {
   Loan testBorrowingLoan = Loan(
     isLending: false,
+    person: Person(name: "정아", loans: []),
     initialAmount: 3000000,
     dueDate: DateTime(2025, 10, 31),
     loanDate: DateTime.now(),
