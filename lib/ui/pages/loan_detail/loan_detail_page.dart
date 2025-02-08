@@ -137,7 +137,8 @@ class LoanDetailPage extends StatelessWidget {
                     SizedBox(height: 10),
                     Text(memo,
                         style: TextStyle(
-                            fontSize: 14, color: AppColor.disabled.of(context))),
+                            fontSize: 14,
+                            color: AppColor.disabled.of(context))),
                   ],
                 ),
               ),
@@ -166,7 +167,7 @@ class LoanDetailPage extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 40),
-              Divider(height: 0, thickness: 0.6),
+              Divider(height: 0, color: AppColor.divider.of(context)),
               SizedBox(height: 40),
               Row(children: [
                 Text('전체 금액',
@@ -264,7 +265,7 @@ class LoanDetailPage extends StatelessWidget {
                 offstage: repaymentRate == 0,
                 child: Column(
                   children: [
-                    Divider(),
+                    const Divider(height: 0, thickness: 0.3),
                     SizedBox(height: 24),
                     Row(children: [
                       Text(myAction == MyAction.lend ? '받은 금액' : '갚은 금액',
@@ -348,7 +349,7 @@ class LoanDetailPage extends StatelessWidget {
                           Repayment(amount: 100, date: DateTime(2024, 4, 12)),
                     ),
                     SizedBox(
-                      height: 100,
+                      height: 60,
                     )
                   ],
                 ),
@@ -391,9 +392,7 @@ class RepaymentCard extends StatelessWidget {
             IconButton(onPressed: () {}, icon: Icon(Icons.close))
           ]),
         ),
-        SizedBox(
-          height: 2,
-        ),
+        SizedBox(height: 2),
       ],
     );
   }

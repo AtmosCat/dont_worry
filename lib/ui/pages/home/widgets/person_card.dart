@@ -69,17 +69,17 @@ class PersonCard extends StatelessWidget {
         ),
         child: Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
           ),
           clipBehavior: Clip.none,
           elevation: 1,
-          shadowColor: AppColor.containerBlue10.of(context), // 빨간 그림자
+          shadowColor: AppColor.shadowBlack.of(context), // 빨간 그림자
           color: amount != 0 // 상환여부 따라 배경색 변경
               ? AppColor.containerWhite.of(context)
               : AppColor.containerLightGray20.of(context),
           child: Padding(
             padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: Column(children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,7 +110,7 @@ class PersonCard extends StatelessWidget {
                                 ? 'D-day'
                                 : '연체 중',
                         style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 13,
                             color: dDay > 0
                                 ? AppColor.primaryBlue.of(context)
                                 : AppColor.primaryRed.of(context),
@@ -119,7 +119,7 @@ class PersonCard extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: 20,
+                height: 8,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

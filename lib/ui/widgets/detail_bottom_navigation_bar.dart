@@ -27,10 +27,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Divider(
-              height: 0,
-              thickness: 0.6,
-            ),
+            Divider(height: 0, color: AppColor.divider.of(context)),
             BottomNavigationBar(
                 items: [
                   BottomNavigationBarItem(

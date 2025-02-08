@@ -13,9 +13,9 @@ class LoanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String title = loan.title;
-    final int amount = 300;
+    final int amount = 3000000;
     final int totalRepayment = 10000;
-    final double repaymentRate = 0.5;
+    final double repaymentRate = 0;
     /*TODO: 금액 관련 데이터를 구하는 로직 개발 필요
     
     개발사항 1. amount :갚아야 할 남은 금액
@@ -69,7 +69,7 @@ class LoanCard extends StatelessWidget {
           children: [
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 30.0),
+                  const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
               child: Column(
                 children: [
                   Row(
@@ -100,7 +100,7 @@ class LoanCard extends StatelessWidget {
                                     ? 'D-day'
                                     : '연체 중',
                             style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 13,
                                 color: dDay > 0
                                     ? AppColor.primaryBlue.of(context)
                                     : AppColor.primaryRed.of(context),
@@ -108,7 +108,7 @@ class LoanCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -203,7 +203,7 @@ class LoanCard extends StatelessWidget {
                           repaymentRate == 1,
                       child: Column(
                         children: [
-                          SizedBox(height: 50),
+                          SizedBox(height: 20),
                           LinearProgressIndicator(
                             value: repaymentRate,
                             minHeight: 4,
@@ -241,7 +241,7 @@ class LoanCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(height: 0, thickness: 0.6),
+            Divider(height: 0, color: AppColor.divider.of(context)),
           ],
         ),
       ),

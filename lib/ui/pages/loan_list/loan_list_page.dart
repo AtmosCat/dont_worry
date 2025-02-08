@@ -22,17 +22,10 @@ class LoanListPage extends StatelessWidget {
         children: [
           LoanListHeader(person: person),
           SizedBox(height: 10),
-          Container(
-              color: AppColor.containerWhite.of(context),
-              child: Column(
-                children: [
-                  ListHeader(myAction: myAction, category: Category.loan,),
-                  Divider(
-                thickness: 0.4,
-                height: 0,
-              ),
-                ],
-              )),
+          ListHeader(
+            myAction: myAction,
+            category: Category.loan,
+          ),
           LoanCard(
               myAction: myAction,
               loan: Loan(
@@ -60,8 +53,7 @@ class LoanListPage extends StatelessWidget {
                 memo: '빠른 상환을 부탁드립니다.',
               )),
           SizedBox(height: 10),
-          Container(
-              color: AppColor.containerWhite.of(context), child: ListHeader(category: Category.loan)),
+          ListHeader(category: Category.loan),
           LoanCard(
               myAction: myAction,
               loan: Loan(
@@ -75,7 +67,7 @@ class LoanListPage extends StatelessWidget {
                 title: '김철수에게 빌려준 돈',
                 memo: '빠른 상환을 부탁드립니다.',
               )),
-              SizedBox(height: 60)
+          SizedBox(height: 60)
         ],
       ),
       bottomNavigationBar: DetailBottomNavigationBar(
@@ -150,9 +142,9 @@ class LoanListHeader extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox()
           ]),
         ),
+        Divider(height: 0, color: AppColor.divider.of(context)),
       ],
     );
   }

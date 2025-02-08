@@ -5,6 +5,16 @@ final ThemeData lightTheme = ThemeData(
   primaryColor: Color(0xFF007AFF),
   scaffoldBackgroundColor: Color(0xFFF1F1F1), // 부드러운 밝은 배경색
 
+  // 디바이더 색상 설정
+  dividerTheme: DividerThemeData(
+    color: Colors.grey.withOpacity(0.2),
+    thickness: 1,
+  ),
+
+  tabBarTheme: TabBarTheme(
+    dividerColor: Colors.grey.withOpacity(0.2),
+  ),
+
   // 앱 바 설정
   appBarTheme: AppBarTheme(
     titleTextStyle: TextStyle(color: Color(0xFF333333), fontSize: 18),
@@ -14,19 +24,18 @@ final ThemeData lightTheme = ThemeData(
 
   // 팝업메뉴 설정
   popupMenuTheme: PopupMenuThemeData(
-    color: Colors.white,
-    textStyle: TextStyle(color: Color(0xFF333333)),
-  ),
+      color: Colors.white,
+      textStyle: TextStyle(color: Color(0xFF333333)),
+      labelTextStyle:
+          WidgetStateProperty.all(TextStyle(color: Color(0xFF333333)))),
 
   // 카드 설정
-  cardTheme: 
-  CardTheme(
-    color: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(0),
-    ),
-    clipBehavior: Clip.none
-  ),
+  cardTheme: CardTheme(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0),
+      ),
+      clipBehavior: Clip.none),
 
   // 바텀시트 설정
   bottomSheetTheme: BottomSheetThemeData(
@@ -75,25 +84,33 @@ final ThemeData darkTheme = ThemeData(
   primaryColor: Color(0xFF7CA7D5),
   scaffoldBackgroundColor: Color(0xFF121212), // 다크 배경
 
+  // 디바이더 색상 설정
+  dividerTheme: DividerThemeData(
+    color: const Color.fromARGB(255, 36, 36, 36).withOpacity(0.1),
+    thickness: 1,
+  ),
+
+  tabBarTheme: TabBarTheme(
+    dividerColor: Colors.grey.withOpacity(0.2),
+  ),
+
   // 앱 바 설정
   appBarTheme: AppBarTheme(
-titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
+    titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
     backgroundColor: Color(0xFF1E1E1E),
     scrolledUnderElevation: 0,
   ),
 
 // 팝업메뉴 설정
   popupMenuTheme: PopupMenuThemeData(
-    color: Color(0xFF1E1E1E),
-    textStyle: TextStyle(color: Colors.white),
-  ),
+      color: Color(0xFF1E1E1E),
+      textStyle: TextStyle(color: Colors.white),
+      labelTextStyle: WidgetStateProperty.all(TextStyle(color: Colors.white))),
 
   // 카드 설정
-  cardTheme: 
-  CardTheme(
+  cardTheme: CardTheme(
     color: Color(0xFF1E1E1E),
   ),
-
 
   // 바텀시트 설정
   bottomSheetTheme: BottomSheetThemeData(
@@ -111,8 +128,7 @@ titleTextStyle: TextStyle(color: Colors.white, fontSize: 18),
     foregroundColor: Color(0xFF7CA7D5), // 하얀색 아이콘 및 글씨
   ),
 
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-  ),
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(),
   // 텍스트 관련 설정
   textTheme: TextTheme(
     bodyMedium: TextStyle(color: Color(0xFFDDDDDD)), // 부드러운 흰색 텍스트

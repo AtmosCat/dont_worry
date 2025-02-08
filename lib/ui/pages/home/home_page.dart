@@ -221,7 +221,7 @@ class PersonTabView extends StatelessWidget {
             loans: [], // 빈 리스트
             memo: '특이사항 없음',
           )),
-      SizedBox(height: 200)
+      SizedBox(height: 60)
     ]);
   }
 }
