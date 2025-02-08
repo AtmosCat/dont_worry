@@ -15,7 +15,7 @@ class LoanCard extends StatelessWidget {
     final String title = loan.title;
     final int amount = 300;
     final int totalRepayment = 10000;
-    final double repaymentRate = 0.1;
+    final double repaymentRate = 0.5;
     /*TODO: 금액 관련 데이터를 구하는 로직 개발 필요
     
     개발사항 1. amount :갚아야 할 남은 금액
@@ -148,7 +148,7 @@ class LoanCard extends StatelessWidget {
                           iconAlignment: IconAlignment.end,
                           style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 14,
@@ -181,7 +181,7 @@ class LoanCard extends StatelessWidget {
                           iconAlignment: IconAlignment.end,
                           style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             padding: const EdgeInsets.symmetric(
                               horizontal: 14,

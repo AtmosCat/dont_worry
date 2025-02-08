@@ -22,6 +22,10 @@ final ThemeData lightTheme = ThemeData(
   cardTheme: 
   CardTheme(
     color: Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0),
+    ),
+    clipBehavior: Clip.none
   ),
 
   // 바텀시트 설정

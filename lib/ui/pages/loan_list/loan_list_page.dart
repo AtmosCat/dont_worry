@@ -21,19 +21,61 @@ class LoanListPage extends StatelessWidget {
       body: ListView(
         children: [
           LoanListHeader(person: person),
-          ListHeader(myAction: myAction),
+          SizedBox(height: 10),
+          Container(
+              color: AppColor.containerWhite.of(context),
+              child: Column(
+                children: [
+                  ListHeader(myAction: myAction, category: Category.loan,),
+                  Divider(
+                thickness: 0.4,
+                height: 0,
+              ),
+                ],
+              )),
           LoanCard(
               myAction: myAction,
               loan: Loan(
                 isLending: true, // 빌려주는 돈
                 initialAmount: 100000,
-                repayments: [Repayment(amount: 300, date: DateTime(2024, 2, 1))],
+                repayments: [
+                  Repayment(amount: 300, date: DateTime(2024, 2, 1))
+                ],
                 loanDate: DateTime(2024, 2, 1),
                 dueDate: DateTime(2024, 4, 1),
                 title: '김철수에게 빌려준 돈',
                 memo: '빠른 상환을 부탁드립니다.',
               )),
-          ListHeader(),
+          LoanCard(
+              myAction: myAction,
+              loan: Loan(
+                isLending: true, // 빌려주는 돈
+                initialAmount: 100000,
+                repayments: [
+                  Repayment(amount: 300, date: DateTime(2024, 2, 1))
+                ],
+                loanDate: DateTime(2024, 2, 1),
+                dueDate: DateTime(2024, 4, 1),
+                title: '김철수에게 빌려준 돈',
+                memo: '빠른 상환을 부탁드립니다.',
+              )),
+          SizedBox(height: 10),
+          Container(
+              color: AppColor.containerWhite.of(context), child: ListHeader(category: Category.loan)),
+          LoanCard(
+              myAction: myAction,
+              loan: Loan(
+                isLending: true, // 빌려주는 돈
+                initialAmount: 100000,
+                repayments: [
+                  Repayment(amount: 300, date: DateTime(2024, 2, 1))
+                ],
+                loanDate: DateTime(2024, 2, 1),
+                dueDate: DateTime(2024, 4, 1),
+                title: '김철수에게 빌려준 돈',
+                memo: '빠른 상환을 부탁드립니다.',
+              )),
+              SizedBox(height: 60)
         ],
       ),
       bottomNavigationBar: DetailBottomNavigationBar(
@@ -111,7 +153,6 @@ class LoanListHeader extends StatelessWidget {
             SizedBox()
           ]),
         ),
-        Divider(height: 0, thickness: 0.6)
       ],
     );
   }

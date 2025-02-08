@@ -17,8 +17,8 @@ class PersonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int amount = 10;
-    int totalRepayment = 10000;
+    int amount = 100;
+    int totalRepayment = 0;
     /*TODO: 금액 관련 데이터를 구하는 로직 개발 필요
     
     개발사항 1. amount :갚아야 할 남은 금액
@@ -62,89 +62,104 @@ class PersonCard extends StatelessWidget {
         MaterialPageRoute(
             builder: (context) => LoanListPage(myAction, person: person)),
       ),
-      child: Card(
-        color: amount != 0 // 상환여부 따라 배경색 변경
-            ? AppColor.containerWhite.of(context)
-            : AppColor.containerLightGray20.of(context),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
-          child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  person.name,
-                  style: TextStyle(
-                      color: amount != 0 // 상환여부 따라 글씨색상 변경
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 4.0,
+          vertical: 0,
+        ),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          clipBehavior: Clip.none,
+          elevation: 1,
+          shadowColor: AppColor.containerBlue10.of(context), // 빨간 그림자
+          color: amount != 0 // 상환여부 따라 배경색 변경
+              ? AppColor.containerWhite.of(context)
+              : AppColor.containerLightGray20.of(context),
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    person.name,
+                    style: TextStyle(
+                        color: amount != 0 // 상환여부 따라 글씨색상 변경
+                            ? AppColor.defaultBlack.of(context)
+                            : AppColor.disabled.of(context),
+                        fontSize: 16),
+                  ),
+                  Spacer(),
+                  // 디데이 날짜 위젯 : 상환 여부에 따라 amount 또는 totalRepayment 표시
+                  Visibility(
+                    visible: amount != 0,
+                    // 상환 완료 시,
+                    replacement: Text(
+                        '${lastRepaymentDate.year}.${lastRepaymentDate.month}.${lastRepaymentDate.day} ',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: AppColor.disabled.of(context))),
+                    // 미상환 시,
+                    child: Text(
+                        dDay > 0
+                            ? 'D-$dDay'
+                            : dDay == 0
+                                ? 'D-day'
+                                : '연체 중',
+                        style: TextStyle(
+                            fontSize: 15,
+                            color: dDay > 0
+                                ? AppColor.primaryBlue.of(context)
+                                : AppColor.primaryRed.of(context),
+                            fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // 금액 위젯
+                  Text.rich(
+                    style: TextStyle(
+                      color: amount != 0
                           ? AppColor.defaultBlack.of(context)
-                          : AppColor.disabled.of(context),
-                      fontSize: 16),
-                ),
-                Spacer(),
-                // 디데이 날짜 위젯 : 상환 여부에 따라 amount 또는 totalRepayment 표시
-                Visibility(
-                  visible: amount != 0,
-                  // 상환 완료 시,
-                  replacement: Text(
-                      '${lastRepaymentDate.year}.${lastRepaymentDate.month}.${lastRepaymentDate.day} ',
-                      style: TextStyle(
-                          fontSize: 15, color: AppColor.disabled.of(context))),
-                  // 미상환 시,
-                  child: Text(
-                      dDay > 0
-                          ? 'D-$dDay'
-                          : dDay == 0
-                              ? 'D-day'
-                              : '연체 중',
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: dDay > 0
-                              ? AppColor.primaryBlue.of(context)
-                              : AppColor.primaryRed.of(context),
-                          fontWeight: FontWeight.bold)),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // 금액 위젯
-                Text.rich(
-                  style: TextStyle(
-                    color: amount != 0
-                        ? AppColor.defaultBlack.of(context)
-                        : AppColor.disabled.of(context), // 상환 여부에 따라 색상변경
-                  ),
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: NumberUtils.formatWithCommas(
-                            amount != 0 ? amount : totalRepayment), // 상환 여부에 따라 amount 또는 totalRepayment
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.7,
+                          : AppColor.disabled.of(context), // 상환 여부에 따라 색상변경
+                    ),
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: NumberUtils.formatWithCommas(amount != 0
+                              ? amount
+                              : totalRepayment), // 상환 여부에 따라 amount 또는 totalRepayment
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -0.7,
+                          ),
                         ),
-                      ),
-                      const TextSpan(
-                        text: ' 원',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
+                        const TextSpan(
+                          text: ' 원',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: AppColor.lightGray20.of(context),
-                  size: 20,
-                ),
-              ],
-            ),
-          ]),
+                  Spacer(),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColor.lightGray20.of(context),
+                    size: 20,
+                  ),
+                ],
+              ),
+            ]),
+          ),
         ),
       ),
     );

@@ -1,11 +1,11 @@
-
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class ListHeader extends StatefulWidget {
   final MyAction? myAction;
-  const ListHeader({this.myAction, super.key});
+  final Category category;
+  const ListHeader({this.myAction, required this.category, super.key});
 
   @override
   State<ListHeader> createState() => _ListHeaderState();
@@ -17,15 +17,6 @@ class _ListHeaderState extends State<ListHeader> {
   @override
   Widget build(BuildContext context) {
 
-    String title = '';
-    if (widget.myAction == MyAction.lend) {
-      title = '내가 빌려준 돈';
-    } else if (widget.myAction == MyAction.borrow) {
-      title = '내가 빌린 돈';
-    } else {
-      title = '이미 다 갚았어요';
-    }
-
     return Padding(
       padding: EdgeInsets.only(top: 20),
       child: SizedBox(
@@ -34,8 +25,28 @@ class _ListHeaderState extends State<ListHeader> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(width: 14),
-            Text(title,
-                style: TextStyle(fontSize: 16, color: AppColor.defaultBlack.of(context))),
+            Icon(
+              widget.myAction != null
+                  ? widget.category == Category.person
+                      ? Icons.person
+                      : Icons.payments
+                  : Icons.check,
+            ),
+            SizedBox(width: 8),
+            Text(
+                widget.myAction != null
+                    ? widget.myAction == MyAction.lend
+                        ? widget.category == Category.person
+                            ? '내가 빌려준 사람'
+                            : '내가 빌려준 돈'
+                        : widget.category == Category.person
+                            ? '내가 빌린 사람'
+                            : '내가 빌린 돈'
+                    : '이미 다 갚았어요',
+                style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.defaultBlack.of(context),
+                    fontWeight: FontWeight.w900)),
             Spacer(),
             Offstage(
               offstage: widget.myAction == null,

@@ -6,7 +6,7 @@ import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
-import 'package:dont_worry/ui/widgets/home_bottom_app_bar.dart';
+import 'package:dont_worry/ui/pages/home/widgets/home_bottom_app_bar.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:flutter/material.dart';
 
@@ -179,7 +179,7 @@ class PersonTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     /* TODO: '빌려준 돈' Person List 구현 */
     return ListView(padding: EdgeInsets.all(4), children: [
-      ListHeader(myAction: myAction),
+      ListHeader(myAction: myAction, category: Category.person),
       PersonCard(
           myAction: myAction,
           person: Person(
@@ -199,7 +199,7 @@ class PersonTabView extends StatelessWidget {
             ], // 빈 리스트
             memo: '특이사항 없음',
           )),
-      ListHeader(),
+      ListHeader(category: Category.person),
       PersonCard(
           myAction: myAction,
           person: Person(

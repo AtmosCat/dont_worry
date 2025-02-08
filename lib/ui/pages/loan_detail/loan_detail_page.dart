@@ -84,7 +84,7 @@ class LoanDetailPage extends StatelessWidget {
                       iconAlignment: IconAlignment.end,
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
@@ -115,7 +115,7 @@ class LoanDetailPage extends StatelessWidget {
                       iconAlignment: IconAlignment.end,
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
