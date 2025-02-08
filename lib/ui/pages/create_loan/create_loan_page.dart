@@ -45,7 +45,7 @@ class CreateLoanPage extends StatelessWidget {
                     context, "빌려준 돈 더미 데이터가 Firebase에 추가됨.");
               }
             },
-            child: Text("빌려준 돈 더미 데이터 생성"),
+            child: Text("빌려준 돈 더미 데이터 생성!"),
           ),
           SizedBox(height: 20),
           ElevatedButton(
@@ -58,7 +58,7 @@ class CreateLoanPage extends StatelessWidget {
                     context, "빌린 돈 더미 데이터가 Firebase에 추가됨.");
               }
             },
-            child: Text("빌린 돈 더미 데이터 생성"),
+            child: Text("빌린 돈 더미 데이터 생성!"),
           ),
         ],
       )),
