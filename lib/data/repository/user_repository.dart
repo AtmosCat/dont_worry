@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class UserRepository {
-
   final auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
 
-  // 1. Create: 회원가입 후 유저 정보 추가
+  // Create: 회원가입 후 유저 정보 추가
   Future<bool> signup({
     required BuildContext context,
     required String email,
@@ -23,7 +24,6 @@ class UserRepository {
       );
       final user = result.user;
       // firestore에 별도로 유저 정보 저장
-      final firestore = FirebaseFirestore.instance;
       final userRef = firestore.collection('users').doc(user!.uid);
       await userRef.set(
         {
@@ -31,6 +31,7 @@ class UserRepository {
           'email': email,
           'password': password,
           'phoneNumber': phoneNumber,
+          'loans': [],
         },
       );
       return true;
@@ -43,7 +44,7 @@ class UserRepository {
         SnackbarUtil.showSnackBar(context, "올바른 이메일 형식을 입력해주세요.");
       } else if (e.code == 'network-request-failed') {
         SnackbarUtil.showSnackBar(context, '네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
-      }else {
+      } else {
         SnackbarUtil.showSnackBar(context, '로그인 실패: ${e.message}');
       }
       return false;
@@ -54,7 +55,8 @@ class UserRepository {
     }
   }
 
-Future<bool> signin({
+  // Post: 로그인
+  Future<bool> signin({
     required BuildContext context,
     required String email,
     required String password,
@@ -71,7 +73,7 @@ Future<bool> signin({
         errorMessage = '사용자를 찾을 수 없습니다.';
       } else if (e.code == 'invalid-email') {
         errorMessage = '이메일 형식이 잘못되었습니다.';
-      }else if (e.code == 'wrong-password') {
+      } else if (e.code == 'wrong-password') {
         errorMessage = '비밀번호가 잘못되었습니다.';
       } else if (e.code == 'invalid-credential') {
         errorMessage = '인증 정보가 잘못되었습니다.';
@@ -90,10 +92,27 @@ Future<bool> signin({
       return false;
     }
   }
+
+  // Create: Loan 데이터 추가
+  Future<bool> createLoanData({
+    required BuildContext context,
+    required Loan loan,
+  }) async {
+    final user = auth.currentUser;
+    try {
+      final collectionRef = firestore.collection('users');
+      final docRef = collectionRef.doc(user!.uid);
+      await docRef.update({
+        'loans': FieldValue.arrayUnion([loan.toJson()]),
+      });
+      return true;
+    } catch (e) {
+      SnackbarUtil.showSnackBar(context, "알 수 없는 오류 발생: $e");
+      print("오류: $e");
+      return false;
+    }
+  }
 }
-
-
-
 // class PostRepository {
 //   Future<List<Post>?> getAll() async {
 //     try {

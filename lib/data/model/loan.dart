@@ -20,6 +20,24 @@ class Loan {
     required this.title,
     this.memo,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isLending': isLending,
+      'initialAmount': initialAmount,
+      'loanDate': loanDate.toIso8601String(), // DateTime을 문자열로 변환
+      'title': title,
+    };
+  }
+
+  factory Loan.fromJson(Map<String, dynamic> json) {
+    return Loan(
+      isLending: json['isLending'],
+      initialAmount: json['initialAmount'],
+      loanDate: DateTime.parse(json['loanDate']),
+      title: json['title'],
+    );
+  }
 }
 
 // 상환액 (상환내역의 총합)

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/theme/theme.dart';
+import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:dont_worry/ui/pages/signin/signin_page.dart';
 import 'package:dont_worry/ui/pages/signup/signup_page.dart';
@@ -31,7 +32,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode;

@@ -2,6 +2,7 @@ import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage>
             final double value = _tabController.animation!.value;
             final int currentIndex = (value + 0.5).floor();
             return HomeBottomAppBar(
-              myAction: currentIndex == 0 ? MyAction.lend : MyAction.borrow);
+                myAction: currentIndex == 0 ? MyAction.lend : MyAction.borrow);
           }),
       body: NestedScrollView(
         /* 상하 스크롤 시, 헤더 숨기기 + 탭바 고정을 위해 세팅
@@ -142,19 +143,26 @@ class _CreateLoanFloatingActionButtonState
           final double value = widget.tabController.animation!.value;
           final int currentIndex = (value + 0.5).floor();
           return FloatingActionButton.extended(
-              onPressed: () {
-                /* TODO: 플로팅버튼 액션
+            onPressed: () {
+              /* TODO: 플로팅버튼 액션
             - CreateLoanPage로 이동
             - 현재 TabBar가 lend인지 borrow인지 함께 전달 필요
           */
-              },
-              backgroundColor: currentIndex == 0
-                  ? AppColor.primaryBlue.of(context)
-                  : AppColor.primaryRed.of(context), // TabBar 위치 감지
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30), // 더 부드러운 모양
-              ),
-              label: Row(children: [
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateLoanPage(),
+                ),
+              );
+            },
+            backgroundColor: currentIndex == 0
+                ? AppColor.primaryBlue.of(context)
+                : AppColor.primaryRed.of(context), // TabBar 위치 감지
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30), // 더 부드러운 모양
+            ),
+            label: Row(
+              children: [
                 Icon(Icons.add, size: 20),
                 SizedBox(width: 10),
                 Text(
@@ -162,7 +170,9 @@ class _CreateLoanFloatingActionButtonState
                         ? '빌려준 돈 기록  '
                         : '빌린 돈 기록  ', // TabBar 위치 감지, style: TextStyle(fontSize: 16)),
                     style: TextStyle(fontSize: 16)),
-              ]));
+              ],
+            ),
+          );
         });
   }
 }
