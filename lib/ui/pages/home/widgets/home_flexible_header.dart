@@ -9,11 +9,6 @@ class HomeFlexibleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(String colorName) {
-      final theme = Theme.of(context).extension<MyColor>();
-      return theme?.getColor(colorName) ??
-          Colors.transparent; // null일 경우 fallback 값 지정
-    }
 
     int totalLendAmount = 3000000;
     int totalBorrowedAmount = 3000;
@@ -47,15 +42,15 @@ class HomeFlexibleHeader extends StatelessWidget {
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                             color: currentIndex == 0
-                                ? getColor('primaryBlue')
-                                : getColor('primaryRed'))),
+                                ? AppColor.primaryBlue.of(context)
+                                : AppColor.primaryRed.of(context))),
                     Text(
                       '원',
                       style: TextStyle(
                           fontSize: 24,
                           color: currentIndex == 0
-                              ? getColor('primaryBlue')
-                              : getColor('primaryRed')),
+                              ? AppColor.primaryBlue.of(context)
+                              : AppColor.primaryRed.of(context)),
                     )
                   ],
                 ),

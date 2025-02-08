@@ -16,11 +16,6 @@ class _ListHeaderState extends State<ListHeader> {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(String colorName) {
-      final theme = Theme.of(context).extension<MyColor>();
-      return theme?.getColor(colorName) ??
-          Colors.transparent; // null일 경우 fallback 값 지정
-    }
 
     String title = '';
     if (widget.myAction == MyAction.lend) {
@@ -40,7 +35,7 @@ class _ListHeaderState extends State<ListHeader> {
           children: [
             SizedBox(width: 14),
             Text(title,
-                style: TextStyle(fontSize: 16, color: getColor('black'))),
+                style: TextStyle(fontSize: 16, color: AppColor.defaultBlack.of(context))),
             Spacer(),
             Offstage(
               offstage: widget.myAction == null,
@@ -49,11 +44,11 @@ class _ListHeaderState extends State<ListHeader> {
                     children: [
                       Text(
                         selectedSortOption,
-                        style: TextStyle(color: getColor('deactivatedGrey')),
+                        style: TextStyle(color: AppColor.gray20.of(context)),
                       ),
                       Icon(
                         Icons.arrow_drop_down,
-                        color: getColor('deactivatedGrey'),
+                        color: AppColor.gray20.of(context),
                       )
                     ],
                   ),

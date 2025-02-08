@@ -19,10 +19,6 @@ class _HomeTabBarState extends State<HomeTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    Color getColor(String colorName) {
-      final theme = Theme.of(context).extension<MyColor>();
-      return theme?.getColor(colorName) ?? Colors.transparent;  // null일 경우 fallback 값 지정
-    }
 
     return AnimatedBuilder(
       /* AnimatedBuilder 세팅
@@ -35,7 +31,7 @@ class _HomeTabBarState extends State<HomeTabBar> {
         final int currentIndex = (value + 0.5).floor();
 
         return Container(
-          color: getColor('backgroundWhite'),
+          color: AppColor.containerWhite.of(context),
           child: TabBar(
             controller: widget.tabController,
             tabs: [
@@ -46,16 +42,16 @@ class _HomeTabBarState extends State<HomeTabBar> {
                     Text('빌려준 돈',
                         style: TextStyle(
                           color: currentIndex == 0
-                              ? getColor('black')
-                              : getColor('deactivatedGrey'), // TabBar 위치 감지
+                              ? AppColor.deepBlack.of(context)
+                              : AppColor.disabled.of(context), // TabBar 위치 감지
                         )),
                     SizedBox(width: 5),
                     Text(
                       '$lendCount', //몇 명인지
                       style: TextStyle(
                         color: currentIndex == 0
-                            ? getColor('primaryBlue')
-                            : getColor('deactivatedGrey'), // TabBar 위치 감지
+                            ? AppColor.primaryBlue.of(context)
+                            : AppColor.disabled.of(context), // TabBar 위치 감지
                       ),
                     ),
                   ],
@@ -68,16 +64,16 @@ class _HomeTabBarState extends State<HomeTabBar> {
                     Text('빌린 돈',
                         style: TextStyle(
                           color: currentIndex == 1
-                              ? getColor('black')
-                              : getColor('deactivatedGrey'), // TabBar 위치 감지
+                              ? AppColor.deepBlack.of(context)
+                              : AppColor.disabled.of(context), // TabBar 위치 감지
                         )),
                     SizedBox(width: 5),
                     Text(
                       '$borrowCount', //몇 명인지
                       style: TextStyle(
                         color: currentIndex == 1
-                            ? getColor('primaryRed')
-                            : getColor('deactivatedGrey'), // TabBar 위치 감지
+                            ? AppColor.primaryRed.of(context)
+                            : AppColor.disabled.of(context), // TabBar 위치 감지
                       ),
                     ),
                   ],
@@ -90,7 +86,7 @@ class _HomeTabBarState extends State<HomeTabBar> {
                 const TextStyle(fontWeight: FontWeight.normal),
             indicatorWeight: 3,
             indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: currentIndex == 0 ? getColor('primaryBlue') : getColor('primaryRed'), // TabBar 위치 감지
+            indicatorColor: currentIndex == 0 ? AppColor.primaryBlue.of(context) : AppColor.primaryRed.of(context), // TabBar 위치 감지
           ),
         );
       },

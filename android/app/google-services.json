@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "759260321065",
+    "project_id": "don-t-worry-efc15",
+    "storage_bucket": "don-t-worry-efc15.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759260321065:android:df26032e634359cb1a5338",
+        "android_client_info": {
+          "package_name": "com.example.dont_worry"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1jcRInwfNgACrHUKjJjzsl15F8oc9AaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

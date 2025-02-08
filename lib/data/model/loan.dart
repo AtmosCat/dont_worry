@@ -1,9 +1,8 @@
-import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 
 class Loan {
   bool isLending; // 빌리는지, 빌려주는지 여부
-  Person person; // 채무자, 채권자
+  // Person person; // 채무자, 채권자
   int initialAmount; // 최초 대출금액
   List<Repayment>? repayments; //상환 내역
   DateTime loanDate; // 차용일
@@ -13,7 +12,7 @@ class Loan {
 
   Loan({
     required this.isLending,
-    required this.person,
+    // required this.person,
     required this.initialAmount,
     this.repayments,
     required this.loanDate,
