@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage>
             final double value = _tabController.animation!.value;
             final int currentIndex = (value + 0.5).floor();
             return HomeBottomAppBar(
-              myAction: currentIndex == 0 ? MyAction.lend : MyAction.borrow);
+                myAction: currentIndex == 0 ? MyAction.lend : MyAction.borrow);
           }),
       body: NestedScrollView(
         /* 상하 스크롤 시, 헤더 숨기기 + 탭바 고정을 위해 세팅
@@ -61,6 +61,16 @@ class _HomePageState extends State<HomePage>
           return [
             SliverAppBar(
               pinned: true,
+              title: Title(
+                  color: AppColor.containerWhite.of(context),
+                  child: Text(
+                    '돈워리', // 추후 로고 개발예정
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w900,
+                        color: AppColor.primaryBlue.of(context)),
+                  )),
+              centerTitle: true,
               actions: [
                 //앱바 우측 more 버튼
                 IconButton(
