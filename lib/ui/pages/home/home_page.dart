@@ -195,10 +195,10 @@ class PersonTabView extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
-          ListHeader(myAction: MyAction.lend),
-          HomePendingLoanListView(),
+          ListHeader(myAction: myAction),
+          HomePendingLoanListView(myAction: myAction),
           ListHeader(),
-          // HomePaidLoanListView(),
+          HomePaidLoanListView(myAction: myAction),
         ],
       ),
     );

@@ -6,4 +6,17 @@ class Repayment {
     required this.amount,
     required this.date,
   });
+
+  Repayment.fromJson(Map<String, dynamic> json)
+      : this(
+          amount: json['amount'],
+          date: DateTime.parse(json['date']),
+        );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'amount': amount,
+      'date': date.toIso8601String(),
+    };
+  }
 }

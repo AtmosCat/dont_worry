@@ -6,23 +6,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePendingLoanListView extends StatelessWidget {
+
+  final MyAction myAction;
+
+  HomePendingLoanListView({
+    required this.myAction,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
         final homeState = ref.watch(homeViewModel);
-        final loans = homeState.loans;
+        final loans = myAction == MyAction.lend
+            ? homeState.loans.where((loan) => loan.isLending).toList()
+            : homeState.loans.where((loan) => !loan.isLending).toList();
 
-        // 그룹화된 상환 완료된 대출 리스트
+        // 그룹화된 상환 중인 대출 리스트
         final groupedLoansByPerson = groupBy(loans, (loan) => loan.person);
         final groupedPendingLoansByPerson = groupedLoansByPerson.map(
           (key, value) {
             final pendingLoans = value
                 .where((loan) =>
                     loan.repayments != null &&
-                    loan.initialAmount >
                         Loan.remainingLoanAmount(
-                            loan.initialAmount, loan.repayments!))
+                            loan.initialAmount, loan.repayments!) > 0 )
                 .toList();
             return MapEntry(key, pendingLoans);
           },
@@ -36,6 +44,7 @@ class HomePendingLoanListView extends StatelessWidget {
           itemBuilder: (context, index) {
             return PersonCard(
               person: groupedPendingLoansByPerson.keys.elementAt(index),
+              loans: groupedPendingLoansByPerson.values.elementAt(index),
               myAction: MyAction.lend,
             );
           },

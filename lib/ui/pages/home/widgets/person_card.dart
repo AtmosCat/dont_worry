@@ -1,3 +1,4 @@
+import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_list/loan_list_page.dart';
@@ -7,18 +8,22 @@ import 'package:flutter/material.dart';
 
 class PersonCard extends StatelessWidget {
   final Person person;
+  final List<Loan> loans;
   final MyAction myAction;
 
   const PersonCard({
     required this.person,
+    required this.loans,
     required this.myAction,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    int amount = 10;
-    int totalRepayment = 10000;
+    // int totalInitialAmount = getTotalInitialAmount();
+    // int totalRepayment = getTotalRepayment();
+    int totalRemainingLoanAmount = getTotalRemainingLoanAmount();
+
     /*TODO: 금액 관련 데이터를 구하는 로직 개발 필요
     
     개발사항 1. amount :갚아야 할 남은 금액
@@ -63,7 +68,7 @@ class PersonCard extends StatelessWidget {
             builder: (context) => LoanListPage(myAction, person: person)),
       ),
       child: Card(
-        color: amount != 0 // 상환여부 따라 배경색 변경
+        color: totalRemainingLoanAmount != 0 // 상환여부 따라 배경색 변경
             ? AppColor.containerWhite.of(context)
             : AppColor.containerLightGray20.of(context),
         child: Padding(
@@ -75,7 +80,7 @@ class PersonCard extends StatelessWidget {
                 Text(
                   person.name,
                   style: TextStyle(
-                      color: amount != 0 // 상환여부 따라 글씨색상 변경
+                      color: totalRemainingLoanAmount != 0 // 상환여부 따라 글씨색상 변경
                           ? AppColor.defaultBlack.of(context)
                           : AppColor.disabled.of(context),
                       fontSize: 16),
@@ -83,7 +88,7 @@ class PersonCard extends StatelessWidget {
                 Spacer(),
                 // 디데이 날짜 위젯 : 상환 여부에 따라 amount 또는 totalRepayment 표시
                 Visibility(
-                  visible: amount != 0,
+                  visible: totalRemainingLoanAmount != 0,
                   // 상환 완료 시,
                   replacement: Text(
                       '${lastRepaymentDate.year}.${lastRepaymentDate.month}.${lastRepaymentDate.day} ',
@@ -114,7 +119,7 @@ class PersonCard extends StatelessWidget {
                 // 금액 위젯
                 Text.rich(
                   style: TextStyle(
-                    color: amount != 0
+                    color: totalRemainingLoanAmount != 0
                         ? AppColor.defaultBlack.of(context)
                         : AppColor.disabled.of(context), // 상환 여부에 따라 색상변경
                   ),
@@ -122,7 +127,7 @@ class PersonCard extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: NumberUtils.formatWithCommas(
-                            amount != 0 ? amount : totalRepayment), // 상환 여부에 따라 amount 또는 totalRepayment
+                            totalRemainingLoanAmount), // 상환 여부에 따라 amount 또는 totalRepayment
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w500,
@@ -148,5 +153,25 @@ class PersonCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  int getTotalInitialAmount() {
+    int totalInitialAmount = 0;
+    for (Loan loan in loans) {
+      totalInitialAmount += loan.initialAmount;
+    }
+    return totalInitialAmount;
+  }
+
+  int getTotalRepayment() {
+    int totalRepayment = 0;
+    for (Loan loan in loans) {
+      totalRepayment += Loan.totalRepaymentAmount(loan.repayments ?? []);
+    }
+    return totalRepayment;
+  }
+  
+  int getTotalRemainingLoanAmount() {
+    return getTotalInitialAmount() - getTotalRepayment();
   }
 }

@@ -7,12 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePaidLoanListView extends StatelessWidget {
+  final MyAction myAction;
+
+  HomePaidLoanListView({
+    required this.myAction,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
         final homeState = ref.watch(homeViewModel);
-        final loans = homeState.loans;
+        final loans = myAction == MyAction.lend
+            ? homeState.loans.where((loan) => loan.isLending).toList()
+            : homeState.loans.where((loan) => !loan.isLending).toList();
 
         // 그룹화된 상환 완료된 대출 리스트
         final groupedLoansByPerson = groupBy(loans, (loan) => loan.person);
@@ -21,9 +29,9 @@ class HomePaidLoanListView extends StatelessWidget {
             final paidLoans = value
                 .where((loan) =>
                     loan.repayments != null &&
-                    loan.initialAmount <=
-                        Loan.remainingLoanAmount(
-                            loan.initialAmount, loan.repayments!))
+                    Loan.remainingLoanAmount(
+                            loan.initialAmount, loan.repayments!) <=
+                        0)
                 .toList();
             return MapEntry(key, paidLoans);
           },
@@ -33,14 +41,22 @@ class HomePaidLoanListView extends StatelessWidget {
           shrinkWrap: true, // ListView의 크기를 제한
           physics: NeverScrollableScrollPhysics(), // 내부 스크롤 비활성화
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          itemCount: groupedPaidLoansByPerson.length,
+          itemCount: groupedPaidLoansByPerson.entries
+              .where((entry) => entry.value.isNotEmpty) // 값이 비어있지 않은 항목만 필터링
+              .length,
           itemBuilder: (context, index) {
+            final validEntries = groupedPaidLoansByPerson.entries
+                .where((entry) => entry.value.isNotEmpty) // 다시 필터링
+                .toList();
+
             return PersonCard(
-              person: groupedPaidLoansByPerson.keys.elementAt(index),
-              myAction: MyAction.lend,
+              person: validEntries[index].key,
+              loans: validEntries[index].value,
+              myAction: myAction,
             );
           },
-          separatorBuilder: (context, index) => Divider(height: 20),
+          separatorBuilder: (context, index) =>
+              Divider(height: 2, color: Colors.grey[100]),
         );
       },
     );

@@ -26,6 +26,8 @@ class Loan {
       : this(
           isLending: json['isLending'],
           person: Person.fromJson(json['person']),
+          repayments: json['repayments']?.map<Repayment>((e) => Repayment.fromJson(e))
+                  .toList(),
           initialAmount: json['initialAmount'],
           loanDate: DateTime.parse(json['loanDate']),
           title: json['title'],
@@ -36,6 +38,7 @@ class Loan {
       'isLending': isLending,
       'person': person.toJson(),
       'initialAmount': initialAmount,
+      'repayments': repayments?.map((e) => e.toJson()).toList(),
       'loanDate': loanDate.toIso8601String(), // DateTime을 문자열로 변환
       'title': title,
     };
