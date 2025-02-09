@@ -150,12 +150,12 @@ class _CreateLoanFloatingActionButtonState
             - CreateLoanPage로 이동
             - 현재 TabBar가 lend인지 borrow인지 함께 전달 필요
           */
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateLoanPage(),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => CreateLoanPage(myAction: myAction,),
+              //   ),
+              // );
             },
             backgroundColor: currentIndex == 0
                 ? AppColor.primaryBlue.of(context)
@@ -189,9 +189,6 @@ class PersonTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /* TODO: '빌려준 돈' Person List 구현 */
-    // return ListView(padding: EdgeInsets.all(4), children: [
-    //   ListHeader(myAction: myAction),
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -202,49 +199,5 @@ class PersonTabView extends StatelessWidget {
         ],
       ),
     );
-    // PersonCard(
-    //   myAction: myAction,
-    //   person: Person(
-    //     name: '홍길동',
-    //     loans: [
-    //       Loan(
-    //         isLending: true, // 빌려준 돈
-    //         person: Person(name: "홍길동", loans: []),
-    //         initialAmount: 10000, // 1만원
-    //         repayments: [
-    //           Repayment(amount: 5000, date: DateTime(2024, 10, 26)),
-    //         ], // 5천원 상환
-    //         loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
-    //         dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
-    //         title: '간식값',
-    //         memo: '내일까지 갚아라',
-    //       )
-    //     ],
-    //     memo: '특이사항 없음',
-    //   ),
-    // ),
-    // ListHeader();
-    // HomePaidLoanListView(),
-    // PersonCard(
-    //     myAction: myAction,
-    //     person: Person(
-    //       name: '다가픔',
-    //       loans: [], // 빈 리스트
-    //       memo: '특이사항 없음',
-    //     )),
-    // PersonCard(
-    //     myAction: myAction,
-    //     person: Person(
-    //       name: '홍길동123214214214',
-    //       loans: [], // 빈 리스트
-    //       memo: '특이사항 없음',
-    //     )),
-    // PersonCard(
-    //     myAction: myAction,
-    //     person: Person(
-    //       name: '홍길동',
-    //       loans: [], // 빈 리스트
-    //       memo: '특이사항 없음',
-    //     )), ]
   }
 }

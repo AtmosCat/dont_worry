@@ -1,4 +1,6 @@
 import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/data/repository/user_repository.dart';
 import 'package:dont_worry/ui/pages/home/home_view_model.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
@@ -6,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePendingLoanListView extends StatelessWidget {
-
   final MyAction myAction;
 
   HomePendingLoanListView({
@@ -22,15 +23,15 @@ class HomePendingLoanListView extends StatelessWidget {
             ? homeState.loans.where((loan) => loan.isLending).toList()
             : homeState.loans.where((loan) => !loan.isLending).toList();
 
-        // 그룹화된 상환 중인 대출 리스트
+        // Person 기준으로 그룹화된 상환 중인 대출 리스트
         final groupedLoansByPerson = groupBy(loans, (loan) => loan.person);
         final groupedPendingLoansByPerson = groupedLoansByPerson.map(
           (key, value) {
             final pendingLoans = value
                 .where((loan) =>
                     loan.repayments != null &&
-                        Loan.remainingLoanAmount(
-                            loan.initialAmount, loan.repayments!) > 0 )
+                    Loan.remainingLoanAmount(
+                            loan.initialAmount, loan.repayments!) > 0)
                 .toList();
             return MapEntry(key, pendingLoans);
           },
@@ -62,5 +63,16 @@ class HomePendingLoanListView extends StatelessWidget {
       map.putIfAbsent(key, () => []).add(item);
       return map;
     });
+  }
+
+  Future<List<Person>?> getPersonList() async {
+    final loans = await UserRepository().getLoans();
+    final personList = <Person>[];
+    for (var loan in loans!) {
+      final person = loan.person;
+      if (!personList.contains(person)) {
+        personList.add(person);
+      }
+    }
   }
 }

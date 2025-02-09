@@ -17,7 +17,7 @@ class HomeBottomAppBar extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CreateLoanPage(),
+            builder: (context) => CreateLoanPage(myAction: myAction,),
           ),
         );
       },

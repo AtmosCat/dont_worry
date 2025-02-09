@@ -22,7 +22,7 @@ class HomePaidLoanListView extends StatelessWidget {
             ? homeState.loans.where((loan) => loan.isLending).toList()
             : homeState.loans.where((loan) => !loan.isLending).toList();
 
-        // 그룹화된 상환 완료된 대출 리스트
+        // Person 기준으로 그룹화된 상환 완료된 대출 리스트
         final groupedLoansByPerson = groupBy(loans, (loan) => loan.person);
         final groupedPaidLoansByPerson = groupedLoansByPerson.map(
           (key, value) {
@@ -30,8 +30,7 @@ class HomePaidLoanListView extends StatelessWidget {
                 .where((loan) =>
                     loan.repayments != null &&
                     Loan.remainingLoanAmount(
-                            loan.initialAmount, loan.repayments!) <=
-                        0)
+                            loan.initialAmount, loan.repayments!) <= 0)
                 .toList();
             return MapEntry(key, paidLoans);
           },

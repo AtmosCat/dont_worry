@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -134,6 +135,20 @@ class UserRepository {
       return null;
     }
   }
+
+  Future<List<Person>?> getPersonList() async {
+    final loans = await UserRepository().getLoans();
+    final personList = <Person>[];
+    for (var loan in loans!) {
+      final person = loan.person;
+      if (!personList.contains(person)) {
+        personList.add(person);
+      }
+    }
+    return personList;
+  }
+
+
 }
 // class PostRepository {
 //   Future<List<Post>?> getAll() async {
