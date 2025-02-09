@@ -4,6 +4,8 @@ import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
+import 'package:dont_worry/ui/pages/home/widgets/home_paid_loan_list_view.dart';
+import 'package:dont_worry/ui/pages/home/widgets/home_pending_loan_list_view.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
@@ -188,52 +190,61 @@ class PersonTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /* TODO: '빌려준 돈' Person List 구현 */
-    return ListView(padding: EdgeInsets.all(4), children: [
-      ListHeader(myAction: myAction),
-      PersonCard(
-        myAction: myAction,
-        person: Person(
-          name: '홍길동',
-          loans: [
-            Loan(
-              isLending: true, // 빌려준 돈
-              person: Person(name: "홍길동", loans: []),
-              initialAmount: 10000, // 1만원
-              repayments: [
-                Repayment(amount: 5000, date: DateTime(2024, 10, 26)),
-              ], // 5천원 상환
-              loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
-              dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
-              title: '간식값',
-              memo: '내일까지 갚아라',
-            )
-          ],
-          memo: '특이사항 없음',
-        ),
+    // return ListView(padding: EdgeInsets.all(4), children: [
+    //   ListHeader(myAction: myAction),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          ListHeader(myAction: MyAction.lend),
+          HomePendingLoanListView(),
+          ListHeader(),
+          // HomePaidLoanListView(),
+        ],
       ),
-      ListHeader(),
-      PersonCard(
-          myAction: myAction,
-          person: Person(
-            name: '다가픔',
-            loans: [], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
-      PersonCard(
-          myAction: myAction,
-          person: Person(
-            name: '홍길동123214214214',
-            loans: [], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
-      PersonCard(
-          myAction: myAction,
-          person: Person(
-            name: '홍길동',
-            loans: [], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
-      SizedBox(height: 200)
-    ]);
+    );
+    // PersonCard(
+    //   myAction: myAction,
+    //   person: Person(
+    //     name: '홍길동',
+    //     loans: [
+    //       Loan(
+    //         isLending: true, // 빌려준 돈
+    //         person: Person(name: "홍길동", loans: []),
+    //         initialAmount: 10000, // 1만원
+    //         repayments: [
+    //           Repayment(amount: 5000, date: DateTime(2024, 10, 26)),
+    //         ], // 5천원 상환
+    //         loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
+    //         dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
+    //         title: '간식값',
+    //         memo: '내일까지 갚아라',
+    //       )
+    //     ],
+    //     memo: '특이사항 없음',
+    //   ),
+    // ),
+    // ListHeader();
+    // HomePaidLoanListView(),
+    // PersonCard(
+    //     myAction: myAction,
+    //     person: Person(
+    //       name: '다가픔',
+    //       loans: [], // 빈 리스트
+    //       memo: '특이사항 없음',
+    //     )),
+    // PersonCard(
+    //     myAction: myAction,
+    //     person: Person(
+    //       name: '홍길동123214214214',
+    //       loans: [], // 빈 리스트
+    //       memo: '특이사항 없음',
+    //     )),
+    // PersonCard(
+    //     myAction: myAction,
+    //     person: Person(
+    //       name: '홍길동',
+    //       loans: [], // 빈 리스트
+    //       memo: '특이사항 없음',
+    //     )), ]
   }
 }

@@ -127,7 +127,8 @@ class UserRepository {
       if (loans == null) {
         return null;
       }
-      return loans.map<Loan>((e) => Loan.fromJson(e)).toList();
+      final loanList = List<Loan>.from(loans.map((e) => Loan.fromJson(e)));
+      return loanList;
     } catch (e) {
       print("오류: $e");
       return null;
