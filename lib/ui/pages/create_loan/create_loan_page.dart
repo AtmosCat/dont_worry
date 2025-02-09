@@ -7,6 +7,10 @@ import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 
 class CreateLoanPage extends StatelessWidget {
+  
+  final nameEdittingController = TextEditingController();
+  final amountEdittingController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,46 +37,64 @@ class CreateLoanPage extends StatelessWidget {
         ),
       ),
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () async {
-              UserRepository userRepository = UserRepository();
-              Loan testData = createTestLendingLoan();
-              if (await userRepository.createLoanData(
-                  context: context, loan: testData)) {
-                SnackbarUtil.showSnackBar(
-                    context, "빌려준 돈 더미 데이터가 Firebase에 추가됨.");
-              }
-            },
-            child: Text("빌려준 돈 더미 데이터 생성!"),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () async {
-              UserRepository userRepository = UserRepository();
-              Loan testData = createTestBorrowingLoan();
-              if (await userRepository.createLoanData(
-                  context: context, loan: testData)) {
-                SnackbarUtil.showSnackBar(
-                    context, "빌린 돈 더미 데이터가 Firebase에 추가됨.");
-              }
-            },
-            child: Text("빌린 돈 더미 데이터 생성!"),
-          ),
-        ],
-      )),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+            TextFormField(
+              controller: nameEdittingController,
+              decoration: InputDecoration(
+                labelText: "이름",
+              ),
+            ),
+            SizedBox(height: 20),
+            TextFormField(
+              controller: amountEdittingController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "대출금액",
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                UserRepository userRepository = UserRepository();
+                Loan testData = createTestLendingLoan(nameEdittingController.text, int.parse(amountEdittingController.text));
+                if (await userRepository.createLoanData(
+                    context: context, loan: testData)) {
+                  SnackbarUtil.showSnackBar(
+                      context, "빌려준 돈 더미 데이터가 Firebase에 추가됨.");
+                }
+              },
+              child: Text("빌려준 돈 더미 데이터 생성하기"),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                UserRepository userRepository = UserRepository();
+                Loan testData = createTestBorrowingLoan(nameEdittingController.text, int.parse(amountEdittingController.text));
+                if (await userRepository.createLoanData(
+                    context: context, loan: testData)) {
+                  SnackbarUtil.showSnackBar(
+                      context, "빌린 돈 더미 데이터가 Firebase에 추가됨.");
+                }
+              },
+              child: Text("빌린 돈 더미 데이터 생성하기"),
+            ),
+                    ],
+                  ),
+          )),
     );
   }
 }
 
 // 빌려준 돈 더미 데이터 생성
-Loan createTestLendingLoan() {
+Loan createTestLendingLoan(String name, int amount) {
   Loan testLendingLoan = Loan(
     isLending: true,
-    person: Person(name: "수진", loans: []),
-    initialAmount: 2000000,
+    person: Person(name: name, loans: []),
+    initialAmount: amount,
     repayments: [],
     dueDate: DateTime(2025, 10, 31),
     loanDate: DateTime.now(),
@@ -83,11 +105,11 @@ Loan createTestLendingLoan() {
 }
 
 // 빌려준 돈 더미 데이터 생성
-Loan createTestBorrowingLoan() {
+Loan createTestBorrowingLoan(String name, int amount) {
   Loan testBorrowingLoan = Loan(
     isLending: false,
-    person: Person(name: "정아", loans: []),
-    initialAmount: 3000000,
+    person: Person(name: name, loans: []),
+    initialAmount: amount,
     repayments: [],
     dueDate: DateTime(2025, 10, 31),
     loanDate: DateTime.now(),
