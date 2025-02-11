@@ -1,3 +1,4 @@
+import 'package:dont_worry/data/repository/sql_database.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/theme/theme.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
@@ -5,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  // Binding 초기화
-  // WidgetsFlutterBinding.ensureInitialized();
+
   // 네비게이션 바를 투명하게 설정
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent, // 하단 네비게이션 바 배경 투명
@@ -14,6 +14,8 @@ void main() {
   ));
 
 
+  WidgetsFlutterBinding.ensureInitialized();
+  SqlDatabase(); // DB 초기화
   runApp(const MyApp());
 }
 

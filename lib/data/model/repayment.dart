@@ -1,6 +1,23 @@
 import 'package:uuid/uuid.dart';
 
+/* SQL 사용을 위해,
+tableName과 Fields{} 클래스를 정의해줬습니다 */
+
+/* 모든 파라미터를 'string' key로
+- 반드시 Id를 가지고 있을 것
+- 상위 클래스 Person과 Loan Id를 가지고 있을 것 */
+
+
+class RepaymentFields{
+  static final String personId = 'personId';
+  static final String loanId = 'loanId';
+  static final String repaymentId = 'repaymentId';
+  static final String amount = 'amount';
+  static final String date = 'date';
+}
+
 class Repayment {
+  static String tableName = 'repayment'; // 테이블 이름을 'string' key로
   String personId;
   String loanId;
   String repaymentId;

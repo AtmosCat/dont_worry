@@ -35,8 +35,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
-  # 랜덤 ID 생성을 위해
+  # SQFlite를 위해
   uuid: ^3.0.6
+  path: ^1.9.0
+  sqflite: ^2.4.1
 
 dev_dependencies:
   flutter_test:
