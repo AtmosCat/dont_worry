@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage>
         },
 
         // TabBar 위치에 따라 하단 위젯 세팅
-        body: TabBarView(controller: _tabController, children: const [
+        body: TabBarView(controller: _tabController, children: [
           PersonTabView(myAction: MyAction.lend), // 빌려간 돈 위젯
           PersonTabView(myAction: MyAction.borrow), // 빌린 돈 위젯
         ]),
@@ -128,59 +128,10 @@ class _HomePageState extends State<HomePage>
   }
 }
 
-// 플로팅버튼
-class CreateLoanFloatingActionButton extends StatefulWidget {
-  final TabController tabController;
-
-  const CreateLoanFloatingActionButton(
-    this.tabController, {
-    super.key,
-  });
-
-  @override
-  State<CreateLoanFloatingActionButton> createState() =>
-      _CreateLoanFloatingActionButtonState();
-}
-
-class _CreateLoanFloatingActionButtonState
-    extends State<CreateLoanFloatingActionButton> {
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: widget.tabController.animation!,
-        builder: (context, child) {
-          final double value = widget.tabController.animation!.value;
-          final int currentIndex = (value + 0.5).floor();
-          return FloatingActionButton.extended(
-              onPressed: () {
-                /* TODO: 플로팅버튼 액션
-            - CreateLoanPage로 이동
-            - 현재 TabBar가 lend인지 borrow인지 함께 전달 필요
-          */
-              },
-              backgroundColor: currentIndex == 0
-                  ? AppColor.primaryBlue.of(context)
-                  : AppColor.primaryRed.of(context), // TabBar 위치 감지
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30), // 더 부드러운 모양
-              ),
-              label: Row(children: [
-                Icon(Icons.add, size: 20),
-                SizedBox(width: 10),
-                Text(
-                    currentIndex == 0
-                        ? '빌려준 돈 기록  '
-                        : '빌린 돈 기록  ', // TabBar 위치 감지, style: TextStyle(fontSize: 16)),
-                    style: TextStyle(fontSize: 16)),
-              ]));
-        });
-  }
-}
-
 // '빌려준 돈', '빌린 돈' 탭의 View
 class PersonTabView extends StatelessWidget {
   final MyAction myAction;
-  const PersonTabView({
+  PersonTabView({
     required this.myAction,
     super.key,
   });
@@ -190,48 +141,52 @@ class PersonTabView extends StatelessWidget {
     /* TODO: '빌려준 돈' Person List 구현 */
     return ListView(padding: EdgeInsets.all(4), children: [
       ListHeader(myAction: myAction, category: Category.person),
-      PersonCard(
-          myAction: myAction,
-          person: Person(
-            name: '홍길동',
-            loans: [
-              Loan(
-                isLending: true, // 빌려준 돈
-                initialAmount: 10000, // 1만원
-                repayments: [
-                  Repayment(amount: 5000, date: DateTime(2024, 10, 26)),
-                ], // 5천원 상환
-                loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
-                dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
-                title: '간식값',
-                memo: '내일까지 갚아라',
-              )
-            ], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
+      PersonCard(myAction: myAction, person: dummyPerson1),
       ListHeader(category: Category.person),
       PersonCard(
           myAction: myAction,
-          person: Person(
-            name: '다가픔',
-            loans: [], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
+          person: dummyPerson2),
       PersonCard(
           myAction: myAction,
-          person: Person(
-            name: '홍길동123214214214',
-            loans: [], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
+          person: dummyPerson2),
       PersonCard(
           myAction: myAction,
-          person: Person(
-            name: '홍길동',
-            loans: [], // 빈 리스트
-            memo: '특이사항 없음',
-          )),
+          person: dummyPerson2),
       SizedBox(height: 60)
     ]);
   }
+
+// 더미데이터
+  Person dummyPerson1 = Person(
+    personId: 'test001_person',
+    name: '홍길동',
+    loans: [
+      Loan(
+        personId: 'test001_person',
+        loanId: 'test001_loan',
+        isLending: true, // 빌려준 돈
+        initialAmount: 10000, // 1만원
+        repayments: [
+          Repayment(
+              personId: 'test001_person',
+              loanId: 'test001_loan',
+              repaymentId: 'test001_repayment',
+              amount: 5000,
+              date: DateTime(2024, 10, 26)),
+        ], // 5천원 상환
+        loanDate: DateTime(2024, 10, 25), // 2024년 10월 25일
+        dueDate: DateTime(2024, 11, 24), // 2024년 11월 24일
+        title: '간식값',
+        memo: '내일까지 갚아라',
+      )
+    ], // 빈 리스트
+    memo: '특이사항 없음',
+  );
+
+  Person dummyPerson2 = Person(
+            personId: 'test002_person',
+            name: '다가픔',
+            loans: [], // 빈 리스트
+            memo: '특이사항 없음',
+          );
 }

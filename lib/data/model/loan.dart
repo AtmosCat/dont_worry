@@ -1,6 +1,9 @@
 import 'package:dont_worry/data/model/repayment.dart';
+import 'package:uuid/uuid.dart';
 
 class Loan {
+  String personId;
+  String loanId;
   bool isLending; // 빌리는지, 빌려주는지 여부
   // Person person; // 채무자, 채권자
   int initialAmount; // 최초 대출금액
@@ -11,6 +14,8 @@ class Loan {
   String? memo; // 세부메모
 
   Loan({
+    required this.personId,
+    String? loanId,
     required this.isLending,
     // required this.person,
     required this.initialAmount,
@@ -19,7 +24,7 @@ class Loan {
     this.dueDate,
     required this.title,
     this.memo,
-  });
+  }) : loanId = loanId ?? Uuid().v4();
 }
 
 // 상환액 (상환내역의 총합)

@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 class LoanListPage extends StatelessWidget {
   final MyAction myAction;
   final Person person;
-  const LoanListPage(this.myAction, {required this.person, super.key});
+  LoanListPage(this.myAction, {required this.person, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,47 +26,11 @@ class LoanListPage extends StatelessWidget {
             myAction: myAction,
             category: Category.loan,
           ),
-          LoanCard(
-              myAction: myAction,
-              loan: Loan(
-                isLending: true, // 빌려주는 돈
-                initialAmount: 100000,
-                repayments: [
-                  Repayment(amount: 300, date: DateTime(2024, 2, 1))
-                ],
-                loanDate: DateTime(2024, 2, 1),
-                dueDate: DateTime(2024, 4, 1),
-                title: '김철수에게 빌려준 돈',
-                memo: '빠른 상환을 부탁드립니다.',
-              )),
-          LoanCard(
-              myAction: myAction,
-              loan: Loan(
-                isLending: true, // 빌려주는 돈
-                initialAmount: 100000,
-                repayments: [
-                  Repayment(amount: 300, date: DateTime(2024, 2, 1))
-                ],
-                loanDate: DateTime(2024, 2, 1),
-                dueDate: DateTime(2024, 4, 1),
-                title: '김철수에게 빌려준 돈',
-                memo: '빠른 상환을 부탁드립니다.',
-              )),
+          LoanCard(myAction: myAction, loan: dummyLoan1),
+          LoanCard(myAction: myAction, loan: dummyLoan1),
           SizedBox(height: 10),
           ListHeader(category: Category.loan),
-          LoanCard(
-              myAction: myAction,
-              loan: Loan(
-                isLending: true, // 빌려주는 돈
-                initialAmount: 100000,
-                repayments: [
-                  Repayment(amount: 300, date: DateTime(2024, 2, 1))
-                ],
-                loanDate: DateTime(2024, 2, 1),
-                dueDate: DateTime(2024, 4, 1),
-                title: '김철수에게 빌려준 돈',
-                memo: '빠른 상환을 부탁드립니다.',
-              )),
+          LoanCard(myAction: myAction, loan: dummyLoan1),
           SizedBox(height: 60)
         ],
       ),
@@ -74,6 +38,25 @@ class LoanListPage extends StatelessWidget {
           myAction: myAction, category: Category.person),
     );
   }
+
+  Loan dummyLoan1 = Loan(
+    personId: 'test001_person',
+    loanId: 'test001_loan',
+    isLending: true, // 빌려주는 돈
+    initialAmount: 100000,
+    repayments: [
+      Repayment(
+          personId: 'test001_person',
+          loanId: 'test001_loan',
+          repaymentId: 'test001_repayment',
+          amount: 300,
+          date: DateTime(2024, 2, 1))
+    ],
+    loanDate: DateTime(2024, 2, 1),
+    dueDate: DateTime(2024, 4, 1),
+    title: '김철수에게 빌려준 돈',
+    memo: '빠른 상환을 부탁드립니다.',
+  );
 }
 
 class LoanListHeader extends StatelessWidget {

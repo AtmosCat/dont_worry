@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class LoanDetailPage extends StatelessWidget {
   final MyAction myAction;
   final Loan loan;
-  const LoanDetailPage(this.myAction, {required this.loan, super.key});
+  LoanDetailPage(this.myAction, {required this.loan, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -332,22 +332,10 @@ class LoanDetailPage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 30),
-                    RepaymentCard(
-                      repayment:
-                          Repayment(amount: 300000, date: DateTime(2024, 2, 1)),
-                    ),
-                    RepaymentCard(
-                      repayment: Repayment(
-                          amount: 2020000, date: DateTime(2024, 3, 2)),
-                    ),
-                    RepaymentCard(
-                      repayment:
-                          Repayment(amount: 4000, date: DateTime(2024, 4, 21)),
-                    ),
-                    RepaymentCard(
-                      repayment:
-                          Repayment(amount: 100, date: DateTime(2024, 4, 12)),
-                    ),
+                    RepaymentCard(repayment: dummyRepayment1),
+                    RepaymentCard(repayment: dummyRepayment1),
+                    RepaymentCard(repayment: dummyRepayment1),
+                    RepaymentCard(repayment: dummyRepayment1),
                     SizedBox(
                       height: 60,
                     )
@@ -360,6 +348,13 @@ class LoanDetailPage extends StatelessWidget {
       ),
     );
   }
+
+  Repayment dummyRepayment1 = Repayment(
+      personId: 'test001_person',
+      loanId: 'test001_loan',
+      repaymentId: 'test001_repayment',
+      amount: 300000,
+      date: DateTime(2024, 2, 1));
 }
 
 class RepaymentCard extends StatelessWidget {
