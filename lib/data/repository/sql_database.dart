@@ -13,6 +13,12 @@ class SqlDatabase {
   factory SqlDatabase() {
     return instance;
   }
+  Future<Database> get database async {
+    if (_database != null) return _database!;
+    await _initDatabase();
+    return _database!;
+  }
+
 
   // path 경로에 DB를 저장/열람
   Database? _database;
@@ -26,36 +32,38 @@ class SqlDatabase {
   void _databaseCreate(Database db, int version) async {
     var batch = db.batch();
     batch.execute('''
-      CREATE TABLE ${Person.tableName}(
-        ${PersonFields.personId} TEXT NOT NULL PRIMARY KEY,
-        ${PersonFields.name} TEXT NOT NULL,
-        ${PersonFields.memo} TEXT
+      create table ${Person.tableName}(
+        ${PersonFields.personId} text not null primary key,
+        ${PersonFields.name} text not null,
+        ${PersonFields.loans} text not null,
+        ${PersonFields.memo} text
       )
     ''');
 
     batch.execute('''
-      CREATE TABLE ${Loan.tableName}(
-        ${LoanFields.personId} TEXT NOT NULL,
-        ${LoanFields.loanId} TEXT NOT NULL PRIMARY KEY,
-        ${LoanFields.isLending} INTEGER NOT NULL,
-        ${LoanFields.initialAmount} INTEGER NOT NULL,
-        ${LoanFields.loanDate} TEXT NOT NULL,
-        ${LoanFields.dueDate} TEXT NOT NULL,
-        ${LoanFields.title} TEXT NOT NULL,
-        ${LoanFields.memo} TEXT NOT NULL,
-        FOREIGN KEY (${LoanFields.personId}) REFERENCES ${Person.tableName} (${PersonFields.personId}) ON DELETE CASCADE
+      create table ${Loan.tableName}(
+        ${LoanFields.personId} text not null,
+        ${LoanFields.loanId} text not null primary key,
+        ${LoanFields.isLending} integer not null,
+        ${LoanFields.initialAmount} integer not null,
+        ${LoanFields.repayments} text not null,
+        ${LoanFields.loanDate} text not null,
+        ${LoanFields.dueDate} text not null,
+        ${LoanFields.title} text not null,
+        ${LoanFields.memo} text not null,
+        foreign key (${LoanFields.personId}) referencse ${Person.tableName} (${PersonFields.personId}) on delete cascade
       )
     ''');
 
     batch.execute('''
-      CREATE TABLE ${Repayment.tableName}(
-        ${RepaymentFields.personId} TEXT NOT NULL,
-        ${RepaymentFields.loanId} TEXT NOT NULL,
-        ${RepaymentFields.repaymentId} TEXT NOT NULL PRIMARY KEY,
-        ${RepaymentFields.amount} INTEGER NOT NULL,
-        ${RepaymentFields.date} TEXT NOT NULL,
-        FOREIGN KEY(${RepaymentFields.personId}) REFERENCES ${Person.tableName}(${PersonFields.personId}) ON DELETE CASCADE
-        FOREIGN KEY (${RepaymentFields.loanId}) REFERENCES ${Loan.tableName} (${LoanFields.loanId}) ON DELETE CASCADE
+      create table ${Repayment.tableName}(
+        ${RepaymentFields.personId} text not null,
+        ${RepaymentFields.loanId} text not null,
+        ${RepaymentFields.repaymentId} text not null primary key,
+        ${RepaymentFields.amount} integer not null,
+        ${RepaymentFields.date} text not null,
+        foreign key(${RepaymentFields.personId}) referencse ${Person.tableName}(${PersonFields.personId}) on delete cascade
+        foreign key (${RepaymentFields.loanId}) referencse ${Loan.tableName} (${LoanFields.loanId}) on delete cascade
       )
     ''');
     await batch.commit();

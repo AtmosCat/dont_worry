@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:uuid/uuid.dart';
 
@@ -9,24 +10,25 @@ tableName과 Fields{} 클래스를 정의해줬습니다 */
 - 상위 클래스 Person의 Id를 가지고 있을 것
 - 하위 클래스에 대한 List<Repayment>는 생략 */
 
-class LoanFields{
-  static final String personId = 'personId';
-  static final String loanId = 'loanId';
-  static final String isLending = 'isLending';
-  static final String initialAmount = 'initialAmount';
-  static final String loanDate = 'loanDate';
-  static final String dueDate = 'dueDate';
-  static final String title = 'title';
-  static final String memo = 'memo';
+class LoanFields {
+  static final String personId = 'PERSON_ID';
+  static final String loanId = 'LOAN_ID';
+  static final String isLending = 'IS_LENDING';
+  static final String initialAmount = 'INITIAL_AMOUNT';
+  static final String repayments = 'REPAYMENTS';
+  static final String loanDate = 'LOAN_DATE';
+  static final String dueDate = 'DUE_DATE';
+  static final String title = 'TITLE';
+  static final String memo = 'MEMO';
 }
 
 class Loan {
-  static String tableName = 'loan';  // 테이블 이름을 'string' key로
+  static String tableName = 'LOAN'; // 테이블 이름을 'string' key로
   String personId;
   String loanId;
   bool isLending; // 빌리는지, 빌려주는지 여부
   int initialAmount; // 최초 대출금액
-  List<Repayment>? repayments; //상환 내역
+  List<Repayment> repayments; //상환 내역
   DateTime loanDate; // 차용일
   DateTime? dueDate; // 변제일
   String title; //제목 (= 기본값 loanDate)
@@ -37,12 +39,77 @@ class Loan {
     String? loanId,
     required this.isLending,
     required this.initialAmount,
-    this.repayments,
-    required this.loanDate,
+    List<Repayment>? repayments,
+    DateTime? loanDate,
     this.dueDate,
-    required this.title,
+    String? title,
     this.memo,
-  }) : loanId = loanId ?? Uuid().v4();
+  })  : loanId = loanId ?? Uuid().v4(),
+        loanDate = loanDate ?? DateTime.now(),
+        repayments = repayments ?? [],
+        title = title ??
+            "${loanDate ?? DateTime.now().year}년 ${loanDate ?? DateTime.now().month}월 ${loanDate ?? DateTime.now().day}일";
+
+  Map<String, dynamic> toJson() {
+    return {
+      LoanFields.personId: personId,
+      LoanFields.loanId: loanId,
+      LoanFields.isLending: isLending ? 1 : 0,
+      LoanFields.initialAmount: initialAmount,
+      LoanFields.repayments: repayments.map((r) => r.toJson()).toList(),
+      LoanFields.loanDate: loanDate.toIso8601String(),
+      LoanFields.dueDate: dueDate?.toIso8601String(),
+      LoanFields.title: title,
+      LoanFields.memo: memo,
+    };
+  }
+
+  factory Loan.fromJson(Map<String, dynamic> json) {
+    List<dynamic> repaymentList =
+        jsonDecode(json[LoanFields.repayments] as String);
+    List<Repayment> repayments =
+        repaymentList.map((r) => Repayment.fromJson(r)).toList();
+
+    return Loan(
+      personId: json[LoanFields.personId] as String,
+      loanId: json[LoanFields.loanId] as String,
+      isLending: json[LoanFields.isLending] as int == 1,
+      initialAmount: json[LoanFields.initialAmount] as int,
+      repayments: repayments,
+      loanDate: DateTime.parse((json[LoanFields.loanDate] as String)),
+      dueDate: json[LoanFields.dueDate] == null
+          ? null
+          : DateTime.parse((json[LoanFields.dueDate] as String)),
+      title: json[LoanFields.title] as String,
+      memo: json[LoanFields.memo] == null
+          ? null
+          : json[LoanFields.memo] as String,
+    );
+  }
+
+  Loan clone({
+    String? personId,
+    String? loanId,
+    bool? isLending,
+    int? initialAmount,
+    List<Repayment>? repayments,
+    DateTime? loanDate,
+    DateTime? dueDate,
+    String? title,
+    String? memo,
+  }) {
+    return Loan(
+      personId: personId ?? this.personId,
+      loanId: loanId ?? this.loanId,
+      isLending: isLending ?? this.isLending,
+      initialAmount: initialAmount ?? this.initialAmount,
+      repayments: repayments ?? this.repayments.map((r) => r.clone()).toList(),
+      loanDate: loanDate ?? this.loanDate,
+      dueDate: dueDate ?? this.dueDate,
+      title: title ?? this.title,
+      memo: memo ?? this.memo,
+    );
+  }
 }
 
 // 상환액 (상환내역의 총합)
