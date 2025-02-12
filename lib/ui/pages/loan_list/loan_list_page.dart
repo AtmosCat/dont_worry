@@ -39,7 +39,8 @@ class LoanListPage extends StatelessWidget {
     );
   }
 
-  Loan dummyLoan1 = Loan(
+  // 더미데이터
+  final Loan dummyLoan1 = Loan(
     personId: 'test001_person',
     loanId: 'test001_loan',
     isLending: true, // 빌려주는 돈

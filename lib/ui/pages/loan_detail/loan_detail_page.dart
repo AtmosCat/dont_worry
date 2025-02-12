@@ -349,7 +349,8 @@ class LoanDetailPage extends StatelessWidget {
     );
   }
 
-  Repayment dummyRepayment1 = Repayment(
+// 더미 데이터
+  final Repayment dummyRepayment1 = Repayment(
       personId: 'test001_person',
       loanId: 'test001_loan',
       repaymentId: 'test001_repayment',

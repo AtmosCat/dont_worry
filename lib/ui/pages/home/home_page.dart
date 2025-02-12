@@ -157,7 +157,7 @@ class PersonTabView extends StatelessWidget {
   }
 
 // 더미데이터
-  Person dummyPerson1 = Person(
+  final Person dummyPerson1 = Person(
     personId: 'test001_person',
     name: '홍길동',
     loans: [
@@ -183,7 +183,7 @@ class PersonTabView extends StatelessWidget {
     memo: '특이사항 없음',
   );
 
-  Person dummyPerson2 = Person(
+  final Person dummyPerson2 = Person(
             personId: 'test002_person',
             name: '다가픔',
             loans: [], // 빈 리스트
