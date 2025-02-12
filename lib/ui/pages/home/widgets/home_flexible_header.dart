@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 // 플렉서블 헤더
 class HomeFlexibleHeader extends StatelessWidget {
-  final TabController tabController;
-  const HomeFlexibleHeader(this.tabController, {super.key});
+  final TabController _tabController;
+  const HomeFlexibleHeader(this._tabController, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +14,9 @@ class HomeFlexibleHeader extends StatelessWidget {
 
     return FlexibleSpaceBar(
         background: AnimatedBuilder(
-            animation: tabController.animation!,
+            animation: _tabController.animation!,
             builder: (context, child) {
-              final double value = tabController.animation!.value;
+              final double value = _tabController.animation!.value;
               final int currentIndex = (value + 0.5).floor();
               return Container(
                 padding: EdgeInsets.only(top: 50, left: 20, right: 20),

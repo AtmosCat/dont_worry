@@ -5,7 +5,7 @@ import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
 
   // 네비게이션 바를 투명하게 설정
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -13,9 +13,9 @@ void main() {
     systemNavigationBarIconBrightness: Brightness.dark, // 아이콘 색상 조절
   ));
 
-
+  // SQL 사용을 위한 세팅
   WidgetsFlutterBinding.ensureInitialized();
-  SqlDatabase(); // DB 초기화
+  SqlDatabase();
   runApp(const MyApp());
 }
 

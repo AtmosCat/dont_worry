@@ -11,19 +11,19 @@ tableName과 Fields{} 클래스를 정의해줬습니다 */
 - 하위 클래스에 대한 List<Repayment>는 생략 */
 
 class LoanFields {
-  static final String personId = 'PERSON_ID';
-  static final String loanId = 'LOAN_ID';
-  static final String isLending = 'IS_LENDING';
-  static final String initialAmount = 'INITIAL_AMOUNT';
-  static final String repayments = 'REPAYMENTS';
-  static final String loanDate = 'LOAN_DATE';
-  static final String dueDate = 'DUE_DATE';
-  static final String title = 'TITLE';
-  static final String memo = 'MEMO';
+  static final String personId = 'parent_id';
+  static final String loanId = 'loan_id';
+  static final String isLending = 'is_lending';
+  static final String initialAmount = 'initial_amount';
+  static final String repayments = 'repayments';
+  static final String loanDate = 'loan_date';
+  static final String dueDate = 'due_date';
+  static final String title = 'title';
+  static final String memo = 'memo';
 }
 
 class Loan {
-  static String tableName = 'LOAN'; // 테이블 이름을 'string' key로
+  static String tableName = 'loan'; // 테이블 이름을 'string' key로
   String personId;
   String loanId;
   bool isLending; // 빌리는지, 빌려주는지 여부

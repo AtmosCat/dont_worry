@@ -13,12 +13,12 @@ class SqlDatabase {
   factory SqlDatabase() {
     return instance;
   }
-  Future<Database> get database async {
-    if (_database != null) return _database!;
+Future<Database> get database async {
+  if (_database == null) {
     await _initDatabase();
-    return _database!;
   }
-
+  return _database!;
+}
 
   // path 경로에 DB를 저장/열람
   Database? _database;
@@ -51,7 +51,7 @@ class SqlDatabase {
         ${LoanFields.dueDate} text not null,
         ${LoanFields.title} text not null,
         ${LoanFields.memo} text not null,
-        foreign key (${LoanFields.personId}) referencse ${Person.tableName} (${PersonFields.personId}) on delete cascade
+        foreign key (${LoanFields.personId}) references ${Person.tableName} (${PersonFields.personId}) on delete cascade
       )
     ''');
 
@@ -62,8 +62,8 @@ class SqlDatabase {
         ${RepaymentFields.repaymentId} text not null primary key,
         ${RepaymentFields.amount} integer not null,
         ${RepaymentFields.date} text not null,
-        foreign key(${RepaymentFields.personId}) referencse ${Person.tableName}(${PersonFields.personId}) on delete cascade
-        foreign key (${RepaymentFields.loanId}) referencse ${Loan.tableName} (${LoanFields.loanId}) on delete cascade
+        foreign key(${RepaymentFields.personId}) references ${Person.tableName}(${PersonFields.personId}) on delete cascade
+        foreign key (${RepaymentFields.loanId}) references ${Loan.tableName} (${LoanFields.loanId}) on delete cascade
       )
     ''');
     await batch.commit();

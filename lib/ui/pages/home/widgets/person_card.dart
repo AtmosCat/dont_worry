@@ -1,7 +1,7 @@
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/pages/loan_list/loan_list_page.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/ui/pages/person_detail/person_detail_page.dart';
+import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -60,7 +60,7 @@ class PersonCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => LoanListPage(myAction, person: person)),
+            builder: (context) => PersonDetailPage(myAction, person: person)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(

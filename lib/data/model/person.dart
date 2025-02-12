@@ -10,14 +10,14 @@ tableName과 Fields{} 클래스를 정의해줬습니다 */
 - 하위 클래스에 대한 List<Loan>은 생략 */
 
 class PersonFields {
-  static final personId = 'PERSON_ID';
-  static final name = 'NAME';
-  static final loans = 'LOANS';
-  static final memo = 'MEMO';
+  static final personId = 'person_id';
+  static final name = 'name';
+  static final loans = 'loans';
+  static final memo = 'memo';
 }
 
 class Person {
-  static String tableName = 'REPAYMENT'; // 테이블 이름을 'string' key로
+  static String tableName = 'person'; // 테이블 이름을 'string' key로
   String personId;
   String name;
   List<Loan> loans;
@@ -41,14 +41,19 @@ class Person {
   }
 
   factory Person.fromJson(Map<String, dynamic> json) {
-    List<dynamic> loanList = jsonDecode(json[PersonFields.loans] as String);
-    List<Loan> loans = loanList.map((r) => Loan.fromJson(r)).toList();
+    List<Loan> loans = (json[PersonFields.loans] != null)
+        ? (jsonDecode(json[PersonFields.loans] as String) as List)
+            .map((r) => Loan.fromJson(r))
+            .toList()
+        : [];
 
     return Person(
       personId: json[PersonFields.personId] as String,
       name: json[PersonFields.name] as String,
       loans: loans,
-      memo: json[PersonFields.memo] as String,
+      memo: json[PersonFields.memo] != null
+          ? json[PersonFields.memo] as String
+          : null,
     );
   }
 

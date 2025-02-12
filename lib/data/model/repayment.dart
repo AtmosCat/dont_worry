@@ -8,15 +8,15 @@ tableName과 Fields{} 클래스를 정의해줬습니다 */
 - 상위 클래스 Person과 Loan Id를 가지고 있을 것 */
 
 class RepaymentFields {
-  static final String personId = 'PERSON_ID';
-  static final String loanId = 'LOAN_ID';
-  static final String repaymentId = 'REPAYMENT_ID';
-  static final String amount = 'AMOUNT';
-  static final String date = 'DATE';
+  static final String personId = 'person_id';
+  static final String loanId = 'loan_id';
+  static final String repaymentId = 'repayment_id';
+  static final String amount = 'amount';
+  static final String date = 'date';
 }
 
 class Repayment {
-  static String tableName = 'REPAYMENT'; // 테이블 이름을 'string' key로
+  static String tableName = 'repayment'; // 테이블 이름을 'string' key로
   String personId;
   String loanId;
   String repaymentId;
