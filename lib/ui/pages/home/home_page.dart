@@ -1,4 +1,4 @@
-import 'package:dont_worry/data/%08home_view_model.dart';
+import 'package:dont_worry/data/home_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
 import 'package:dont_worry/theme/colors.dart';
@@ -80,42 +80,6 @@ class _HomePageState extends State<HomePage>
         bottomNavigationBar: HomeBottomAppBar(_tabController));
   }
 
-  void deleteDatabaseFile() async {
-    await SqlDatabase.deleteDatabaseFile();
-  }
-
-  void createPerson({required BuildContext context, required WidgetRef ref}) async {
-    Person newPerson = Person(name: '이름');
-    await ref.read(homeViewModelProvider.notifier).createPerson(newPerson);
-
-    // Loan newLoan = Loan(
-    //     personId: newPerson.personId,
-    //     isLending: true,
-    //     initialAmount: 10000,
-    //     repayments: [
-    //       Repayment(
-    //           personId: 'test001_person',
-    //           loanId: 'test001_loan',
-    //           repaymentId: 'test001_repayment',
-    //           amount: 300,
-    //           date: DateTime(2024, 2, 1))
-    //     ],
-    //     loanDate: DateTime(2024, 2, 1),
-    //     dueDate: DateTime(2024, 4, 1),
-    //     title: '제목',
-    //     memo: '빠른 상환을 부탁드립니다.');
-
-    // await SqlLoanCrudRepository.create(newLoan);
-
-    // Repayment newRepayment = Repayment(
-    //   personId: newPerson.personId,
-    //   loanId: newLoan.loanId,
-    //   amount: 3000,
-    // );
-
-    // await SqlRepaymentCrudRepository.create(newRepayment);
-  }
-
   // more 버튼 바텀시트 호출 메서드
   Future<dynamic> showMoreBottomSheet(BuildContext context) {
     return showModalBottomSheet(
@@ -163,5 +127,42 @@ class _HomePageState extends State<HomePage>
         );
       },
     );
+  }
+
+
+  void deleteDatabaseFile() async {
+    await SqlDatabase.deleteDatabaseFile();
+  }
+
+  void createPerson({required BuildContext context, required WidgetRef ref}) async {
+    Person newPerson = Person(name: '이름');
+    await ref.read(homeViewModelProvider.notifier).createPerson(newPerson);
+
+    // Loan newLoan = Loan(
+    //     personId: newPerson.personId,
+    //     isLending: true,
+    //     initialAmount: 10000,
+    //     repayments: [
+    //       Repayment(
+    //           personId: 'test001_person',
+    //           loanId: 'test001_loan',
+    //           repaymentId: 'test001_repayment',
+    //           amount: 300,
+    //           date: DateTime(2024, 2, 1))
+    //     ],
+    //     loanDate: DateTime(2024, 2, 1),
+    //     dueDate: DateTime(2024, 4, 1),
+    //     title: '제목',
+    //     memo: '빠른 상환을 부탁드립니다.');
+
+    // await SqlLoanCrudRepository.create(newLoan);
+
+    // Repayment newRepayment = Repayment(
+    //   personId: newPerson.personId,
+    //   loanId: newLoan.loanId,
+    //   amount: 3000,
+    // );
+
+    // await SqlRepaymentCrudRepository.create(newRepayment);
   }
 }

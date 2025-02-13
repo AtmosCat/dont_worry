@@ -1,4 +1,4 @@
-import 'package:dont_worry/data/%08home_view_model.dart';
+import 'package:dont_worry/data/home_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
