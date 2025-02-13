@@ -1,0 +1,127 @@
+import 'dart:async';
+
+import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/data/model/repayment.dart';
+import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
+import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
+import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class LedgerState {
+  final List<Person> people;
+  final List<Loan> loans;
+  final List<Repayment> repayments;
+  LedgerState({
+    required this.people,
+    required this.loans,
+    required this.repayments,
+  });
+}
+
+class LedgerViewModel extends StateNotifier<LedgerState> {
+  LedgerViewModel()
+      : super(LedgerState(people: [], loans: [], repayments: [])) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    try {
+      final people = await SqlPersonCrudRepository.getList();
+      final loans = await SqlLoanCrudRepository.getList();
+      final repayments = await SqlRepaymentCrudRepository.getList();
+
+      state = LedgerState(people: people, loans: loans, repayments: repayments);
+    } catch (e) {
+      print('Error initializing data: $e');
+    }
+  }
+
+  Future<void> loadPeople() async {
+    try {
+      List<Person> people = await SqlPersonCrudRepository.getList();
+      state = LedgerState(
+        people: people,
+        loans: state.loans,
+        repayments: state.repayments,
+      );
+    } catch (e) {
+      print('Error loading data: $e');
+    }
+  }
+
+  Future<void> loadLoans() async {
+    try {
+      List<Loan> loans = await SqlLoanCrudRepository.getList();
+      state = LedgerState(
+        people: state.people,
+        loans: loans,
+        repayments: state.repayments,
+      );
+    } catch (e) {
+      print('Error loading loans: $e');
+    }
+  }
+
+  Future<void> loadRepayments() async {
+    try {
+      List<Repayment> repayments = await SqlRepaymentCrudRepository.getList();
+      state = LedgerState(
+        people: state.people,
+        loans: state.loans,
+        repayments: repayments,
+      );
+    } catch (e) {
+      print('Error loading repayments: $e');
+    }
+  }
+
+  Future<void> createPerson(Person person) async {
+    await SqlPersonCrudRepository.create(person);
+    await loadPeople();
+  }
+
+  Future<void> updatePerson(Person person) async {
+    await SqlPersonCrudRepository.update(person);
+    await loadPeople();
+  }
+
+  Future<void> deletePerson(Person person) async {
+    await SqlPersonCrudRepository.delete(person);
+    await loadPeople();
+  }
+
+  Future<void> createLoan(Loan loan) async {
+    await SqlLoanCrudRepository.create(loan);
+    await loadLoans(); // 대출 목록 다시 불러오기
+  }
+
+  Future<void> updateLoan(Loan loan) async {
+    await SqlLoanCrudRepository.update(loan);
+    await loadLoans();
+  }
+
+  Future<void> deleteLoan(Loan loan) async {
+    await SqlLoanCrudRepository.delete(loan);
+    await loadLoans();
+  }
+
+  Future<void> createRepayment(Repayment repayment) async {
+    await SqlRepaymentCrudRepository.create(repayment);
+    await loadRepayments();
+  }
+
+  Future<void> updateRepayment(Repayment repayment) async {
+    await SqlRepaymentCrudRepository.update(repayment);
+    await loadRepayments();
+  }
+
+  Future<void> deleteRepayment(Repayment repayment) async {
+    await SqlRepaymentCrudRepository.delete(repayment);
+    await loadRepayments();
+  }
+}
+
+final ledgerViewModelProvider =
+    StateNotifierProvider<LedgerViewModel, LedgerState>(
+        (ref) => LedgerViewModel());

@@ -1,6 +1,11 @@
+import 'package:dont_worry/data/ledger_view_model.dart';
+import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailBottomNavigationBar extends StatelessWidget {
   final MyAction myAction;
@@ -62,9 +67,9 @@ class DetailBottomNavigationBar extends StatelessWidget {
                 ],
                 onTap: (int index) {
                   if (index == 0) {
-                    // 원하는 동작 추가
+                    handleCreateLoan(context);
                   } else if (index == 1) {
-                    // 원하는 동작 추가
+                    handleCreateRepayment(context);
                   }
                 },
                 backgroundColor: AppColor.containerWhite.of(context),
@@ -74,5 +79,123 @@ class DetailBottomNavigationBar extends StatelessWidget {
                 type: BottomNavigationBarType.fixed),
           ],
         ));
+  }
+
+  void createLoan(
+      {required BuildContext context,
+      required WidgetRef ref,
+      required int initialAmount}) async {
+    Loan newLoan = Loan(
+        initialAmount: initialAmount,
+        personId: 'personId',
+        isLending: myAction == MyAction.lend,
+        repayments: [
+          Repayment(
+              personId: 'test001_person',
+              loanId: 'test001_loan',
+              repaymentId: 'test001_repayment',
+              amount: 300,
+              date: DateTime(2024, 2, 1))
+        ],
+        loanDate: DateTime(2024, 2, 1),
+        dueDate: DateTime(2024, 4, 1),
+        title: '제목',
+        memo: '빠른 상환을 부탁드립니다.');
+    await ref.read(ledgerViewModelProvider.notifier).createLoan(newLoan);
+  }
+
+  void createRepayment(
+      {required BuildContext context,
+      required WidgetRef ref,
+      required int amount}) async {
+    Repayment newRepayment = Repayment(
+        personId: 'personId',
+        loanId: 'loanId',
+        amount: amount,
+        date: DateTime.now());
+    await ref
+        .read(ledgerViewModelProvider.notifier)
+        .createRepayment(newRepayment);
+  }
+
+  void handleCreateLoan(BuildContext context) {
+    var amountController = TextEditingController();
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              padding: EdgeInsets.all(50),
+              child: Column(
+                children: [
+                  TextField(
+                      controller: amountController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      decoration: InputDecoration(
+                          labelText: '빌릴 금액',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          fillColor: AppColor.containerLightGray30.of(context),
+                          filled: true,
+                          contentPadding: EdgeInsets.all(20))),
+                  Consumer(
+                    builder:
+                        (BuildContext context, WidgetRef ref, Widget? child) {
+                      return ElevatedButton(
+                          onPressed: () {
+                            createLoan(
+                                context: context,
+                                ref: ref,
+                                initialAmount:
+                                    int.parse(amountController.text));
+                            Navigator.pop(context);
+                          },
+                          child: Text('대출 생성'));
+                    },
+                  )
+                ],
+              ),
+            ));
+  }
+
+  void handleCreateRepayment(BuildContext context) {
+    var amountController = TextEditingController();
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              padding: EdgeInsets.all(50),
+              child: Column(
+                children: [
+                  TextField(
+                      controller: amountController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
+                      decoration: InputDecoration(
+                          labelText: '갚을 금액',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          fillColor: AppColor.containerLightGray30.of(context),
+                          filled: true,
+                          contentPadding: EdgeInsets.all(20))),
+                  Consumer(
+                    builder:
+                        (BuildContext context, WidgetRef ref, Widget? child) {
+                      return ElevatedButton(
+                          onPressed: () {
+                            createRepayment(
+                                context: context,
+                                ref: ref,
+                                amount: int.parse(amountController.text));
+                            Navigator.pop(context);
+                          },
+                          child: Text('상환 생성'));
+                    },
+                  )
+                ],
+              ),
+            ));
   }
 }

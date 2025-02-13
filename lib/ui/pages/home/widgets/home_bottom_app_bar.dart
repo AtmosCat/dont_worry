@@ -1,6 +1,9 @@
+import 'package:dont_worry/data/ledger_view_model.dart';
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeBottomAppBar extends StatelessWidget {
   final TabController _tabController;
@@ -31,7 +34,6 @@ class HomeBottomAppBar extends StatelessWidget {
               color: Colors.transparent,
               elevation: 0,
               child: GestureDetector(
-                onTap: () { },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -49,11 +51,54 @@ class HomeBottomAppBar extends StatelessWidget {
                     Text(myAction == MyAction.lend ? '빌려준 돈 기록' : '빌린 돈 기록'),
                   ],
                 ),
+                onTap: () {
+                  final nameController = TextEditingController();
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) => Container(
+                          padding: EdgeInsets.all(50),
+                          child: Column(
+                            children: [
+                              TextField(
+                                controller: nameController,
+                                decoration: InputDecoration(
+                                    labelText: '이름',
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    filled: true,
+                                    fillColor: AppColor.containerLightGray30
+                                        .of(context),
+                                    contentPadding: EdgeInsets.all(14)),
+                              ),
+                              Consumer(
+                                builder: (BuildContext context, WidgetRef ref,
+                                    Widget? child) {
+                                  return ElevatedButton(
+                                      onPressed: () {
+                                        createPerson(
+                                            context: context,
+                                            ref: ref,
+                                            name: nameController.text);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('0원짜리 인물 생성'));
+                                },
+                              )
+                            ],
+                          )));
+                },
               ),
             ),
           );
         });
   }
-}
 
-// myAction == MyAction.lend ?AppColor.containerBlue30.of(context):AppColor.containerRed30.of(context)
+  void createPerson(
+      {required BuildContext context,
+      required WidgetRef ref,
+      required String name}) async {
+    Person newPerson = Person(name: name);
+    await ref.read(ledgerViewModelProvider.notifier).createPerson(newPerson);
+  }
+}

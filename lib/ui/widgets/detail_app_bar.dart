@@ -1,10 +1,10 @@
+import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 enum MyAction { lend, borrow }
 
@@ -100,37 +100,43 @@ class _BottomSheet extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.edit),
-                title: Text('편집 (미구현)'),
-                onTap: () {
-                  if (category == Category.person) {
-                    // 인물 정보수정
-                  } else {
-                    // 대출 정보수정
-                  }
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.delete, color: AppColor.primaryRed.of(context)),
-                title: Text(
-                  '삭제',
-                  style: TextStyle(
-                      color: AppColor.primaryRed.of(context),
-                      fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  var onConfirm = (category == Category.person)
-                      ? () {
-                          SqlPersonCrudRepository.delete(person!);
-                        }
-                      : () {
-                          SqlLoanCrudRepository.delete(loan!);
-                        };
-                  Navigator.pop(context);
-                  showDeleteBottomSheet(context: context, onConfirm: onConfirm);
-                },
-              ),
+                  leading: Icon(Icons.edit),
+                  title: Text('편집 (미구현)'),
+                  onTap: () {
+                    if (category == Category.person) {
+                      // 인물 정보수정
+                    } else {
+                      // 대출 정보수정
+                    }
+                    Navigator.pop(context);
+                  }),
+              Consumer(builder:
+                  (BuildContext context, WidgetRef ref, Widget? child) {
+                return ListTile(
+                  leading: Icon(Icons.delete,
+                      color: AppColor.primaryRed.of(context)),
+                  title: Text('삭제',
+                      style: TextStyle(
+                          color: AppColor.primaryRed.of(context),
+                          fontWeight: FontWeight.bold)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    showDeleteBottomSheet(
+                        context: context,
+                        onConfirm: (category == Category.person)
+                            ? () async {
+                                await ref
+                                    .read(ledgerViewModelProvider.notifier)
+                                    .deletePerson(person!);
+                              }
+                            : () async {
+                                await ref
+                                    .read(ledgerViewModelProvider.notifier)
+                                    .deleteLoan(loan!);
+                              });
+                  },
+                );
+              })
             ],
           ),
         ));

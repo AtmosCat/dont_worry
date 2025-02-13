@@ -1,9 +1,11 @@
+import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/pages/loan_detail/widgets/repayment_list.dart';
+import 'package:dont_worry/ui/pages/loan_detail/widgets/repayment_card.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoanDetailRepaymentSection extends StatelessWidget {
   const LoanDetailRepaymentSection({
@@ -40,11 +42,23 @@ class LoanDetailRepaymentSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 30),
-          RepaymentList(),
+          repaymentList(),
           SizedBox(height: 60)
         ],
       ),
     );
+  }
+
+  Consumer repaymentList() {
+    return Consumer(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+      var repaymentsState = ref.watch(ledgerViewModelProvider).repayments;
+      return repaymentsState.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: List.generate(repaymentsState.length,
+                  (index) => RepaymentCard(repayment: repaymentsState[index])));
+    });
   }
 
   // 갚는 중일 때 진행률 표기

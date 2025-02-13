@@ -1,4 +1,4 @@
-import 'package:dont_worry/data/home_view_model.dart';
+import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
 import 'package:dont_worry/theme/colors.dart';
@@ -101,7 +101,10 @@ class _HomePageState extends State<HomePage>
                       leading: Icon(Icons.edit),
                       title: Text('TEST_Person 생성'),
                       onTap: () {
-                        createPerson(context: context, ref: ref, );
+                        createPerson(
+                          context: context,
+                          ref: ref,
+                        );
                         Navigator.pop(context);
                       },
                     );
@@ -111,7 +114,7 @@ class _HomePageState extends State<HomePage>
                   leading: Icon(Icons.delete,
                       color: AppColor.primaryRed.of(context)),
                   title: Text(
-                    'TEST_DB 완전 삭제',
+                    'TEST_DB 완전 초기화',
                     style: TextStyle(
                         color: AppColor.primaryRed.of(context),
                         fontWeight: FontWeight.bold),
@@ -129,14 +132,17 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-
   void deleteDatabaseFile() async {
     await SqlDatabase.deleteDatabaseFile();
   }
 
-  void createPerson({required BuildContext context, required WidgetRef ref}) async {
+  void createPerson(
+      {required BuildContext context, required WidgetRef ref}) async {
     Person newPerson = Person(name: '이름');
-    await ref.read(homeViewModelProvider.notifier).createPerson(newPerson);
+    await ref.read(ledgerViewModelProvider.notifier).createPerson(newPerson);
+  }
+}
+
 
     // Loan newLoan = Loan(
     //     personId: newPerson.personId,
@@ -164,5 +170,3 @@ class _HomePageState extends State<HomePage>
     // );
 
     // await SqlRepaymentCrudRepository.create(newRepayment);
-  }
-}

@@ -1,74 +1,64 @@
+import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/person_detail_header.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/detail_bottom_navigation_bar.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PersonDetailPage extends StatelessWidget {
   final MyAction myAction;
   final Person person;
   PersonDetailPage(this.myAction, {required this.person, super.key});
 
-  Future<List<Loan>> _loadLoanData() async {
-    return await SqlLoanCrudRepository.getList();
-  }
-
   // PersonDetailPage UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         // #1. 상단 앱바
-        appBar: DetailAppBar(myAction: myAction, category: Category.person, person: person,),
+        appBar: DetailAppBar(
+          myAction: myAction,
+          category: Category.person,
+          person: person,
+        ),
         body: ListView(
           children: [
             // #2. 헤더
             PersonDetailHeader(person: person),
             SizedBox(height: 10),
             // #3-1. 미상환 대출 List
-            ListHeader(
-              myAction: myAction,
-              category: Category.loan,
-            ),
-            FutureBuilder<List<Loan>>(
-              future: _loadLoanData(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<List<Loan>> snapshot,
-              ) {
-                if (snapshot.hasError) {
-                  return const Center(child: Text('Not Support Sqflite'));
-                }
-                ;
-                if (snapshot.hasData) {
-                  var datas = snapshot.data;
-                  return Column(
-                      children: List.generate(
-                          datas!.length,
-                          (index) => LoanCard(
-                              loan: datas[index],
-                              myAction: myAction)).toList());
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            ),
-            // LoanCard(myAction: myAction, loan: dummyLoan1),
-            // LoanCard(myAction: myAction, loan: dummyLoan1),
+            ListHeader(myAction: myAction, category: Category.loan),
+            loanList(),
             SizedBox(height: 10),
             // #3-2. 상환완료 대출 List
             ListHeader(category: Category.loan),
-            LoanCard(myAction: myAction, loan: dummyLoan1),
+            loanList(),
             SizedBox(height: 60)
           ],
         ),
         // #4. 하단 네비게이션바
         bottomNavigationBar: DetailBottomNavigationBar(
             myAction: myAction, category: Category.person));
+  }
+
+  Consumer loanList() {
+    return Consumer(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+      final loansState = ref.watch(ledgerViewModelProvider).loans;
+
+      return loansState.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: List.generate(
+                  loansState.length,
+                  (index) =>
+                      LoanCard(loan: loansState[index], myAction: myAction)),
+            );
+    });
   }
 
   // 더미데이터
