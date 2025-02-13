@@ -1,4 +1,5 @@
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,14 @@ class HomeBottomAppBar extends StatelessWidget {
               color: Colors.transparent,
               elevation: 0,
               child: GestureDetector(
-                onTap: () { },
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateLoanPage(myAction: myAction),
+                    ),
+                  );
+                },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
