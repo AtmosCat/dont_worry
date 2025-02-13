@@ -56,7 +56,8 @@ class Loan {
       LoanFields.loanId: loanId,
       LoanFields.isLending: isLending ? 1 : 0,
       LoanFields.initialAmount: initialAmount,
-      LoanFields.repayments: repayments.map((r) => r.toJson()).toList(),
+      LoanFields.repayments:
+          jsonEncode(repayments.map((r) => r.toJson()).toList()),
       LoanFields.loanDate: loanDate.toIso8601String(),
       LoanFields.dueDate: dueDate?.toIso8601String(),
       LoanFields.title: title,
@@ -65,10 +66,11 @@ class Loan {
   }
 
   factory Loan.fromJson(Map<String, dynamic> json) {
-    List<dynamic> repaymentList =
-        jsonDecode(json[LoanFields.repayments] as String);
-    List<Repayment> repayments =
-        repaymentList.map((r) => Repayment.fromJson(r)).toList();
+    List<Repayment> repayments = json[LoanFields.repayments] != null
+        ? (jsonDecode(json[LoanFields.repayments] as String) as List)
+            .map((r) => Repayment.fromJson(r))
+            .toList()
+        : [];
 
     return Loan(
       personId: json[LoanFields.personId] as String,

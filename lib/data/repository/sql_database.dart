@@ -13,12 +13,12 @@ class SqlDatabase {
   factory SqlDatabase() {
     return instance;
   }
-Future<Database> get database async {
-  if (_database == null) {
-    await _initDatabase();
+  Future<Database> get database async {
+    if (_database == null) {
+      await _initDatabase();
+    }
+    return _database!;
   }
-  return _database!;
-}
 
   // path 경로에 DB를 저장/열람
   Database? _database;
@@ -26,6 +26,13 @@ Future<Database> get database async {
     var databasePath = await getDatabasesPath();
     String path = join(databasePath, 'dont_worry.db');
     _database = await openDatabase(path, version: 1, onCreate: _databaseCreate);
+  }
+  // path 경로에 DB를 제거
+  static Future<void> deleteDatabaseFile() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'dont_worry.db');
+    await deleteDatabase(path);
+    print('Database deleted');
   }
 
   // SQL 테이블 구조 작성
@@ -68,15 +75,6 @@ Future<Database> get database async {
     ''');
     await batch.commit();
   }
-
-static Future<void> deleteDatabaseFile() async {
-  final dbPath = await getDatabasesPath(); // 데이터베이스 경로 가져오기
-  final path = join(dbPath, 'dont_worry.db'); // 데이터베이스 파일 경로
-
-  // 데이터베이스 파일 삭제
-  await deleteDatabase(path);
-  print('Database deleted');
-}
 
   // DB연결 종료 메서드
   void closeDatabase() async {

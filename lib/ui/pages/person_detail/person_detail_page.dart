@@ -1,6 +1,7 @@
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
+import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/person_detail_header.dart';
 import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
@@ -12,6 +13,10 @@ class PersonDetailPage extends StatelessWidget {
   final MyAction myAction;
   final Person person;
   PersonDetailPage(this.myAction, {required this.person, super.key});
+
+  Future<List<Loan>> _loadLoanData() async {
+    return await SqlLoanCrudRepository.getList(person.personId);
+  }
 
   // PersonDetailPage UI
   @override
@@ -29,8 +34,31 @@ class PersonDetailPage extends StatelessWidget {
               myAction: myAction,
               category: Category.loan,
             ),
-            LoanCard(myAction: myAction, loan: dummyLoan1),
-            LoanCard(myAction: myAction, loan: dummyLoan1),
+            FutureBuilder<List<Loan>>(
+              future: _loadLoanData(),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<List<Loan>> snapshot,
+              ) {
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Not Support Sqflite'));
+                }
+                ;
+                if (snapshot.hasData) {
+                  var datas = snapshot.data;
+                  return Column(
+                      children: List.generate(
+                          datas!.length,
+                          (index) => LoanCard(
+                              loan: datas[index],
+                              myAction: myAction)).toList());
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+            // LoanCard(myAction: myAction, loan: dummyLoan1),
+            // LoanCard(myAction: myAction, loan: dummyLoan1),
             SizedBox(height: 10),
             // #3-2. 상환완료 대출 List
             ListHeader(category: Category.loan),

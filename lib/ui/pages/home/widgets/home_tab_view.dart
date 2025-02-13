@@ -40,21 +40,6 @@ class HomeTabView extends StatelessWidget {
       ),
       // PersonCard(myAction: myAction, person: dummyPerson1),
       ListHeader(category: Category.person),
-      FutureBuilder<List<Person>>(
-        future: _loadPersonData(),
-        builder: (context, AsyncSnapshot<List<Person>> snapshot) {
-          if (snapshot.hasError) {
-            return const Center(child: Text('Not Support Sqflite'));
-          }
-          if (snapshot.hasData) {
-            var datas = snapshot.data;
-            return Column(
-                children: List.generate(datas!.length, (index) => PersonCard(person:datas[index], myAction: myAction)).toList());
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
       PersonCard(myAction: myAction, person: dummyPerson2),
       SizedBox(height: 60)
     ]);

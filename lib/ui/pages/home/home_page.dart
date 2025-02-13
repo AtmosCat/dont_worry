@@ -93,20 +93,20 @@ class _HomePageState extends State<HomePage>
     );
     await SqlPersonCrudRepository.create(newPerson);
 
-    // Loan newLoan = Loan(
-    //   personId: newPerson.personId,
-    //   isLending: true,
-    //   initialAmount: 970318,
-    // );
-    // await SqlLoanCrudRepository.create(newLoan);
+    Loan newLoan = Loan(
+      personId: newPerson.personId,
+      isLending: true,
+      initialAmount: 970318,
+    );
+    await SqlLoanCrudRepository.create(newLoan);
 
-    // Repayment newRepayment = Repayment(
-    //   personId: newPerson.personId,
-    //   loanId: newLoan.loanId,
-    //   amount: 3000,
-    // );
+    Repayment newRepayment = Repayment(
+      personId: newPerson.personId,
+      loanId: newLoan.loanId,
+      amount: 3000,
+    );
 
-    // await SqlRepaymentCrudRepository.create(newRepayment);
+    await SqlRepaymentCrudRepository.create(newRepayment);
   }
 
   // more 버튼 바텀시트 호출 메서드
