@@ -1,11 +1,11 @@
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
+import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class CommonDetailBottomNavigationBar extends StatelessWidget {
+class DetailBottomNavigationBar extends StatelessWidget {
   final MyAction myAction;
   final Category category;
-  const CommonDetailBottomNavigationBar({
+  const DetailBottomNavigationBar({
     required this.myAction,
     required this.category,
     super.key,

@@ -1,44 +1,35 @@
+import 'package:dont_worry/data/%08home_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
-import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
-import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
+import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeTabView extends StatelessWidget {
+class HomeTabView extends ConsumerWidget {
   final MyAction myAction;
   HomeTabView({
     required this.myAction,
     super.key,
   });
 
-  Future<List<Person>> _loadPersonData() async {
-    return await SqlPersonCrudRepository.getList();
-  }
-
   @override
-  Widget build(BuildContext context) {
-    /* TODO: '빌려준 돈' Person List 구현 */
+  Widget build(BuildContext context, WidgetRef ref) {
+    final homeState = ref.watch(homeViewModelProvider);
+
     return ListView(padding: EdgeInsets.all(4), children: [
       ListHeader(myAction: myAction, category: Category.person),
-      FutureBuilder<List<Person>>(
-        future: _loadPersonData(),
-        builder: (context, AsyncSnapshot<List<Person>> snapshot) {
-          if (snapshot.hasError) {
-            return const Center(child: Text('Not Support Sqflite'));
-          }
-          if (snapshot.hasData) {
-            var datas = snapshot.data;
-            return Column(
-                children: List.generate(datas!.length, (index) => PersonCard(person:datas[index], myAction: myAction)).toList());
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-      // PersonCard(myAction: myAction, person: dummyPerson1),
+      homeState.people.isEmpty
+          ? const Center(child: CircularProgressIndicator()) // 로딩 중
+          : Column(
+              children: List.generate(
+                homeState.people.length,
+                (index) => PersonCard(
+                    person: homeState.people[index], myAction: myAction),
+              ),
+            ),
       ListHeader(category: Category.person),
       PersonCard(myAction: myAction, person: dummyPerson2),
       SizedBox(height: 60)

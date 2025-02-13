@@ -1,14 +1,28 @@
+import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
+import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 
 enum MyAction { lend, borrow }
+
 enum Category { person, loan, repayment, home }
 
-class CommonDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
+class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   final MyAction myAction;
   final Category category;
+  final Person? person;
+  final Loan? loan;
 
-  const CommonDetailAppBar(this.myAction, this.category, {super.key});
+  const DetailAppBar({
+    required this.myAction,
+    required this.category,
+    this.person,
+    this.loan,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +41,11 @@ class CommonDetailAppBar extends StatelessWidget implements PreferredSizeWidget 
             showModalBottomSheet(
               context: context,
               builder: (BuildContext context) {
-                return DetailAppBarBottomSheet(myAction, category);
+                return _BottomSheet(
+                    myAction: myAction,
+                    category: category,
+                    person: person,
+                    loan: loan);
               },
             );
           },
@@ -40,15 +58,21 @@ class CommonDetailAppBar extends StatelessWidget implements PreferredSizeWidget 
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class DetailAppBarBottomSheet extends StatelessWidget {
+class _BottomSheet extends StatelessWidget {
   final MyAction myAction;
   final Category category;
+  final Person? person;
+  final Loan? loan;
 
-  const DetailAppBarBottomSheet(this.myAction, this.category, {super.key});
+  const _BottomSheet({
+    required this.myAction,
+    required this.category,
+    required this.person,
+    required this.loan,
+  });
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
         padding: const EdgeInsets.all(14.0),
         child: SizedBox(
@@ -61,7 +85,7 @@ class DetailAppBarBottomSheet extends StatelessWidget {
                   color: AppColor.primaryBlue.of(context),
                 ),
                 title: Text(
-                  '전액 상환 완료',
+                  '전액 상환 완료 (미구현)',
                   style: TextStyle(
                       color: AppColor.primaryBlue.of(context),
                       fontWeight: FontWeight.bold),
@@ -77,7 +101,7 @@ class DetailAppBarBottomSheet extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.edit),
-                title: Text('편집'),
+                title: Text('편집 (미구현)'),
                 onTap: () {
                   if (category == Category.person) {
                     // 인물 정보수정
@@ -88,15 +112,23 @@ class DetailAppBarBottomSheet extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.delete),
-                title: Text('삭제'),
+                leading: Icon(Icons.delete, color: AppColor.primaryRed.of(context)),
+                title: Text(
+                  '삭제',
+                  style: TextStyle(
+                      color: AppColor.primaryRed.of(context),
+                      fontWeight: FontWeight.bold),
+                ),
                 onTap: () {
-                  if (category == Category.person) {
-                    // 인물 삭제
-                  } else {
-                    // 대출 삭제
-                  }
+                  var onConfirm = (category == Category.person)
+                      ? () {
+                          SqlPersonCrudRepository.delete(person!);
+                        }
+                      : () {
+                          SqlLoanCrudRepository.delete(loan!);
+                        };
                   Navigator.pop(context);
+                  showDeleteBottomSheet(context: context, onConfirm: onConfirm);
                 },
               ),
             ],

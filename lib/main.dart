@@ -4,6 +4,7 @@ import 'package:dont_worry/theme/theme.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
 
@@ -16,7 +17,7 @@ void main() async {
   // SQL 사용을 위한 세팅
   WidgetsFlutterBinding.ensureInitialized();
   SqlDatabase();
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

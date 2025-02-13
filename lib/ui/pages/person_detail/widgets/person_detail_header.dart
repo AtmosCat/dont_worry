@@ -10,7 +10,7 @@ class PersonDetailHeader extends StatelessWidget {
     required this.person,
     super.key,
   });
-
+  
   @override
   Widget build(BuildContext context) {
     return Column(

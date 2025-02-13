@@ -3,8 +3,8 @@ import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_info_section.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_repayment_section.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_summary_section.dart';
-import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
-import 'package:dont_worry/ui/widgets/common_detail_bottom_navigation_bar.dart';
+import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/ui/widgets/detail_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class LoanDetailPage extends StatelessWidget {
@@ -17,14 +17,14 @@ class LoanDetailPage extends StatelessWidget {
     final String title = loan.title;
     final String memo = loan.memo ?? '';
 
-    final int amount = 100;
+    final int amount = 5000;
     final int initialAmount = loan.initialAmount;
-    final int totalRepayment = 1;
-    final double repaymentRate = 0.2;
+    final int totalRepayment = initialAmount - amount;
+    final double repaymentRate = totalRepayment / initialAmount;
 
-    final int dDay = -1;
     final DateTime loanDate = loan.loanDate;
     final DateTime? dueDate = loan.dueDate;
+    final int dDay = -1;
 
     final String name = '김철수';
     final bool isRepaid = amount == 0;
@@ -33,7 +33,7 @@ class LoanDetailPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.containerWhite.of(context),
       // #1. 상단 앱바
-      appBar: CommonDetailAppBar(myAction, Category.loan),
+      appBar: DetailAppBar(myAction: myAction, category: Category.loan, loan: loan),
       body: ListView(
         children: [
           Container(
@@ -71,7 +71,7 @@ class LoanDetailPage extends StatelessWidget {
         ],
       ),
       // #3. 하단 네비게이션바
-      bottomNavigationBar: CommonDetailBottomNavigationBar(
+      bottomNavigationBar: DetailBottomNavigationBar(
           myAction: myAction, category: Category.loan),
     );
   }

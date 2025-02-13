@@ -1,5 +1,5 @@
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
+import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class HomeBottomAppBar extends StatelessWidget {

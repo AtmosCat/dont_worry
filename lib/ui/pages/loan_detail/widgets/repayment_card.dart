@@ -1,5 +1,7 @@
 import 'package:dont_worry/data/model/repayment.dart';
+import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +32,10 @@ class RepaymentCard extends StatelessWidget {
                     fontSize: 16,
                     color: AppColor.gray20.of(context),
                     fontWeight: FontWeight.bold)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.close))
+            IconButton(onPressed: () {
+              var onConfirm = (){SqlRepaymentCrudRepository.delete(repayment);};
+              showDeleteBottomSheet(context: context, onConfirm: onConfirm);
+            }, icon: Icon(Icons.close))
           ]),
         ),
         SizedBox(height: 2),

@@ -50,7 +50,7 @@ class SqlLoanCrudRepository {
   }
 
   // Read List
-  static Future<List<Loan>> getList(String? personId) async {
+  static Future<List<Loan>> getList({String? personId}) async {
     var db = await SqlDatabase().database;
     var whereClauses = <String>[];
     var whereArgs = <dynamic>[];

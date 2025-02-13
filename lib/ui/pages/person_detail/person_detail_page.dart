@@ -4,8 +4,8 @@ import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/person_detail_header.dart';
-import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
-import 'package:dont_worry/ui/widgets/common_detail_bottom_navigation_bar.dart';
+import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/ui/widgets/detail_bottom_navigation_bar.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class PersonDetailPage extends StatelessWidget {
   PersonDetailPage(this.myAction, {required this.person, super.key});
 
   Future<List<Loan>> _loadLoanData() async {
-    return await SqlLoanCrudRepository.getList(person.personId);
+    return await SqlLoanCrudRepository.getList();
   }
 
   // PersonDetailPage UI
@@ -23,7 +23,7 @@ class PersonDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         // #1. 상단 앱바
-        appBar: CommonDetailAppBar(myAction, Category.person),
+        appBar: DetailAppBar(myAction: myAction, category: Category.person, person: person,),
         body: ListView(
           children: [
             // #2. 헤더
@@ -67,7 +67,7 @@ class PersonDetailPage extends StatelessWidget {
           ],
         ),
         // #4. 하단 네비게이션바
-        bottomNavigationBar: CommonDetailBottomNavigationBar(
+        bottomNavigationBar: DetailBottomNavigationBar(
             myAction: myAction, category: Category.person));
   }
 
