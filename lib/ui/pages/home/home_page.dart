@@ -1,3 +1,10 @@
+import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/data/model/repayment.dart';
+import 'package:dont_worry/data/repository/sql_database.dart';
+import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
+import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
+import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
@@ -76,6 +83,32 @@ class _HomePageState extends State<HomePage>
         bottomNavigationBar: HomeBottomAppBar(_tabController));
   }
 
+  void deleteDatabaseFile() async {
+    await SqlDatabase.deleteDatabaseFile();
+  }
+
+  void createPerson() async {
+    Person newPerson = Person(
+      name: '이름',
+    );
+    await SqlPersonCrudRepository.create(newPerson);
+
+    // Loan newLoan = Loan(
+    //   personId: newPerson.personId,
+    //   isLending: true,
+    //   initialAmount: 970318,
+    // );
+    // await SqlLoanCrudRepository.create(newLoan);
+
+    // Repayment newRepayment = Repayment(
+    //   personId: newPerson.personId,
+    //   loanId: newLoan.loanId,
+    //   amount: 3000,
+    // );
+
+    // await SqlRepaymentCrudRepository.create(newRepayment);
+  }
+
   // more 버튼 바텀시트 호출 메서드
   Future<dynamic> showMoreBottomSheet(BuildContext context) {
     return showModalBottomSheet(
@@ -89,11 +122,24 @@ class _HomePageState extends State<HomePage>
               children: <Widget>[
                 ListTile(
                   leading: Icon(Icons.edit),
-                  title: Text('준비중'),
+                  title: Text('TEST_DB 통으로 삭제'),
                   onTap: () {
-                    /* TODO: more 버튼 기능 기획, 구현 필요
-                    - 알림 등 앱 설정, 약관 확인 등...
-                    */
+                    deleteDatabaseFile();
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.edit),
+                  title: Text('TEST_Person 생성'),
+                  onTap: () {
+                    createPerson();    
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.edit),
+                  title: Text('TEST'),
+                  onTap: () {    
                     Navigator.pop(context);
                   },
                 ),

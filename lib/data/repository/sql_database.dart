@@ -69,6 +69,15 @@ Future<Database> get database async {
     await batch.commit();
   }
 
+static Future<void> deleteDatabaseFile() async {
+  final dbPath = await getDatabasesPath(); // 데이터베이스 경로 가져오기
+  final path = join(dbPath, 'dont_worry.db'); // 데이터베이스 파일 경로
+
+  // 데이터베이스 파일 삭제
+  await deleteDatabase(path);
+  print('Database deleted');
+}
+
   // DB연결 종료 메서드
   void closeDatabase() async {
     if (_database != null) await _database!.close();

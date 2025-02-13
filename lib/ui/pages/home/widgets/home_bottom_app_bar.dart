@@ -1,9 +1,3 @@
-import 'package:dont_worry/data/model/loan.dart';
-import 'package:dont_worry/data/model/person.dart';
-import 'package:dont_worry/data/model/repayment.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/common_detail_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -11,28 +5,6 @@ import 'package:flutter/material.dart';
 class HomeBottomAppBar extends StatelessWidget {
   final TabController _tabController;
   const HomeBottomAppBar(this._tabController, {super.key});
-
-  void createLoan() async {
-    Person newPerson = Person(
-      name: '이름',
-    );
-
-    Loan newLoan = Loan(
-      personId: newPerson.personId,
-      isLending: true,
-      initialAmount: 970318,
-    );
-
-    Repayment newRepayment = Repayment(
-      personId: newPerson.personId,
-      loanId: newLoan.loanId,
-      amount: 3000,
-    );
-
-    await SqlRepaymentCrudRepository.create(newRepayment);
-    await SqlLoanCrudRepository.create(newLoan);
-    await SqlPersonCrudRepository.create(newPerson);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +31,7 @@ class HomeBottomAppBar extends StatelessWidget {
               color: Colors.transparent,
               elevation: 0,
               child: GestureDetector(
-                onTap: () {
-                  createLoan();
-                },
+                onTap: () { },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
