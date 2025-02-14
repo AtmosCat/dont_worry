@@ -78,6 +78,7 @@ class _SearchPopupState extends State<SearchPopup> {
                     onTap: () {
                       searchController.text = filteredPeopleNames[index];
                       selectedPerson = filteredPeople[index];
+                      widget.onSelect(selectedPerson);
                     },
                   );
                 },
@@ -94,22 +95,23 @@ class _SearchPopupState extends State<SearchPopup> {
                   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
-                    ),
+                    ), 
                   ),
                 ),
-                onPressed: () {
-                  if (searchController.text.trim().isNotEmpty) {
-                    final person = selectedPerson.name.isEmpty
-                        ? Person(name: searchController.text)
-                        : selectedPerson;
-                    widget.onSelect(person);
-                  } else {
+                onPressed: () async {
+                  if (searchController.text.trim().isEmpty) {
                     Navigator.pop(context);
                     SnackbarUtil.showSnackBar(context, "이름은 빈칸일 수 없습니다.");
+                  } else if (allPeopleNames.contains(searchController.text)) {
+                    Navigator.pop(context);
+                    SnackbarUtil.showSnackBar(context, "이미 존재하는 이름은 추가할 수 없습니다.");
+                  } else {
+                    widget.onSelect(Person(name: searchController.text));
+                    await SqlPersonCrudRepository.create(Person(name: searchController.text));
                   }
                 },
                 child: Text(
-                  '입력',
+                  '직접 추가',
                   style: TextStyle(
                     color: AppColor.containerWhite.of(context),
                   ),

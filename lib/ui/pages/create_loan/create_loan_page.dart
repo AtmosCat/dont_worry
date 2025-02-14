@@ -9,6 +9,7 @@ import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/utils/datetime_utils.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CreateLoanPage extends StatefulWidget {
   final MyAction myAction;
@@ -238,8 +239,12 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                         title: titleEdittingController.text,
                         memo: memoEdittingController.text,
                       );
-                      var result = await SqlLoanCrudRepository.create(newLoan);
-                      if (result) {
+                      var loanUpdateResult =
+                          await SqlLoanCrudRepository.create(newLoan);
+                      selectedPerson.loans.add(newLoan);
+                      var personUpdateResult =
+                          await SqlPersonCrudRepository.update(selectedPerson);
+                      if (loanUpdateResult && personUpdateResult) {
                         SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
                         Navigator.pop(context);
                       } else {
@@ -272,6 +277,12 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
     return TextFormField(
       maxLines: 1,
       controller: _controller,
+      keyboardType: _controller != amountEdittingController
+          ? TextInputType.text
+          : TextInputType.number,
+      inputFormatters: _controller != amountEdittingController
+          ? []
+          : [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         labelText: _labelText,
         labelStyle: TextStyle(color: AppColor.gray30.of(context)),

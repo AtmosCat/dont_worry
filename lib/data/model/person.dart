@@ -21,7 +21,7 @@ class Person {
   String personId;
   String name;
   List<Loan> loans;
-  String? memo;
+  String? memo = "";
 
   Person({
     String? personId,

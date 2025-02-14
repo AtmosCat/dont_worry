@@ -10,15 +10,23 @@ class SqlPersonCrudRepository {
   }
 
   // Update
-  static Future<int> update(Person person) async {
+static Future<bool> update(Person person) async {
+  try {
     var db = await SqlDatabase().database;
-    return await db.update(
+    int updatedRows = await db.update(
       Person.tableName,
       person.toJson(),
       where: '${PersonFields.personId} = ?',
       whereArgs: [person.personId],
     );
+
+    return updatedRows > 0; // 성공적으로 업데이트되면 true
+  } catch (e) {
+    print("업데이트 실패: $e"); // 예외 메시지 출력 (로그 확인용)
+    return false; // 실패 시 false 반환
   }
+}
+
 
   // Delete
   static Future<int> delete(Person person) async {
@@ -50,6 +58,6 @@ class SqlPersonCrudRepository {
       PersonFields.loans,
       PersonFields.memo
     ]);
-    return result.map((r)=>Person.fromJson(r)).toList();
+    return result.map((r) => Person.fromJson(r)).toList();
   }
 }
