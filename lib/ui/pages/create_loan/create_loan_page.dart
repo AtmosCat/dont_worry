@@ -3,7 +3,6 @@ import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/pages/create_loan/person_search_list.dart';
 import 'package:dont_worry/ui/pages/create_loan/search_popup.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
@@ -13,7 +12,13 @@ import 'package:flutter/material.dart';
 
 class CreateLoanPage extends StatefulWidget {
   final MyAction myAction;
-  CreateLoanPage({super.key, required this.myAction});
+  final Person? person;
+
+  CreateLoanPage({
+    super.key,
+    required this.myAction,
+    this.person,
+  });
 
   @override
   State<CreateLoanPage> createState() => _CreateLoanPageState();
@@ -38,6 +43,10 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.person != null) {
+      selectedPerson = widget.person!;
+      selectedPersonName = widget.person!.name;
+    }
     loanDateEdittingController.text =
         "${loanDate.year}-${loanDate.month}-${loanDate.day}";
     dueDateEdittingController.text =
@@ -226,8 +235,8 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                             widget.myAction == MyAction.lend ? true : false,
                         initialAmount: int.parse(amountEdittingController.text),
                         repayments: [],
-                        loanDate:
-                            DateTime(loanDate.year, loanDate.month, loanDate.day),
+                        loanDate: DateTime(
+                            loanDate.year, loanDate.month, loanDate.day),
                         dueDate:
                             DateTime(dueDate.year, dueDate.month, dueDate.day),
                         title: titleEdittingController.text,
@@ -251,7 +260,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   ),
                 ),
               ),
-                SizedBox(height: 20),
+              SizedBox(height: 20),
             ],
           ),
         )),

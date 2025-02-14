@@ -22,10 +22,10 @@ class _SearchPopupState extends State<SearchPopup> {
   @override
   void initState() {
     super.initState();
-    fetchPersons();
+    fetchPeople();
   }
 
-  Future<void> fetchPersons() async {
+  Future<void> fetchPeople() async {
     List<Person> allPeople = await SqlPersonCrudRepository.getList();
     filteredPeople = allPeople;
     setState(() {

@@ -51,7 +51,8 @@ class PersonDetailPage extends StatelessWidget {
                           datas!.length,
                           (index) => LoanCard(
                               loan: datas[index],
-                              myAction: myAction)).toList());
+                              myAction: myAction,
+                              person: person,)).toList());
                 } else {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -62,13 +63,13 @@ class PersonDetailPage extends StatelessWidget {
             SizedBox(height: 10),
             // #3-2. 상환완료 대출 List
             ListHeader(category: Category.loan),
-            LoanCard(myAction: myAction, loan: dummyLoan1),
+            LoanCard(myAction: myAction, loan: dummyLoan1, person: person,),
             SizedBox(height: 60)
           ],
         ),
         // #4. 하단 네비게이션바
         bottomNavigationBar: DetailBottomNavigationBar(
-            myAction: myAction, category: Category.person));
+            myAction: myAction, category: Category.person, person: person));
   }
 
   // 더미데이터
