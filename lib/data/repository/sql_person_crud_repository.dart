@@ -33,7 +33,6 @@ class SqlPersonCrudRepository {
         columns: [
           PersonFields.personId,
           PersonFields.name,
-          PersonFields.loans,
           PersonFields.memo
         ],
         where: '${PersonFields.personId} = ?',
@@ -47,7 +46,6 @@ class SqlPersonCrudRepository {
     var result = await db.query(Person.tableName, columns: [
       PersonFields.personId,
       PersonFields.name,
-      PersonFields.loans,
       PersonFields.memo
     ]);
     return result.map((r)=>Person.fromJson(r)).toList();

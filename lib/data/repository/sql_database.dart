@@ -42,7 +42,6 @@ class SqlDatabase {
       create table ${Person.tableName}(
         ${PersonFields.personId} text not null primary key,
         ${PersonFields.name} text not null,
-        ${PersonFields.loans} text not null,
         ${PersonFields.memo} text
       )
     ''');
@@ -53,7 +52,6 @@ class SqlDatabase {
         ${LoanFields.loanId} text not null primary key,
         ${LoanFields.isLending} integer not null,
         ${LoanFields.initialAmount} integer not null,
-        ${LoanFields.repayments} text not null,
         ${LoanFields.loanDate} text not null,
         ${LoanFields.dueDate} text not null,
         ${LoanFields.title} text not null,

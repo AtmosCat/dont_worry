@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:uuid/uuid.dart';
 
@@ -15,7 +14,6 @@ class LoanFields {
   static final String loanId = 'loan_id';
   static final String isLending = 'is_lending';
   static final String initialAmount = 'initial_amount';
-  static final String repayments = 'repayments';
   static final String loanDate = 'loan_date';
   static final String dueDate = 'due_date';
   static final String title = 'title';
@@ -28,7 +26,6 @@ class Loan {
   String loanId;
   bool isLending; // 빌리는지, 빌려주는지 여부
   int initialAmount; // 최초 대출금액
-  List<Repayment> repayments; //상환 내역
   DateTime loanDate; // 차용일
   DateTime? dueDate; // 변제일
   String title; //제목 (= 기본값 loanDate)
@@ -46,7 +43,6 @@ class Loan {
     this.memo,
   })  : loanId = loanId ?? Uuid().v4(),
         loanDate = loanDate ?? DateTime.now(),
-        repayments = repayments ?? [],
         title = title ??
             "${loanDate ?? DateTime.now().year}년 ${loanDate ?? DateTime.now().month}월 ${loanDate ?? DateTime.now().day}일";
 
@@ -56,8 +52,6 @@ class Loan {
       LoanFields.loanId: loanId,
       LoanFields.isLending: isLending ? 1 : 0,
       LoanFields.initialAmount: initialAmount,
-      LoanFields.repayments:
-          jsonEncode(repayments.map((r) => r.toJson()).toList()),
       LoanFields.loanDate: loanDate.toIso8601String(),
       LoanFields.dueDate: dueDate?.toIso8601String(),
       LoanFields.title: title,
@@ -66,18 +60,12 @@ class Loan {
   }
 
   factory Loan.fromJson(Map<String, dynamic> json) {
-    List<Repayment> repayments = json[LoanFields.repayments] != null
-        ? (jsonDecode(json[LoanFields.repayments] as String) as List)
-            .map((r) => Repayment.fromJson(r))
-            .toList()
-        : [];
 
     return Loan(
       personId: json[LoanFields.personId] as String,
       loanId: json[LoanFields.loanId] as String,
       isLending: json[LoanFields.isLending] as int == 1,
       initialAmount: json[LoanFields.initialAmount] as int,
-      repayments: repayments,
       loanDate: DateTime.parse((json[LoanFields.loanDate] as String)),
       dueDate: json[LoanFields.dueDate] == null
           ? null
@@ -94,7 +82,6 @@ class Loan {
     String? loanId,
     bool? isLending,
     int? initialAmount,
-    List<Repayment>? repayments,
     DateTime? loanDate,
     DateTime? dueDate,
     String? title,
@@ -105,7 +92,6 @@ class Loan {
       loanId: loanId ?? this.loanId,
       isLending: isLending ?? this.isLending,
       initialAmount: initialAmount ?? this.initialAmount,
-      repayments: repayments ?? this.repayments.map((r) => r.clone()).toList(),
       loanDate: loanDate ?? this.loanDate,
       dueDate: dueDate ?? this.dueDate,
       title: title ?? this.title,
