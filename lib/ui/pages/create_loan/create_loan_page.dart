@@ -124,8 +124,6 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                     controller: nameEdittingController,
                     decoration: InputDecoration(
                       labelText: selectedPersonName,
-                      border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.search),
                     ),
                   ),
                 ),
@@ -148,7 +146,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                 memoEdittingController,
                 "메모",
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 10),
               TextFormField(
                 controller: loanDateEdittingController, // 컨트롤러 사용
                 readOnly: true, // 직접 입력 방지
@@ -161,7 +159,6 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                         width: 2.0), // 포커스 시 테두리 색상
                   ),
                   suffixIcon: Icon(Icons.calendar_today), // 캘린더 아이콘 추가
-                  border: OutlineInputBorder(), // 테두리 추가 (선택 사항)
                 ),
                 onTap: () async {
                   final selectedDate = await DatetimeUtils.selectDate(context);
@@ -174,20 +171,18 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   }
                 },
               ),
-              SizedBox(height: 40),
+              SizedBox(height: 10),
               TextFormField(
-                controller: dueDateEdittingController, // 컨트롤러 사용
-                readOnly: true, // 직접 입력 방지
+                controller: dueDateEdittingController,
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: "상환일",
                   labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: AppColor.primaryBlue.of(context),
-                        width: 2.0), // 포커스 시 테두리 색상
+                        color: AppColor.primaryBlue.of(context), width: 2.0),
                   ),
-                  suffixIcon: Icon(Icons.calendar_today), // 캘린더 아이콘 추가
-                  border: OutlineInputBorder(), // 테두리 추가 (선택 사항)
+                  suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () async {
                   final selectedDate = await DatetimeUtils.selectDate(context);
@@ -210,9 +205,10 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                     padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                         EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    )),
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                   ),
                   onPressed: () async {
                     if (titleEdittingController.text.isEmpty) {

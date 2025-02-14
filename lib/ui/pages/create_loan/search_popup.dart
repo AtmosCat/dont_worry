@@ -1,6 +1,7 @@
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 
 class SearchPopup extends StatefulWidget {
@@ -18,7 +19,8 @@ class _SearchPopupState extends State<SearchPopup> {
   List<String> allPeopleNames = [];
   List<String> filteredPeopleNames = [];
   TextEditingController searchController = TextEditingController();
-  
+  Person selectedPerson = Person(name: "");
+
   @override
   void initState() {
     super.initState();
@@ -36,9 +38,8 @@ class _SearchPopupState extends State<SearchPopup> {
 
   void _filterPeople(String query) {
     setState(() {
-      filteredPeopleNames = allPeopleNames
-          .where((name) => name.contains(query))
-          .toList();
+      filteredPeopleNames =
+          allPeopleNames.where((name) => name.contains(query)).toList();
     });
   }
 
@@ -60,11 +61,11 @@ class _SearchPopupState extends State<SearchPopup> {
                 hintText: "이름을 입력하세요.",
                 prefixIcon: Icon(Icons.search),
                 labelStyle: TextStyle(color: AppColor.gray30.of(context)),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: AppColor.primaryBlue.of(context),
-                        width: 2.0), // 포커스 시 테두리 색상
-                  ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                      color: AppColor.primaryBlue.of(context),
+                      width: 2.0), // 포커스 시 테두리 색상
+                ),
                 border: OutlineInputBorder(),
               ),
             ),
@@ -75,12 +76,47 @@ class _SearchPopupState extends State<SearchPopup> {
                   return ListTile(
                     title: Text(filteredPeopleNames[index]),
                     onTap: () {
-                      widget.onSelect(filteredPeople[index]);
+                      searchController.text = filteredPeopleNames[index];
+                      selectedPerson = filteredPeople[index];
                     },
                   );
                 },
               ),
             ),
+            Container(
+              alignment: Alignment.bottomRight,
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      AppColor.primaryBlue.of(context)),
+                  padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  if (searchController.text.trim().isNotEmpty) {
+                    final person = selectedPerson.name.isEmpty
+                        ? Person(name: searchController.text)
+                        : selectedPerson;
+                    widget.onSelect(person);
+                  } else {
+                    Navigator.pop(context);
+                    SnackbarUtil.showSnackBar(context, "이름은 빈칸일 수 없습니다.");
+                  }
+                },
+                child: Text(
+                  '입력',
+                  style: TextStyle(
+                    color: AppColor.containerWhite.of(context),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10)
           ],
         ),
       ),
