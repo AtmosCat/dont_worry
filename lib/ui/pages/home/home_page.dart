@@ -9,6 +9,7 @@ import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void createPerson({required BuildContext context, required WidgetRef ref}) async {
-    Person newPerson = Person(name: '이름');
+    Person newPerson = Person(name: '이름${Uuid().v1().substring(0, 5)}');
     await ref.read(homeViewModelProvider.notifier).createPerson(newPerson);
 
     // Loan newLoan = Loan(

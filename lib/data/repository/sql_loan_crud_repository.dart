@@ -3,10 +3,15 @@ import 'package:dont_worry/data/repository/sql_database.dart';
 
 class SqlLoanCrudRepository {
   // Create
-  static Future<Loan> create(Loan loan) async {
-    var db = await SqlDatabase().database;
-    await db.insert(Loan.tableName, loan.toJson());
-    return loan.clone();
+  static Future<bool> create(Loan loan) async {
+    try {
+      var db = await SqlDatabase().database;
+      int result = await db.insert(Loan.tableName, loan.toJson());
+      return result > 0;
+    } catch (e) {
+      print("Database insert error: $e");
+      return false;
+    }
   }
 
   // Update
