@@ -36,7 +36,7 @@ class Person {
       PersonFields.personId: personId,
       PersonFields.name: name,
       PersonFields.loans: jsonEncode(loans.map((r) => r.toJson()).toList()), // JSON 문자열로 변환
-      PersonFields.memo: memo,
+      PersonFields.memo: memo ?? "",
     };
   }
 

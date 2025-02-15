@@ -69,6 +69,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
         return SearchPopup(
           onSelect: (Person _selectedPerson) {
             setState(() {
+              getPeople();
               selectedPerson = _selectedPerson;
               selectedPersonName = _selectedPerson.name;
             });
@@ -236,9 +237,11 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                       );
                       var loanUpdateResult =
                           await SqlLoanCrudRepository.create(newLoan);
-                      selectedPerson.loans.add(newLoan);
+                      var updatedSelectedPerson = selectedPerson;
+                      updatedSelectedPerson.loans.add(newLoan);
+                      var baoao = await SqlPersonCrudRepository.existsById(updatedSelectedPerson.personId);
                       var personUpdateResult =
-                          await SqlPersonCrudRepository.update(selectedPerson);
+                          await SqlPersonCrudRepository.update(updatedSelectedPerson);
                       if (loanUpdateResult && personUpdateResult) {
                         SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
                         Navigator.pop(context);

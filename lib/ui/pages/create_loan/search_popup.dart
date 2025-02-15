@@ -106,8 +106,14 @@ class _SearchPopupState extends State<SearchPopup> {
                     Navigator.pop(context);
                     SnackbarUtil.showSnackBar(context, "이미 존재하는 이름은 추가할 수 없습니다.");
                   } else {
-                    widget.onSelect(Person(name: searchController.text));
-                    await SqlPersonCrudRepository.create(Person(name: searchController.text));
+                    final newPerson = Person(name: searchController.text);
+                    widget.onSelect(newPerson);
+                    var result = await SqlPersonCrudRepository.create(newPerson);
+                    if (result) {
+                      SnackbarUtil.showSnackBar(context, "사람 정보가 추가되었습니다.");
+                    } else {
+                      SnackbarUtil.showSnackBar(context, "사람 정보 추가에 실패했습니다.");
+                    }
                   }
                 },
                 child: Text(

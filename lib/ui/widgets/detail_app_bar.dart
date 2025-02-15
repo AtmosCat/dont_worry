@@ -126,8 +126,8 @@ class _BottomSheet extends StatelessWidget {
                     // ✅ 삭제 확인 콜백 설정
                     var onConfirm = (category == Category.person)
                         ? () async {
-                            Navigator.pop(rootContext); // ✅ 모달 닫기
-                            Navigator.pop(rootContext); // ✅ 모달 닫기
+                            Navigator.pop(rootContext);
+                            Navigator.pop(rootContext);
                             var result =
                                 await SqlPersonCrudRepository.delete(person!);
                             if (result) {
