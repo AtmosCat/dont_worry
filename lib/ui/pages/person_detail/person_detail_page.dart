@@ -46,7 +46,8 @@ class PersonDetailPage extends StatelessWidget {
                 ;
                 if (snapshot.hasData && snapshot.data != null) {
                   var datas = snapshot.data!.where((element) {
-                    return element.personId == person.personId;
+                    return element.personId == person.personId
+                    && element.isLending == (myAction == MyAction.lend ? true : false);
                   },).toList();
                   return Column(
                       children: List.generate(

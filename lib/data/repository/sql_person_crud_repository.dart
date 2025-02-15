@@ -21,7 +21,7 @@ class SqlPersonCrudRepository {
       int updatedRows = await db.update(
         Person.tableName,
         person.toJson(),
-        where: '${PersonFields.personId} = ?',
+        where: '${PersonFields.personId} =  ?',
         whereArgs: [person.personId],
       );
       print(person.toJson());
