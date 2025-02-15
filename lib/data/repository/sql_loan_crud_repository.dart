@@ -15,14 +15,20 @@ class SqlLoanCrudRepository {
   }
 
   // Update
-  static Future<int> update(Loan loan) async {
-    var db = await SqlDatabase().database;
-    return await db.update(
-      Loan.tableName,
-      loan.toJson(),
-      where: '${LoanFields.loanId} = ? ',
-      whereArgs: [loan.loanId],
-    );
+  static Future<bool> update(Loan loan) async {
+    try {
+      var db = await SqlDatabase().database;
+      int updatedRows = await db.update(
+        Loan.tableName,
+        loan.toJson(),
+        where: '${LoanFields.loanId} = ?',
+        whereArgs: [loan.loanId],
+      );
+      return updatedRows > 0; // 업데이트된 행이 있으면 true 반환
+    } catch (e) {
+      print("Loan 업데이트 실패: $e");
+      return false; // 실패 시 false 반환
+    }
   }
 
   // Delete

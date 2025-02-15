@@ -62,7 +62,7 @@ class LoanCard extends StatelessWidget {
                     children: [
                       amountText(amount, context, totalRepayment),
                       const Spacer(),
-                      RepaymentButton(isRepaid: isRepaid),
+                      RepaymentButton(isRepaid: isRepaid, loan: loan, person: person,),
                     ],
                   ),
                   Offstage(

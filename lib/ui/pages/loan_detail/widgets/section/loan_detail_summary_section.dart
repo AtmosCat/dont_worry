@@ -26,7 +26,7 @@ class LoanDetailSummarySection extends StatelessWidget {
           children: [
             Text(title, style: TextStyle(fontSize: 20)),
             Spacer(),
-            RepaymentButton(isRepaid: isRepaid),
+            // RepaymentButton(isRepaid: isRepaid, loan: ,),
           ],
         ),
         Offstage(
