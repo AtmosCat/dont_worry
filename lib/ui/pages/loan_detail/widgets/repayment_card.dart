@@ -34,7 +34,7 @@ class RepaymentCard extends StatelessWidget {
                     fontWeight: FontWeight.bold)),
             IconButton(onPressed: () {
               var onConfirm = (){SqlRepaymentCrudRepository.delete(repayment);};
-              showDeleteBottomSheet(context: context, onConfirm: onConfirm);
+              // showDeleteBottomSheet(context: context, onConfirm: onConfirm);
             }, icon: Icon(Icons.close))
           ]),
         ),

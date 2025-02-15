@@ -37,6 +37,7 @@ class _DeleteBottomSheet extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
+                  onConfirm();   
                   Navigator.pop(context);
                 },
               ),

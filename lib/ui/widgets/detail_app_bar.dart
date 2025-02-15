@@ -4,6 +4,7 @@ import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
+import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 
 enum MyAction { lend, borrow }
@@ -112,25 +113,50 @@ class _BottomSheet extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.delete, color: AppColor.primaryRed.of(context)),
-                title: Text(
-                  '삭제',
-                  style: TextStyle(
-                      color: AppColor.primaryRed.of(context),
-                      fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  var onConfirm = (category == Category.person)
-                      ? () {
-                          SqlPersonCrudRepository.delete(person!);
-                        }
-                      : () {
-                          SqlLoanCrudRepository.delete(loan!);
-                        };
-                  Navigator.pop(context);
-                  showDeleteBottomSheet(context: context, onConfirm: onConfirm);
-                },
-              ),
+                  leading: Icon(Icons.delete,
+                      color: AppColor.primaryRed.of(context)),
+                  title: Text(
+                    '삭제',
+                    style: TextStyle(
+                        color: AppColor.primaryRed.of(context),
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    final rootContext = context; // ✅ 모달 닫기 전, rootContext 저장
+                    // ✅ 삭제 확인 콜백 설정
+                    var onConfirm = (category == Category.person)
+                        ? () async {
+                            Navigator.pop(rootContext); // ✅ 모달 닫기
+                            Navigator.pop(rootContext); // ✅ 모달 닫기
+                            var result =
+                                await SqlPersonCrudRepository.delete(person!);
+                            if (result) {
+                              SnackbarUtil.showSnackBar(
+                                  rootContext, "사람 정보가 삭제되었습니다.");
+                            } else {
+                              SnackbarUtil.showSnackBar(
+                                  rootContext, "사람 정보 삭제에 실패했습니다.");
+                            }
+                          }
+                        : () async {
+                            Navigator.pop(rootContext); // ✅ 모달 닫기
+                            var result =
+                                await SqlLoanCrudRepository.delete(loan!);
+                            if (result) {
+                              SnackbarUtil.showSnackBar(
+                                  rootContext, "대출 내역이 삭제되었습니다.");
+                            } else {
+                              SnackbarUtil.showSnackBar(
+                                  rootContext, "대출 내역 삭제에 실패했습니다.");
+                            }
+                          };
+
+                    // ✅ 삭제 확인 모달 표시
+                    showDeleteBottomSheet(
+                      context: rootContext,
+                      onConfirm: onConfirm,
+                    );
+                  }),
             ],
           ),
         ));

@@ -26,10 +26,14 @@ class SqlLoanCrudRepository {
   }
 
   // Delete
-  static Future<int> delete(Loan loan) async {
+  static Future<bool> delete(Loan loan) async {
     var db = await SqlDatabase().database;
-    return await db.delete(Loan.tableName,
-        where: '${LoanFields.loanId} = ?', whereArgs: [loan.loanId]);
+    int result = await db.delete(
+      Loan.tableName,
+      where: '${LoanFields.loanId} = ?',
+      whereArgs: [loan.loanId],
+    );
+    return result > 0; // 삭제된 행이 1개 이상이면 true, 아니면 false
   }
 
   // Read Single By Id

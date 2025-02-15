@@ -44,8 +44,10 @@ class PersonDetailPage extends StatelessWidget {
                   return const Center(child: Text('Not Support Sqflite'));
                 }
                 ;
-                if (snapshot.hasData) {
-                  var datas = snapshot.data;
+                if (snapshot.hasData && snapshot.data != null) {
+                  var datas = snapshot.data!.where((element) {
+                    return element.personId == person.personId;
+                  },).toList();
                   return Column(
                       children: List.generate(
                           datas!.length,

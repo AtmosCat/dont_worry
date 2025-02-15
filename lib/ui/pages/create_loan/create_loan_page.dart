@@ -96,12 +96,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
           elevation: 0,
           leading: IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ),
-              );
+              Navigator.pop(context);
             },
             icon: Padding(
               padding: const EdgeInsets.all(0),
