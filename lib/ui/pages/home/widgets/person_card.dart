@@ -17,45 +17,11 @@ class PersonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int amount = 100;
-    int totalRepayment = 0;
-    /*TODO: 금액 관련 데이터를 구하는 로직 개발 필요
-    
-    개발사항 1. amount :갚아야 할 남은 금액
-      모든 loan의 잔여대출액 remainingLoanAmount 총합
-
-    개발사항 2. totalRepayment : 이미 갚은 금액
-      모든 loan의 상환액 totalRepaymentAmount 총합
-    
-    활용. PersonCard 좌하단에 금액 노출.
-      미상환 시, 갚아야 할 amount 노출
-      전액상환 시, 그동안 갚은 totalRepayment 노출
-
-    주의. 재사용할 가능성이 있습니다.
-    가급적 Person 클래스 내에서 메서드로 구현해주세요.
-    */
-
-    int dDay = 3;
-    DateTime lastRepaymentDate = DateTime(2025, 2, 7);
-    /*TODO: 날짜 관련 데이터 구하는 로직 개발 필요
-
-    개발사항 1. dDay : 다가오는 상환일
-      미상환 loan의 변제일 중 가장 이른 날짜와 현재 날짜 간의 D-day
-      양수일 경우, D-3으로 표기
-      0일 경우, D-day로 표기
-      음수일 경우, '연체 중'으로 표기
-
-    개발사항 2. lastRepaymentDate : 가장 최근에 상환한 날짜
-      모든 loan의 repayment의 date 중 가장 늦은 날짜
-
-    활용. PersonCard 우상단에 디데이, 날짜 노출
-      미상환 시, 다가오는 대출의 dDay 노출
-      전액상환 시, 마지막에 전액 상환한 lastRepaymentDate 노출
-
-    주의. 재사용할 가능성이 있습니다.
-    가급적 Person 클래스 내에서 메서드로 구현해주세요.
-    */
-
+    int amount = person.remainingAmount?? 0;
+    int totalRepayment = person.repayedAmount?? 0;
+    int dDay = person.dDay?? 0;
+    DateTime lastRepaymentDate = person.lastRepayedDate?? DateTime.now();
+   
     return GestureDetector(
       onTap: () => Navigator.push(
         context,

@@ -6,35 +6,36 @@ class SqlPersonCrudRepository {
   static Future<Person> create(Person person) async {
     var db = await SqlDatabase().database;
     await db.insert(Person.tableName, person.toJson());
+    await SqlDatabase.instance.recreateViews(db);
     return person.clone();
   }
 
   // Update
   static Future<int> update(Person person) async {
     var db = await SqlDatabase().database;
-    return await db.update(
+    int result = await db.update(
       Person.tableName,
       person.toJson(),
       where: '${PersonFields.personId} = ?',
       whereArgs: [person.personId],
     );
+    await SqlDatabase.instance.recreateViews(db);
+    return result;
   }
 
   // Delete
   static Future<int> delete(Person person) async {
     var db = await SqlDatabase().database;
-    return await db.delete(Person.tableName,
+    int result = await db.delete(Person.tableName,
         where: '${PersonFields.personId} = ?', whereArgs: [person.personId]);
+    await SqlDatabase.instance.recreateViews(db);
+    return result;
   }
 
   static Future<Person?> getById(String personId) async {
     var db = await SqlDatabase().database;
     var result = await db.query(Person.tableName,
-        columns: [
-          PersonFields.personId,
-          PersonFields.name,
-          PersonFields.memo
-        ],
+        columns: [PersonFields.personId, PersonFields.name, PersonFields.memo],
         where: '${PersonFields.personId} = ?',
         whereArgs: [personId]);
 
@@ -43,11 +44,15 @@ class SqlPersonCrudRepository {
 
   static Future<List<Person>> getList() async {
     var db = await SqlDatabase().database;
-    var result = await db.query(Person.tableName, columns: [
-      PersonFields.personId,
-      PersonFields.name,
-      PersonFields.memo
-    ]);
-    return result.map((r)=>Person.fromJson(r)).toList();
+    var result = await db.query(Person.tableName,
+        columns: [PersonFields.personId, PersonFields.name, PersonFields.memo]);
+    return result.map((r) => Person.fromJson(r)).toList();
+  }
+
+  static Future<List<Person>> getPersonSummaries() async {
+    var db = await SqlDatabase().database;
+    final result = await db.query(Person.viewName);
+
+    return result.map((r) => Person.fromJson(r)).toList();
   }
 }

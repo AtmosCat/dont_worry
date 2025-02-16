@@ -6,25 +6,30 @@ class SqlLoanCrudRepository {
   static Future<Loan> create(Loan loan) async {
     var db = await SqlDatabase().database;
     await db.insert(Loan.tableName, loan.toJson());
+    await SqlDatabase.instance.recreateViews(db);
     return loan.clone();
   }
 
   // Update
   static Future<int> update(Loan loan) async {
     var db = await SqlDatabase().database;
-    return await db.update(
+    int result = await db.update(
       Loan.tableName,
       loan.toJson(),
       where: '${LoanFields.loanId} = ? ',
       whereArgs: [loan.loanId],
     );
+    await SqlDatabase.instance.recreateViews(db);
+    return result;
   }
 
   // Delete
   static Future<int> delete(Loan loan) async {
     var db = await SqlDatabase().database;
-    return await db.delete(Loan.tableName,
+    int result = await db.delete(Loan.tableName,
         where: '${LoanFields.loanId} = ?', whereArgs: [loan.loanId]);
+    await SqlDatabase.instance.recreateViews(db);
+    return result;
   }
 
   // Read Single By Id
@@ -49,7 +54,7 @@ class SqlLoanCrudRepository {
   }
 
   // Read List
-  static Future<List<Loan>> getList({String? personId}) async {
+  static Future<List<Loan>> getList({String? personId, bool? isLending}) async {
     var db = await SqlDatabase().database;
     var whereClauses = <String>[];
     var whereArgs = <dynamic>[];
@@ -57,6 +62,11 @@ class SqlLoanCrudRepository {
     if (personId != null) {
       whereClauses.add('${LoanFields.personId} = ?');
       whereArgs.add(personId);
+    }
+
+    if (isLending != null) {
+      whereClauses.add('${LoanFields.isLending} = ?');
+      whereArgs.add(isLending ? 1 : 0);
     }
 
     var result = await db.query(
@@ -74,6 +84,13 @@ class SqlLoanCrudRepository {
       where: whereClauses.isNotEmpty ? whereClauses.join(' AND ') : null,
       whereArgs: whereArgs,
     );
+
+    return result.map((r) => Loan.fromJson(r)).toList();
+  }
+
+  static Future<List<Loan>> getLoanSummaries() async {
+    var db = await SqlDatabase().database;
+    final result = await db.query(Loan.viewName);
 
     return result.map((r) => Loan.fromJson(r)).toList();
   }

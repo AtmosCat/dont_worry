@@ -6,26 +6,31 @@ class SqlRepaymentCrudRepository {
   static Future<Repayment> create(Repayment repayment) async {
     var db = await SqlDatabase().database;
     await db.insert(Repayment.tableName, repayment.toJson());
+    await SqlDatabase.instance.recreateViews(db);
     return repayment.clone();
   }
   // Update
   static Future<int> update(Repayment repayment) async {
     var db = await SqlDatabase().database;
-    return await db.update(
+    int result = await db.update(
       Repayment.tableName,
       repayment.toJson(),
       where: '${RepaymentFields.repaymentId} = ?',
       whereArgs: [repayment.repaymentId],
     );
+    await SqlDatabase.instance.recreateViews(db);
+    return result;
   }
   // Delete
   static Future<int> delete(Repayment repayment) async {
     var db = await SqlDatabase().database;
-    return await db.delete(
+    int result = await db.delete(
       Repayment.tableName,
       where: '${RepaymentFields.repaymentId} = ?',
       whereArgs: [repayment.repaymentId],
     );
+    await SqlDatabase.instance.recreateViews(db);
+    return result;
   }
 
 
@@ -53,15 +58,11 @@ class SqlRepaymentCrudRepository {
   }
   
   // Read List By Parent Id
-  static Future<List<Repayment>> getList({String? personId, String? loanId}) async {
+  static Future<List<Repayment>> getList({String? loanId}) async {
     var db = await SqlDatabase().database;
     var whereClauses = <String>[];
     var whereArgs = <dynamic>[];
 
-    if (personId != null) {
-      whereClauses.add('${RepaymentFields.personId} = ?');
-      whereArgs.add(personId);
-    }
     if (loanId != null) {
       whereClauses.add('${RepaymentFields.loanId} = ?');
       whereArgs.add(loanId);

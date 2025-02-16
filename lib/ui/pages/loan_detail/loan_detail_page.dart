@@ -62,6 +62,7 @@ class LoanDetailPage extends StatelessWidget {
               // #2-3. 상환한 금액 섹션
               LoanDetailRepaymentSection(
                 myAction: myAction,
+                loanId: loan.loanId,
                 totalRepayment: totalRepayment,
                 initialAmount: initialAmount,
                 repaymentRate: repaymentRate,

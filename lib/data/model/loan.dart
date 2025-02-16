@@ -18,10 +18,16 @@ class LoanFields {
   static final String dueDate = 'due_date';
   static final String title = 'title';
   static final String memo = 'memo';
+  static final String remainingAmount = 'remaining_amount';
+  static final String repayedAmount = 'repayed_amount';
+  static final String dDay = 'd_day';
+  static final String lastRepayedDate = 'last_repayed_date';
+  static final String repaymentRate = 'repayment_rate';
 }
 
 class Loan {
   static String tableName = 'loan'; // 테이블 이름을 'string' key로
+  static String viewName = 'loan_view';
   String personId;
   String loanId;
   bool isLending; // 빌리는지, 빌려주는지 여부
@@ -30,18 +36,29 @@ class Loan {
   DateTime? dueDate; // 변제일
   String title; //제목 (= 기본값 loanDate)
   String? memo; // 세부메모
+  // SQL 조인테이블로 계산할 내용
+  int? remainingAmount;
+  int? repayedAmount;
+  int? dDay;
+  DateTime? lastRepayedDate;
+  double? repaymentRate;
 
-  Loan({
-    required this.personId,
-    String? loanId,
-    required this.isLending,
-    required this.initialAmount,
-    List<Repayment>? repayments,
-    DateTime? loanDate,
-    this.dueDate,
-    String? title,
-    this.memo,
-  })  : loanId = loanId ?? Uuid().v4(),
+  Loan(
+      {required this.personId,
+      String? loanId,
+      required this.isLending,
+      required this.initialAmount,
+      List<Repayment>? repayments,
+      DateTime? loanDate,
+      this.dueDate,
+      String? title,
+      this.memo,
+      this.remainingAmount,
+      this.repayedAmount,
+      this.dDay,
+      this.lastRepayedDate,
+      this.repaymentRate})
+      : loanId = loanId ?? Uuid().v4(),
         loanDate = loanDate ?? DateTime.now(),
         title = title ??
             "${loanDate ?? DateTime.now().year}년 ${loanDate ?? DateTime.now().month}월 ${loanDate ?? DateTime.now().day}일";
@@ -60,7 +77,6 @@ class Loan {
   }
 
   factory Loan.fromJson(Map<String, dynamic> json) {
-
     return Loan(
       personId: json[LoanFields.personId] as String,
       loanId: json[LoanFields.loanId] as String,
@@ -74,6 +90,12 @@ class Loan {
       memo: json[LoanFields.memo] == null
           ? null
           : json[LoanFields.memo] as String,
+      remainingAmount: json[LoanFields.remainingAmount] as int,
+      repayedAmount: json[LoanFields.repayedAmount] as int,
+      dDay: json[LoanFields.dDay] as int,
+      lastRepayedDate:
+          DateTime.parse(json[LoanFields.lastRepayedDate] as String),
+      repaymentRate: json[LoanFields.repaymentRate] as double,
     );
   }
 
@@ -98,29 +120,4 @@ class Loan {
       memo: memo ?? this.memo,
     );
   }
-}
-
-// 상환액 (상환내역의 총합)
-int totalRepaymentAmount(List<Repayment> repayments) {
-  int total = 0;
-  for (var repayment in repayments) {
-    total += repayment.amount;
-  }
-  return total;
-}
-
-// 잔여대출액 {최초대출금액 - 상환액}
-int remainingLoanAmount(int initialAmount, List<Repayment> repayments) {
-  return initialAmount - totalRepaymentAmount(repayments);
-}
-
-// 상환비율
-double repaymentRate(int initialAmount, List<Repayment> repayments) {
-  return totalRepaymentAmount(repayments) / initialAmount;
-}
-
-// 변제일까지의 D-day
-int daysUntilDueDate(DateTime dueDate) {
-  final now = DateTime.now();
-  return dueDate.difference(now).inDays;
 }

@@ -8,15 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoanDetailRepaymentSection extends StatelessWidget {
-  const LoanDetailRepaymentSection({
+  LoanDetailRepaymentSection({
     super.key,
     required this.myAction,
+    required this.loanId,
     required this.totalRepayment,
     required this.initialAmount,
     required this.repaymentRate,
+
   });
 
   final MyAction myAction;
+  final String loanId;
   final int totalRepayment;
   final int initialAmount;
   final double repaymentRate;
@@ -52,7 +55,9 @@ class LoanDetailRepaymentSection extends StatelessWidget {
   Consumer repaymentList() {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-      var repaymentsState = ref.watch(ledgerViewModelProvider).repayments;
+      var repaymentsState = ref.watch(ledgerViewModelProvider.select(
+        (state) => state.repayments.where((repayment)=>repayment.loanId == loanId).toList()
+      ));
       return repaymentsState.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(

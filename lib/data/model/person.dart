@@ -1,4 +1,3 @@
-import 'package:dont_worry/data/model/loan.dart';
 import 'package:uuid/uuid.dart';
 
 /* SQL 사용을 위해,
@@ -9,22 +8,36 @@ tableName과 Fields{} 클래스를 정의해줬습니다 */
 - 하위 클래스에 대한 List<Loan>은 생략 */
 
 class PersonFields {
-  static final personId = 'person_id';
-  static final name = 'name';
-  static final memo = 'memo';
+  static final String personId = 'person_id';
+  static final String name = 'name';
+  static final String memo = 'memo';
+  static final String remainingAmount = 'remaining_amount';
+  static final String repayedAmount = 'repayed_amount';
+  static final String dDay = 'd_day';
+  static final String lastRepayedDate = 'last_repayed_date';
 }
 
 class Person {
   static String tableName = 'person'; // 테이블 이름을 'string' key로
+  static String viewName = 'person_view'; // 테이블 이름을 'string' key로
   String personId;
   String name;
   String? memo;
+  // SQL 조인테이블로 계산할 내용
+  int? remainingAmount;
+  int? repayedAmount;
+  int? dDay;
+  DateTime? lastRepayedDate;
 
   Person({
     String? personId,
     required this.name,
     this.memo,
-  })  : personId = personId ?? Uuid().v4();
+    this.remainingAmount,
+    this.repayedAmount,
+    this.dDay,
+    this.lastRepayedDate,
+  }) : personId = personId ?? Uuid().v4();
 
   Map<String, dynamic> toJson() {
     return {
@@ -35,13 +48,17 @@ class Person {
   }
 
   factory Person.fromJson(Map<String, dynamic> json) {
-
     return Person(
       personId: json[PersonFields.personId] as String,
       name: json[PersonFields.name] as String,
       memo: json[PersonFields.memo] != null
           ? json[PersonFields.memo] as String
           : null,
+      remainingAmount: json[PersonFields.remainingAmount] as int,
+      repayedAmount: json[PersonFields.repayedAmount] as int,
+      dDay: json[PersonFields.dDay] as int,
+      lastRepayedDate:
+          DateTime.parse(json[PersonFields.lastRepayedDate] as String),
     );
   }
 
@@ -56,19 +73,4 @@ class Person {
       memo: memo ?? this.memo,
     );
   }
-}
-
-// 해당 사람에게 빌려준 대출 리스트 반환
-List<Loan> lendingLoans(List<Loan> loans) {
-  return loans.where((loan) => loan.isLending).toList();
-}
-
-// 해당 사람에게 빌린 대출 리스트 반환
-List<Loan> borrowingLoans(List<Loan> loans) {
-  return loans.where((loan) => !loan.isLending).toList();
-}
-
-// 변제일까지의 D-day
-int daysUntilUpcomingDueDatedaysUntilDueDate(List<Loan> loans) {
-  return 30;
 }

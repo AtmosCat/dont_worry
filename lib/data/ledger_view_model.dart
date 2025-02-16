@@ -1,11 +1,11 @@
 import 'dart:async';
-
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
+import 'package:dont_worry/service/query_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LedgerState {
@@ -20,16 +20,19 @@ class LedgerState {
 }
 
 class LedgerViewModel extends StateNotifier<LedgerState> {
-  LedgerViewModel()
+  final Ref ref;
+  final _queryService = QueryService();
+
+  LedgerViewModel(this.ref)
       : super(LedgerState(people: [], loans: [], repayments: [])) {
     _init();
   }
 
   Future<void> _init() async {
     try {
-      final people = await SqlPersonCrudRepository.getList();
-      final loans = await SqlLoanCrudRepository.getList();
-      final repayments = await SqlRepaymentCrudRepository.getList();
+      final people = await _queryService.getPeople();
+      final loans = await _queryService.getLoans();
+      final repayments = await _queryService.getRepayments();
 
       state = LedgerState(people: people, loans: loans, repayments: repayments);
     } catch (e) {
@@ -37,43 +40,14 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
     }
   }
 
+  // Person CRUD
   Future<void> loadPeople() async {
-    try {
-      List<Person> people = await SqlPersonCrudRepository.getList();
-      state = LedgerState(
-        people: people,
-        loans: state.loans,
-        repayments: state.repayments,
-      );
-    } catch (e) {
-      print('Error loading data: $e');
-    }
-  }
-
-  Future<void> loadLoans() async {
-    try {
-      List<Loan> loans = await SqlLoanCrudRepository.getList();
-      state = LedgerState(
-        people: state.people,
-        loans: loans,
-        repayments: state.repayments,
-      );
-    } catch (e) {
-      print('Error loading loans: $e');
-    }
-  }
-
-  Future<void> loadRepayments() async {
-    try {
-      List<Repayment> repayments = await SqlRepaymentCrudRepository.getList();
-      state = LedgerState(
-        people: state.people,
-        loans: state.loans,
-        repayments: repayments,
-      );
-    } catch (e) {
-      print('Error loading repayments: $e');
-    }
+    List<Person> people = await _queryService.getPeople();
+    state = LedgerState(
+      people: people,
+      loans: state.loans,
+      repayments: state.repayments,
+    );
   }
 
   Future<void> createPerson(Person person) async {
@@ -91,9 +65,19 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
     await loadPeople();
   }
 
+  // Loan CRUD
+  Future<void> loadLoans() async {
+    List<Loan> loans = await _queryService.getLoans();
+    state = LedgerState(
+      people: state.people,
+      loans: loans,
+      repayments: state.repayments,
+    );
+  }
+
   Future<void> createLoan(Loan loan) async {
     await SqlLoanCrudRepository.create(loan);
-    await loadLoans(); // 대출 목록 다시 불러오기
+    await loadLoans();
   }
 
   Future<void> updateLoan(Loan loan) async {
@@ -104,6 +88,16 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
   Future<void> deleteLoan(Loan loan) async {
     await SqlLoanCrudRepository.delete(loan);
     await loadLoans();
+  }
+
+  // Repayment CRUD
+  Future<void> loadRepayments() async {
+    List<Repayment> repayments = await _queryService.getRepayments();
+    state = LedgerState(
+      people: state.people,
+      loans: state.loans,
+      repayments: repayments,
+    );
   }
 
   Future<void> createRepayment(Repayment repayment) async {
@@ -124,4 +118,4 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
 
 final ledgerViewModelProvider =
     StateNotifierProvider<LedgerViewModel, LedgerState>(
-        (ref) => LedgerViewModel());
+        (ref) => LedgerViewModel(ref));
