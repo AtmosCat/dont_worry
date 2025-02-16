@@ -6,47 +6,36 @@ class SqlRepaymentCrudRepository {
   static Future<Repayment> create(Repayment repayment) async {
     var db = await SqlDatabase().database;
     await db.insert(Repayment.tableName, repayment.toJson());
-    await SqlDatabase.instance.recreateViews(db);
     return repayment.clone();
   }
+
   // Update
   static Future<int> update(Repayment repayment) async {
     var db = await SqlDatabase().database;
-    int result = await db.update(
+    return await db.update(
       Repayment.tableName,
       repayment.toJson(),
-      where: '${RepaymentFields.repaymentId} = ?',
+      where: '${Repayment.repaymentId_} = ?',
       whereArgs: [repayment.repaymentId],
     );
-    await SqlDatabase.instance.recreateViews(db);
-    return result;
   }
+
   // Delete
   static Future<int> delete(Repayment repayment) async {
     var db = await SqlDatabase().database;
-    int result = await db.delete(
+    return await db.delete(
       Repayment.tableName,
-      where: '${RepaymentFields.repaymentId} = ?',
+      where: '${Repayment.repaymentId_} = ?',
       whereArgs: [repayment.repaymentId],
     );
-    await SqlDatabase.instance.recreateViews(db);
-    return result;
   }
-
 
   // Read Single By Id
   static Future<Repayment?> getById(String repaymentId) async {
     var db = await SqlDatabase().database;
     var result = await db.query(
       Repayment.tableName,
-      columns: [
-        RepaymentFields.personId,
-        RepaymentFields.loanId,
-        RepaymentFields.repaymentId,
-        RepaymentFields.amount,
-        RepaymentFields.date,
-      ],
-      where: '${RepaymentFields.repaymentId} = ?',
+      where: '${Repayment.repaymentId_} = ?',
       whereArgs: [repaymentId],
     );
 
@@ -56,7 +45,7 @@ class SqlRepaymentCrudRepository {
       return null;
     }
   }
-  
+
   // Read List By Parent Id
   static Future<List<Repayment>> getList({String? loanId}) async {
     var db = await SqlDatabase().database;
@@ -64,19 +53,12 @@ class SqlRepaymentCrudRepository {
     var whereArgs = <dynamic>[];
 
     if (loanId != null) {
-      whereClauses.add('${RepaymentFields.loanId} = ?');
+      whereClauses.add('${Repayment.loanId_} = ?');
       whereArgs.add(loanId);
     }
 
     var result = await db.query(
       Repayment.tableName,
-      columns: [
-        RepaymentFields.personId,
-        RepaymentFields.loanId,
-        RepaymentFields.repaymentId,
-        RepaymentFields.amount,
-        RepaymentFields.date,
-      ],
       where: whereClauses.isNotEmpty ? whereClauses.join(' AND ') : null,
       whereArgs: whereArgs.isNotEmpty ? whereArgs : null,
     );

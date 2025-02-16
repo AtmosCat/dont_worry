@@ -1,7 +1,7 @@
 import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,8 +16,8 @@ class HomeBottomAppBar extends StatelessWidget {
         builder: (context, child) {
           final double value = _tabController.animation!.value;
           final int currentIndex = (value + 0.5).floor();
-          final MyAction myAction =
-              currentIndex == 0 ? MyAction.lend : MyAction.borrow;
+          final bool isLending =
+              currentIndex == 0 ? true : false;
           return Container(
             decoration: BoxDecoration(
                 color: AppColor.containerWhite.of(context),
@@ -44,11 +44,11 @@ class HomeBottomAppBar extends StatelessWidget {
                     Icon(
                       Icons.add,
                       size: 30,
-                      color: myAction == MyAction.lend
+                      color: isLending
                           ? AppColor.primaryBlue.of(context)
                           : AppColor.primaryRed.of(context),
                     ),
-                    Text(myAction == MyAction.lend ? '빌려준 돈 기록' : '빌린 돈 기록'),
+                    Text(isLending ? '빌려준 돈 기록' : '빌린 돈 기록'),
                   ],
                 ),
                 onTap: () {

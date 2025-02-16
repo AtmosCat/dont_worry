@@ -1,16 +1,16 @@
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/loan_detail_page.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/repayment_button.dart';
 import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
 class LoanCard extends StatelessWidget {
-  final MyAction myAction;
+  final bool isLending;
   final Loan loan;
-  const LoanCard({required this.myAction, required this.loan, super.key});
+  const LoanCard({required this.isLending, required this.loan, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class LoanCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoanDetailPage(myAction, loan: loan),
+          builder: (context) => LoanDetailPage(isLending, loan: loan),
         ),
       ),
       child: Container(

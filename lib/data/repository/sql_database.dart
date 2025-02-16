@@ -25,17 +25,7 @@ class SqlDatabase {
   Future<void> _initDatabase() async {
     var databasePath = await getDatabasesPath();
     String path = join(databasePath, 'dont_worry.db');
-    _database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        _databaseCreate(db, version); // 테이블 생성
-        await createViews(db); // 초기 뷰 생성
-      },
-      onOpen: (db) async {
-        await recreateViews(db); // 앱 실행 시 최신 뷰로 재생성
-      },
-    );
+    _database = await openDatabase(path, version: 1, onCreate: _databaseCreate);
   }
 
   // path 경로에 DB를 제거
@@ -51,90 +41,57 @@ class SqlDatabase {
     var batch = db.batch();
     batch.execute('''
   CREATE TABLE ${Person.tableName}(
-    ${PersonFields.personId} TEXT NOT NULL PRIMARY KEY,
-    ${PersonFields.name} TEXT NOT NULL,
-    ${PersonFields.memo} TEXT
+    ${Person.personId_} TEXT PRIMARY KEY,
+    ${Person.updatedAt_} TEXT NOT NULL,
+    ${Person.name_} TEXT NOT NULL,
+    ${Person.memo_} TEXT,
+    ${Person.repaidLendAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.repaidBorrowAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.remainingLendAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.remainingBorrowAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.isLendPaidOff_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.isBorrowPaidOff_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.upcomingLendDueDate_} TEXT,
+    ${Person.upcomingBorrowDueDate_} TEXT,
+    ${Person.lastLendRepaidDate_} TEXT,
+    ${Person.lastBorrowRepaidDate_} TEXT
   )
 ''');
 
     batch.execute('''
   CREATE TABLE ${Loan.tableName}(
-    ${LoanFields.personId} TEXT NOT NULL,
-    ${LoanFields.loanId} TEXT NOT NULL PRIMARY KEY,
-    ${LoanFields.isLending} INTEGER NOT NULL,
-    ${LoanFields.initialAmount} INTEGER NOT NULL,
-    ${LoanFields.loanDate} TEXT NOT NULL,
-    ${LoanFields.dueDate} TEXT NOT NULL,
-    ${LoanFields.title} TEXT NOT NULL,
-    ${LoanFields.memo} TEXT NOT NULL,
-    FOREIGN KEY (${LoanFields.personId}) REFERENCES ${Person.tableName} (${PersonFields.personId}) ON DELETE CASCADE
+    ${Loan.loanId_} TEXT PRIMARY KEY,
+    ${Loan.personId_} TEXT NOT NULL,
+    ${Loan.updatedAt_} TEXT NOT NULL,
+    ${Loan.isLending_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.initialAmount_} INTEGER NOT NULL,
+    ${Loan.loanDate_} TEXT NOT NULL,
+    ${Loan.dueDate_} TEXT,
+    ${Loan.title_} TEXT NOT NULL,
+    ${Loan.memo_} TEXT,
+    ${Loan.repaidAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.remainingAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.repaymentRate_} REAL NOT NULL,
+    ${Loan.isPaidOff_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.lastRepaidDate_} TEXT,
+    FOREIGN KEY (${Loan.personId_}) REFERENCES ${Person.tableName} (${Person.personId_}) ON DELETE CASCADE
   )
 ''');
 
     batch.execute('''
   CREATE TABLE ${Repayment.tableName}(
-    ${RepaymentFields.personId} TEXT NOT NULL,
-    ${RepaymentFields.loanId} TEXT NOT NULL,
-    ${RepaymentFields.repaymentId} TEXT NOT NULL PRIMARY KEY,
-    ${RepaymentFields.amount} INTEGER NOT NULL,
-    ${RepaymentFields.date} TEXT NOT NULL,
-    FOREIGN KEY(${RepaymentFields.personId}) REFERENCES ${Person.tableName}(${PersonFields.personId}) ON DELETE CASCADE,
-    FOREIGN KEY (${RepaymentFields.loanId}) REFERENCES ${Loan.tableName} (${LoanFields.loanId}) ON DELETE CASCADE
+    ${Repayment.repaymentId_} TEXT PRIMARY KEY,
+    ${Repayment.personId_} TEXT NOT NULL,
+    ${Repayment.loanId_} TEXT NOT NULL,
+    ${Repayment.isLending_} INTEGER NOT NULL,
+    ${Repayment.amount_} INTEGER NOT NULL,
+    ${Repayment.date_} TEXT NOT NULL,
+    FOREIGN KEY(${Repayment.personId_}) REFERENCES ${Person.tableName}(${Person.personId_}) ON DELETE CASCADE,
+    FOREIGN KEY (${Repayment.loanId_}) REFERENCES ${Loan.tableName} (${Loan.loanId_}) ON DELETE CASCADE
   )
 ''');
 
     await batch.commit();
-  }
-Future<void> createViews(Database db) async {
-  await db.execute('''
-  CREATE VIEW ${Loan.viewName} AS
-  SELECT
-    ${LoanFields.personId},
-    ${LoanFields.loanId},
-    ${LoanFields.isLending},
-    ${LoanFields.initialAmount},
-    ${LoanFields.loanDate},
-    ${LoanFields.dueDate},
-    ${LoanFields.title},
-    ${LoanFields.memo},
-    COALESCE(SUM(${RepaymentFields.amount}), 0) AS ${LoanFields.repayedAmount},
-    ${LoanFields.initialAmount} - COALESCE(SUM(${RepaymentFields.amount}), 0) AS ${LoanFields.remainingAmount},
-    CASE
-      WHEN ${LoanFields.initialAmount} = 0 THEN 0
-      ELSE COALESCE(SUM(${RepaymentFields.amount}), 0) / ${LoanFields.initialAmount} 
-    END AS ${LoanFields.repaymentRate},
-    COALESCE(JULIANDAY(${LoanFields.dueDate}) - JULIANDAY(CURRENT_DATE), 0) AS ${LoanFields.dDay}, -- ✅ NULL 방지
-    COALESCE(MAX(${RepaymentFields.date}), '') AS ${LoanFields.lastRepayedDate} -- ✅ NULL 방지
-  FROM ${Loan.tableName} AS ${Loan.tableName}
-  LEFT JOIN ${Repayment.tableName} AS ${Repayment.tableName}
-    ON ${LoanFields.loanId} = ${RepaymentFields.loanId}
-  GROUP BY ${LoanFields.loanId}
-    ''');
-
- await db.execute('''
-DROP VIEW IF EXISTS ${Person.viewName};
-CREATE VIEW ${Person.viewName} AS
-SELECT
-  ${PersonFields.personId} TEXT NOT NULL PRIMARY KEY,
-  ${PersonFields.name} TEXT NOT NULL,
-  ${PersonFields.memo} TEXT,
-  COALESCE(SUM(${LoanFields.repayedAmount}), 0) AS ${PersonFields.repayedAmount},
-  COALESCE(SUM(${LoanFields.remainingAmount}), 0) AS ${PersonFields.remainingAmount},
-  COALESCE(JULIANDAY(COALESCE(MAX(${LoanFields.dueDate}), CURRENT_DATE)) - JULIANDAY(CURRENT_DATE), 0) AS ${PersonFields.dDay}, -- ✅ NULL 방지
-  COALESCE(MAX(${LoanFields.lastRepayedDate}), '') AS ${PersonFields.lastRepayedDate} -- ✅ NULL 방지
-FROM ${Person.tableName} AS ${Person.tableName}
-LEFT JOIN (SELECT * FROM ${Loan.viewName}) AS ${Loan.viewName} -- ✅ Loan이 없을 경우 방어 처리
-  ON ${PersonFields.personId} = ${LoanFields.personId}
-GROUP BY ${PersonFields.personId}
-''');
-
-}
-
-
-  Future<void> recreateViews(Database db) async {
-    await db.execute('DROP VIEW IF EXISTS ${Loan.viewName}');
-    await db.execute('DROP VIEW IF EXISTS ${Person.viewName}');
-    await createViews(db); // 뷰 다시 생성
   }
 
   // DB연결 종료 메서드

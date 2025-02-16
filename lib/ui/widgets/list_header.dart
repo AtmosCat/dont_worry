@@ -1,11 +1,11 @@
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 
 class ListHeader extends StatefulWidget {
-  final MyAction? myAction;
-  final Category category;
-  const ListHeader({this.myAction, required this.category, super.key});
+  final bool? isLending;
+  final UnitType unitType;
+  const ListHeader({this.isLending, required this.unitType, super.key});
 
   @override
   State<ListHeader> createState() => _ListHeaderState();
@@ -19,12 +19,12 @@ class _ListHeaderState extends State<ListHeader> {
     return Column(
       children: [
         Offstage(
-            offstage: widget.category == Category.person,
+            offstage: widget.unitType == UnitType.person,
             child: Divider(height: 0, color: AppColor.divider.of(context)),),
         Container(
-          color: widget.category == Category.person
+          color: widget.unitType == UnitType.person
               ? Colors.transparent
-              : widget.myAction != null // 상환여부 따라 글씨색상 변경
+              : widget.isLending != null // 상환여부 따라 글씨색상 변경
                   ? AppColor.containerWhite.of(context)
                   : AppColor.containerLightGray20.of(context),
           child: SizedBox(
@@ -34,20 +34,20 @@ class _ListHeaderState extends State<ListHeader> {
               children: [
                 SizedBox(width: 14),
                 Icon(
-                  widget.myAction != null
-                      ? widget.category == Category.person
+                  widget.isLending != null
+                      ? widget.unitType == UnitType.person
                           ? Icons.person
                           : Icons.payments
                       : Icons.check,
                 ),
                 SizedBox(width: 8),
                 Text(
-                    widget.myAction != null
-                        ? widget.myAction == MyAction.lend
-                            ? widget.category == Category.person
+                    widget.isLending != null
+                        ? widget.isLending == true
+                            ? widget.unitType == UnitType.person
                                 ? '내가 빌려준 사람'
                                 : '내가 빌려준 돈'
-                            : widget.category == Category.person
+                            : widget.unitType == UnitType.person
                                 ? '내가 빌린 사람'
                                 : '내가 빌린 돈'
                         : '이미 다 갚았어요',
@@ -57,7 +57,7 @@ class _ListHeaderState extends State<ListHeader> {
                         fontWeight: FontWeight.w900)),
                 Spacer(),
                 Offstage(
-                  offstage: widget.myAction == null,
+                  offstage: widget.isLending == null,
                   child: PopupMenuButton(
                       icon: Row(
                         children: [
@@ -104,7 +104,7 @@ class _ListHeaderState extends State<ListHeader> {
           ),
         ),
         Offstage(
-            offstage: widget.category == Category.person,
+            offstage: widget.unitType == UnitType.person,
             child: Divider(height: 0, color: AppColor.divider.of(context)),)
       ],
     );

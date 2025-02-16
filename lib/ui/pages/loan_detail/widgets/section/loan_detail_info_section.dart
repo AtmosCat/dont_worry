@@ -1,12 +1,12 @@
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
 class LoanDetailInfoSection extends StatelessWidget {
   const LoanDetailInfoSection({
     super.key,
-    required this.myAction,
+    required this.isLending,
     required this.initialAmount,
     required this.name,
     required this.loanDate,
@@ -14,7 +14,7 @@ class LoanDetailInfoSection extends StatelessWidget {
     this.dDay = 0,
   });
 
-  final MyAction myAction;
+  final bool isLending;
   final int initialAmount;
   final String name;
   final DateTime loanDate;
@@ -40,7 +40,7 @@ class LoanDetailInfoSection extends StatelessWidget {
         ]),
         SizedBox(height: 10),
         Row(children: [
-          Text(myAction == MyAction.lend ? '빌린 사람' : '빌려준 사람',
+          Text(isLending ? '빌린 사람' : '빌려준 사람',
               style:
                   TextStyle(fontSize: 16, color: AppColor.gray10.of(context))),
           Spacer(),
@@ -52,7 +52,7 @@ class LoanDetailInfoSection extends StatelessWidget {
         ]),
         SizedBox(height: 10),
         Row(children: [
-          Text(myAction == MyAction.lend ? '빌린 날짜' : '빌려준 날짜',
+          Text(isLending ? '빌린 날짜' : '빌려준 날짜',
               style:
                   TextStyle(fontSize: 16, color: AppColor.gray10.of(context))),
           Spacer(),

@@ -3,22 +3,19 @@ import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum MyAction { lend, borrow }
-
-enum Category { person, loan, repayment, home }
-
 class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final MyAction myAction;
-  final Category category;
+  final bool isLending;
+  final UnitType unitType;
   final Person? person;
   final Loan? loan;
 
   const DetailAppBar({
-    required this.myAction,
-    required this.category,
+    required this.isLending,
+    required this.unitType,
     this.person,
     this.loan,
     super.key,
@@ -27,9 +24,9 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(category == Category.person
-          ? (myAction == MyAction.lend ? '내가 빌려준 사람' : '내가 빌린 사람')
-          : (myAction == MyAction.lend ? '내가 빌려준 돈' : '내가 빌린 돈')),
+      title: Text(unitType == UnitType.person
+          ? (isLending ? '내가 빌려준 사람' : '내가 빌린 사람')
+          : (isLending ? '내가 빌려준 돈' : '내가 빌린 돈')),
       centerTitle: true,
       leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -42,8 +39,8 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
               context: context,
               builder: (BuildContext context) {
                 return _BottomSheet(
-                    myAction: myAction,
-                    category: category,
+                    isLending: isLending,
+                    unitType: unitType,
                     person: person,
                     loan: loan);
               },
@@ -59,14 +56,14 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _BottomSheet extends StatelessWidget {
-  final MyAction myAction;
-  final Category category;
+  final bool isLending;
+  final UnitType unitType;
   final Person? person;
   final Loan? loan;
 
   const _BottomSheet({
-    required this.myAction,
-    required this.category,
+    required this.isLending,
+    required this.unitType,
     required this.person,
     required this.loan,
   });
@@ -91,7 +88,7 @@ class _BottomSheet extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  if (category == Category.person) {
+                  if (unitType == UnitType.person) {
                     // 이 사람의 모든 대출을 상환
                   } else {
                     // 이 대출을 상환
@@ -103,7 +100,7 @@ class _BottomSheet extends StatelessWidget {
                   leading: Icon(Icons.edit),
                   title: Text('편집 (미구현)'),
                   onTap: () {
-                    if (category == Category.person) {
+                    if (unitType == UnitType.person) {
                       // 인물 정보수정
                     } else {
                       // 대출 정보수정
@@ -123,7 +120,7 @@ class _BottomSheet extends StatelessWidget {
                     Navigator.pop(context);
                     showDeleteBottomSheet(
                         context: context,
-                        onConfirm: (category == Category.person)
+                        onConfirm: (unitType == UnitType.person)
                             ? () async {
                                 await ref
                                     .read(ledgerViewModelProvider.notifier)

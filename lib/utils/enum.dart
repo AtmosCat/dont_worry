@@ -1,0 +1,1 @@
+enum UnitType { person, loan, repayment, home }

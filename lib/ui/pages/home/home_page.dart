@@ -5,8 +5,8 @@ import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_view.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_bottom_app_bar.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -72,8 +72,8 @@ class _HomePageState extends State<HomePage>
 
           // #2. 탭바 뷰 세팅 -> 위젯
           body: TabBarView(controller: _tabController, children: [
-            HomeTabView(myAction: MyAction.lend), // 빌려간 돈 위젯
-            HomeTabView(myAction: MyAction.borrow), // 빌린 돈 위젯
+            HomeTabView(isLending: true), // 빌려간 돈 위젯
+            HomeTabView(isLending: false), // 빌린 돈 위젯
           ]),
         ),
         // #3. 하단 네비게이션바 -> 위젯

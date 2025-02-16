@@ -5,12 +5,13 @@ import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_repa
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_summary_section.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/detail_bottom_navigation_bar.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 
 class LoanDetailPage extends StatelessWidget {
-  final MyAction myAction;
+  final bool isLending;
   final Loan loan;
-  const LoanDetailPage(this.myAction, {required this.loan, super.key});
+  const LoanDetailPage(this.isLending, {required this.loan, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class LoanDetailPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.containerWhite.of(context),
       // #1. 상단 앱바
-      appBar: DetailAppBar(myAction: myAction, category: Category.loan, loan: loan),
+      appBar: DetailAppBar(isLending: isLending, unitType: UnitType.loan, loan: loan),
       body: ListView(
         children: [
           Container(
@@ -51,7 +52,7 @@ class LoanDetailPage extends StatelessWidget {
               Divider(height: 80, color: AppColor.divider.of(context)),
               // #2-2. 상세 정보 섹션
               LoanDetailInfoSection(
-                myAction: myAction,
+                isLending: isLending,
                 initialAmount: initialAmount,
                 name: name,
                 loanDate: loanDate,
@@ -61,7 +62,7 @@ class LoanDetailPage extends StatelessWidget {
               Divider(height: 80, color: AppColor.divider.of(context)),
               // #2-3. 상환한 금액 섹션
               LoanDetailRepaymentSection(
-                myAction: myAction,
+                isLending: isLending,
                 loanId: loan.loanId,
                 totalRepayment: totalRepayment,
                 initialAmount: initialAmount,
@@ -73,7 +74,7 @@ class LoanDetailPage extends StatelessWidget {
       ),
       // #3. 하단 네비게이션바
       bottomNavigationBar: DetailBottomNavigationBar(
-          myAction: myAction, category: Category.loan),
+          isLending: isLending, unitType: UnitType.loan),
     );
   }
 }

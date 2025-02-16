@@ -2,17 +2,17 @@ import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailBottomNavigationBar extends StatelessWidget {
-  final MyAction myAction;
-  final Category category;
+  final bool isLending;
+  final UnitType unitType;
   const DetailBottomNavigationBar({
-    required this.myAction,
-    required this.category,
+    required this.isLending,
+    required this.unitType,
     super.key,
   });
 
@@ -39,16 +39,16 @@ class DetailBottomNavigationBar extends StatelessWidget {
                       icon: Column(
                         children: [
                           Icon(
-                            category != Category.loan
+                            unitType != UnitType.loan
                                 ? Icons.add
                                 : Icons.edit_note,
                             color: AppColor.defaultBlack.of(context),
                           ),
-                          Text(category != Category.loan
-                              ? myAction == MyAction.lend
+                          Text(unitType != UnitType.loan
+                              ? isLending
                                   ? '빌려준 돈 기록'
                                   : '빌린 돈 기록'
-                              : myAction == MyAction.lend
+                              : isLending
                                   ? '빌려준 돈 편집'
                                   : '빌린 돈 편집')
                         ],
@@ -59,8 +59,9 @@ class DetailBottomNavigationBar extends StatelessWidget {
                         children: [
                           Icon(Icons.task_alt,
                               color: AppColor.primaryBlue.of(context)),
-                          Text(
-                              myAction == MyAction.lend ? '받은 돈 기록' : '갚은 돈 기록')
+                          Text(isLending
+                              ? '받은 돈 기록'
+                              : '갚은 돈 기록')
                         ],
                       ),
                       label: ''),
@@ -88,15 +89,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
     Loan newLoan = Loan(
         initialAmount: initialAmount,
         personId: 'personId',
-        isLending: myAction == MyAction.lend,
-        repayments: [
-          Repayment(
-              personId: 'test001_person',
-              loanId: 'test001_loan',
-              repaymentId: 'test001_repayment',
-              amount: 300,
-              date: DateTime(2024, 2, 1))
-        ],
+        isLending: isLending,
         loanDate: DateTime(2024, 2, 1),
         dueDate: DateTime(2024, 4, 1),
         title: '제목',
@@ -109,10 +102,12 @@ class DetailBottomNavigationBar extends StatelessWidget {
       required WidgetRef ref,
       required int amount}) async {
     Repayment newRepayment = Repayment(
-        personId: 'personId',
-        loanId: 'loanId',
-        amount: amount,
-        date: DateTime.now());
+      personId: 'personId',
+      loanId: 'loanId',
+      amount: amount,
+      date: DateTime.now(),
+      isLending: isLending,
+    );
     await ref
         .read(ledgerViewModelProvider.notifier)
         .createRepayment(newRepayment);

@@ -1,32 +1,32 @@
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/person_detail/person_detail_page.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
 class PersonCard extends StatelessWidget {
   final Person person;
-  final MyAction myAction;
+  final bool isLending;
 
   const PersonCard({
     required this.person,
-    required this.myAction,
+    required this.isLending,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    int amount = person.remainingAmount?? 0;
-    int totalRepayment = person.repayedAmount?? 0;
-    int dDay = person.dDay?? 0;
-    DateTime lastRepaymentDate = person.lastRepayedDate?? DateTime.now();
+    int amount = 0;
+    int totalRepayment = 0;
+    int dDay = 0;
+    DateTime lastRepaymentDate = DateTime.now();
    
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => PersonDetailPage(myAction, person: person)),
+            builder: (context) => PersonDetailPage(isLending, person: person)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(

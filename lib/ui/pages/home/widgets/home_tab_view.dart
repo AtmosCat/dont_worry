@@ -1,23 +1,23 @@
 import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeTabView extends StatelessWidget {
-  final MyAction myAction;
+  final bool isLending;
   HomeTabView({
-    required this.myAction,
+    required this.isLending,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListView(padding: EdgeInsets.all(4), children: [
-      ListHeader(myAction: myAction, category: Category.person),
+      ListHeader(isLending: isLending, unitType: UnitType.person),
       personList(),
-      ListHeader(category: Category.person),
+      ListHeader(unitType: UnitType.person),
       personList(),
       SizedBox(height: 60)
     ]);
@@ -34,7 +34,7 @@ class HomeTabView extends StatelessWidget {
               children: List.generate(
                 peopleState.length,
                 (index) =>
-                    PersonCard(person: peopleState[index], myAction: myAction),
+                    PersonCard(person: peopleState[index], isLending: isLending),
               ),
             );
     });
@@ -43,7 +43,7 @@ class HomeTabView extends StatelessWidget {
 
 
 // 더미데이터
-// PersonCard(myAction: myAction, person: dummyPerson2),
+// PersonCard(isLending: isLending, person: dummyPerson2),
   // final Person dummyPerson1 = Person(
   //   personId: 'test001_person',
   //   name: '홍길동',

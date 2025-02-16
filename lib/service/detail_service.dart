@@ -1,73 +1,55 @@
-// import 'package:dont_worry/data/model/loan.dart';
-// import 'package:dont_worry/data/model/repayment.dart';
-// import 'package:dont_worry/service/query_service.dart';
+import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/repayment.dart';
+import 'package:dont_worry/service/query_service.dart';
 
-// class DetailService {
-//   QueryService _queryService = QueryService();
+class DetailService {
+  QueryService _queryService = QueryService();
 
-//   // 장부 전체 잔여대출금
-//   Future<int> getTotalRemaining() async {
-//     return 0;
-//   }
+  Loan analyzeLoan(
+      {required Loan loan, required List<Repayment> repaymentDatabase}) {
+    var repaymentsByLoanId = _queryService.getRepaymentsBy(
+        repayments: repaymentDatabase, loanId: loan.loanId);
+    var repaidAmount =
+        getLoanRepaidAmount(repaymentsByLoanId: repaymentsByLoanId);
+    var remainingAmount =
+        getLoanRemainingAmount(loan: loan, repaidAmount: repaidAmount);
+    var repaymentRate =
+        getLoanRepaymentRate(loan: loan, repaidAmount: repaidAmount);
+    var isPaidOff = getLoanIsPaidOff(loan: loan, repaidAmount: repaidAmount);
+    var lastRepaidDate =
+        getLastRepaidDate(repaymentsByLoanId: repaymentsByLoanId);
 
-//   // Person의 잔여대출금
-//   Future<int> getRemainingForPerson() async {
-//     return 0;
-//   }
+    return loan.clone(
+        repaidAmount: repaidAmount,
+        remainingAmount: remainingAmount,
+        repaymentRate: repaymentRate,
+        isPaidOff: isPaidOff,
+        lastRepaidDate: lastRepaidDate);
+  }
 
-//   // Loan의 잔여대출금
-//   Future<int> getRemainingForLoan() async {
-//     Loan loan = await _queryService.get... (작성중))
-//     int remainingForLoan = 0;
+  int getLoanRepaidAmount({required List<Repayment> repaymentsByLoanId}) {
+    return repaymentsByLoanId.fold<int>(
+        0, (sum, repayment) => sum + repayment.amount);
+  }
 
+  int getLoanRemainingAmount({required Loan loan, required int repaidAmount}) {
+    return loan.initialAmount - repaidAmount;
+  }
 
-//     return remainingForLoan;
-//   }
+  double getLoanRepaymentRate({required Loan loan, required int repaidAmount}) {
+    return loan.initialAmount > 0 ? repaidAmount / loan.initialAmount : 0;
+  }
 
-//   // Person의 누적상환금
-//   Future<int> getRepayedForPerson(
-//       {required String personId, required bool isLending}) async {
-//     List<Loan> loans = await _queryService.getLoansForPerson(
-//         personId: personId, isLending: isLending);
-//     int repayedForPerson = 0;
-//     for (var loan in loans) {
-//       int repayedForLoan = await getRepayedForLoan(loanId: loan.loanId);
-//       repayedForPerson + repayedForLoan;
-//     }
-//     return repayedForPerson;
-//   }
+  bool getLoanIsPaidOff({required Loan loan, required int repaidAmount}) {
+    return loan.initialAmount <= repaidAmount;
+  }
 
-//   // Loan의 누적상환금
-//   Future<int> getRepayedForLoan({required String loanId}) async {
-//     List<Repayment> repayments =
-//         await _queryService.getRepaymentsForLoan(loanId: loanId);
-//     int repayedForLoan =
-//         repayments.fold<int>(0, (sum, repayment) => sum + repayment.amount);
-//     return repayedForLoan;
-//   }
-
-//   // Person의 디데이
-//   Future<int> getDDayForPerson() async {
-//     return 0;
-//   }
-
-//   // Loan의 디데이
-//   Future<int> getDDay() async {
-//     return 0;
-//   }
-
-//   // Person의 마지막 상환날짜
-//   Future<DateTime> getLastRepayedDateForPerson() async {
-//     return 0;
-//   }
-
-//   // Loan의 마지막 상환날짜
-//   Future<DateTime> getLastRepayedDate() async {
-//     return DateTime();
-//   }
-
-//   // Loan의 대출상환비율
-//   Future<double> getRepaymentRate() async {
-//     return 0;
-//   }
-// }
+  DateTime? getLastRepaidDate({required List<Repayment> repaymentsByLoanId}) {
+    DateTime? latestDate = repaymentsByLoanId.isNotEmpty
+        ? repaymentsByLoanId
+            .map((repayment) => repayment.date)
+            .reduce((a, b) => a.isAfter(b) ? a : b)
+        : null;
+    return latestDate;
+  }
+}

@@ -6,7 +6,6 @@ class SqlLoanCrudRepository {
   static Future<Loan> create(Loan loan) async {
     var db = await SqlDatabase().database;
     await db.insert(Loan.tableName, loan.toJson());
-    await SqlDatabase.instance.recreateViews(db);
     return loan.clone();
   }
 
@@ -16,10 +15,9 @@ class SqlLoanCrudRepository {
     int result = await db.update(
       Loan.tableName,
       loan.toJson(),
-      where: '${LoanFields.loanId} = ? ',
+      where: '${Loan.loanId_} = ? ',
       whereArgs: [loan.loanId],
     );
-    await SqlDatabase.instance.recreateViews(db);
     return result;
   }
 
@@ -27,8 +25,7 @@ class SqlLoanCrudRepository {
   static Future<int> delete(Loan loan) async {
     var db = await SqlDatabase().database;
     int result = await db.delete(Loan.tableName,
-        where: '${LoanFields.loanId} = ?', whereArgs: [loan.loanId]);
-    await SqlDatabase.instance.recreateViews(db);
+        where: '${Loan.loanId_} = ?', whereArgs: [loan.loanId]);
     return result;
   }
 
@@ -37,17 +34,7 @@ class SqlLoanCrudRepository {
     var db = await SqlDatabase().database;
     var result = await db.query(
       Loan.tableName,
-      columns: [
-        LoanFields.personId,
-        LoanFields.loanId,
-        LoanFields.isLending,
-        LoanFields.initialAmount,
-        LoanFields.loanDate,
-        LoanFields.dueDate,
-        LoanFields.title,
-        LoanFields.memo,
-      ],
-      where: '${LoanFields.loanId} = ?',
+      where: '${Loan.loanId_} = ?',
       whereArgs: [loanId],
     );
     return result.isNotEmpty ? Loan.fromJson(result.first) : null;
@@ -60,37 +47,20 @@ class SqlLoanCrudRepository {
     var whereArgs = <dynamic>[];
 
     if (personId != null) {
-      whereClauses.add('${LoanFields.personId} = ?');
+      whereClauses.add('${Loan.personId_} = ?');
       whereArgs.add(personId);
     }
 
     if (isLending != null) {
-      whereClauses.add('${LoanFields.isLending} = ?');
+      whereClauses.add('${Loan.isLending_} = ?');
       whereArgs.add(isLending ? 1 : 0);
     }
 
     var result = await db.query(
       Loan.tableName,
-      columns: [
-        LoanFields.personId,
-        LoanFields.loanId,
-        LoanFields.isLending,
-        LoanFields.initialAmount,
-        LoanFields.loanDate,
-        LoanFields.dueDate,
-        LoanFields.title,
-        LoanFields.memo,
-      ],
       where: whereClauses.isNotEmpty ? whereClauses.join(' AND ') : null,
       whereArgs: whereArgs,
     );
-
-    return result.map((r) => Loan.fromJson(r)).toList();
-  }
-
-  static Future<List<Loan>> getLoanSummaries() async {
-    var db = await SqlDatabase().database;
-    final result = await db.query(Loan.viewName);
 
     return result.map((r) => Loan.fromJson(r)).toList();
   }

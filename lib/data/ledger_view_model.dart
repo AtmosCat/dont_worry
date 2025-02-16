@@ -20,10 +20,10 @@ class LedgerState {
 }
 
 class LedgerViewModel extends StateNotifier<LedgerState> {
-  final Ref ref;
+
   final _queryService = QueryService();
 
-  LedgerViewModel(this.ref)
+  LedgerViewModel()
       : super(LedgerState(people: [], loans: [], repayments: [])) {
     _init();
   }
@@ -68,6 +68,7 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
   // Loan CRUD
   Future<void> loadLoans() async {
     List<Loan> loans = await _queryService.getLoans();
+
     state = LedgerState(
       people: state.people,
       loans: loans,
@@ -93,6 +94,7 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
   // Repayment CRUD
   Future<void> loadRepayments() async {
     List<Repayment> repayments = await _queryService.getRepayments();
+    
     state = LedgerState(
       people: state.people,
       loans: state.loans,
@@ -118,4 +120,4 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
 
 final ledgerViewModelProvider =
     StateNotifierProvider<LedgerViewModel, LedgerState>(
-        (ref) => LedgerViewModel(ref));
+        (ref) => LedgerViewModel());
