@@ -3,7 +3,6 @@ import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/loan_detail_page.dart';
 import 'package:dont_worry/ui/widgets/repayment_button.dart';
 import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
-import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 

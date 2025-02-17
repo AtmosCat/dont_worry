@@ -4,8 +4,6 @@ import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
-import 'package:dont_worry/utils/enum.dart';
 
 class QueryService {
   // SQL 서버에서 List 얻기

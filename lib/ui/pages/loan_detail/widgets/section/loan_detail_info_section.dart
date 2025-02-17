@@ -1,5 +1,4 @@
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 

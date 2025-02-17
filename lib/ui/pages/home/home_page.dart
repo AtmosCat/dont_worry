@@ -6,7 +6,6 @@ import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_view.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_bottom_app_bar.dart';
-import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,7 +1,6 @@
 import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
-import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/person_detail_header.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';

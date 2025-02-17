@@ -2,7 +2,6 @@ import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/repayment_card.dart';
 import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
-import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
