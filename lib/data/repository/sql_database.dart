@@ -45,6 +45,8 @@ class SqlDatabase {
     ${Person.updatedAt_} TEXT NOT NULL,
     ${Person.name_} TEXT NOT NULL,
     ${Person.memo_} TEXT,
+    ${Person.hasLend_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.hasBorrow_} INTEGER NOT NULL DEFAULT 0,
     ${Person.repaidLendAmount_} INTEGER NOT NULL DEFAULT 0,
     ${Person.repaidBorrowAmount_} INTEGER NOT NULL DEFAULT 0,
     ${Person.remainingLendAmount_} INTEGER NOT NULL DEFAULT 0,

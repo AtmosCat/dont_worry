@@ -97,7 +97,22 @@ class HomeBottomAppBar extends StatelessWidget {
       {required BuildContext context,
       required WidgetRef ref,
       required String name}) async {
-    Person newPerson = Person(name: name);
+    Person newPerson = Person(name: name,
+        hasLend: false,
+        hasBorrow: false,
+        isLendPaidOff: false,
+        isBorrowPaidOff: false,
+        memo: null,
+        personId: null,
+        remainingLendAmount: 0,
+        remainingBorrowAmount: 0 ,
+        repaidLendAmount: 0,
+        repaidBorrowAmount: 0,
+        upcomingLendDueDate: null,
+        upcomingBorrowDueDate: null,
+        lastLendRepaidDate: null,
+        lastBorrowRepaidDate: null,
+        updatedAt: DateTime.now());
     await ref.read(ledgerViewModelProvider.notifier).createPerson(newPerson);
   }
 }

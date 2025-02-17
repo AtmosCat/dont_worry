@@ -46,20 +46,28 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
   // Person CRUD
   Future<void> loadPeople() async {
     try {
-      List<Person> people = await SqlPersonCrudRepository.getList();
+      print("loadPeople() 실행");
+      List<Person> people =
+          await SqlPersonCrudRepository.getList(); // ❌ 여기서 멈출 가능성
+      print("DB에서 사람 목록 가져오기 완료");
+
       state = LedgerState(
         people: people,
         loans: state.loans,
         repayments: state.repayments,
       );
+      print("state 업데이트 완료, people 개수: ${people.length}");
     } catch (e) {
       print('Error loading loans: $e');
     }
   }
 
   Future<void> createPerson(Person person) async {
+    print("createPerson() 시작");
     await SqlPersonCrudRepository.create(person);
+    print("DB에 person 추가 완료");
     await loadPeople();
+    print("loadPeople() 완료");
   }
 
   Future<void> updatePerson(Person person) async {
