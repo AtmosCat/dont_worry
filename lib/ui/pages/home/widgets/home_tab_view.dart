@@ -1,4 +1,4 @@
-import 'package:dont_worry/data/ledger_view_model.dart';
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:dont_worry/utils/enum.dart';
@@ -26,7 +26,7 @@ class HomeTabView extends StatelessWidget {
   Consumer personList() {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-      final peopleState = ref.watch(ledgerViewModelProvider).people;
+      final peopleState = ref.watch(appViewModelProvider).people;
 
       return peopleState.isEmpty
           ? const Center(child: CircularProgressIndicator()) // 로딩 중

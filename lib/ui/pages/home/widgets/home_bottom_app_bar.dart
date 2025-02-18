@@ -1,4 +1,4 @@
-import 'package:dont_worry/data/ledger_view_model.dart';
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
@@ -85,6 +85,6 @@ class HomeBottomAppBar extends StatelessWidget {
         lastLendRepaidDate: null,
         lastBorrowRepaidDate: null,
         updatedAt: DateTime.now());
-    await ref.read(ledgerViewModelProvider.notifier).createPerson(newPerson);
+    await ref.read(appViewModelProvider.notifier).createPerson(newPerson);
   }
 }

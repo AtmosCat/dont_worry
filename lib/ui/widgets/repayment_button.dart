@@ -1,8 +1,9 @@
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/repayment.dart';
-import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RepaymentButton extends StatefulWidget {
   final bool isRepaid;
@@ -11,7 +12,6 @@ class RepaymentButton extends StatefulWidget {
     super.key,
     required this.isRepaid,
     required this.loan,
-
   });
 
   @override
@@ -108,17 +108,18 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      final newRepayment = Repayment(
-                        personId: widget.loan.personId,
-                        loanId: widget.loan.loanId,
-                        isLending: widget.loan.isLending,
-                        amount: int.parse(repaymentAmountController.text),
-                      );
-                      var createRepaymentResult =
-                          await SqlRepaymentCrudRepository.create(newRepayment);
-                      if (createRepaymentResult) {
+                  Consumer(
+                    builder: (context, ref, child) => TextButton(
+                      onPressed: () async {
+                        final newRepayment = Repayment(
+                          personId: widget.loan.personId,
+                          loanId: widget.loan.loanId,
+                          isLending: widget.loan.isLending,
+                          amount: int.parse(repaymentAmountController.text),
+                        );
+                        await ref
+                            .read(appViewModelProvider.notifier)
+                            .createRepayment(newRepayment);
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -126,24 +127,17 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                                 "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다."),
                           ),
                         );
-                      } else {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("상환 처리에 실패했습니다."),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(
-                      "확인",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.primaryBlue.of(context),
+                      },
+                      child: Text(
+                        "확인",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.primaryBlue.of(context),
+                        ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               );
             },

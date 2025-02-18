@@ -1,10 +1,10 @@
-import 'package:dont_worry/data/ledger_view_model.dart';
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/repayment.dart';
+import 'package:dont_worry/service/query_service.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/data/model/person.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
 import 'package:dont_worry/ui/widgets/small_loan_card.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +21,6 @@ class DetailBottomNavigationBar extends StatelessWidget {
     required this.person,
     super.key,
   });
-
-  Future<List<Loan>> _loadLoanData() async {
-    return await SqlLoanCrudRepository.getList();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,40 +129,23 @@ class DetailBottomNavigationBar extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 20),
-                            FutureBuilder<List<Loan>>(
-                              future: _loadLoanData(),
-                              builder: (
-                                BuildContext context,
-                                AsyncSnapshot<List<Loan>> snapshot,
-                              ) {
-                                if (snapshot.hasError) {
-                                  return const Center(
-                                      child: Text('Not Support Sqflite'));
-                                }
-                                ;
-                                if (snapshot.hasData && snapshot.data != null) {
-                                  var datas = snapshot.data!.where(
-                                    (element) {
-                                      return element.personId ==
-                                              person.personId &&
-                                          element.isLending ==
-                                              (isLending ? true : false);
-                                    },
-                                  ).toList();
-                                  return Column(
-                                      children: List.generate(
-                                          datas.length,
-                                          (index) => SmallLoanCard(
-                                                loan: datas[index],
-                                                isLending: isLending,
-                                                person: person,
-                                              )).toList());
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              },
-                            ),
+                            Consumer(builder: (context, ref, child) {
+                              var filteredLoans = QueryService().getLoansBy(
+                                personId: person.personId,
+                                isLending: isLending,
+                                isPaidOff: false,
+                                loans: ref.watch(appViewModelProvider).loans,
+                              );
+
+                              return ListView.builder(
+                                itemCount: filteredLoans.length,
+                                itemBuilder: (context, index) => SmallLoanCard(
+                                  loan: filteredLoans[index],
+                                  isLending: isLending,
+                                  person: person,
+                                ),
+                              );
+                            })
                           ],
                         ),
                       ),
@@ -256,7 +235,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
         dueDate: DateTime(2024, 4, 1),
         title: '제목',
         memo: '빠른 상환을 부탁드립니다.');
-    await ref.read(ledgerViewModelProvider.notifier).createLoan(newLoan);
+    await ref.read(appViewModelProvider.notifier).createLoan(newLoan);
   }
 
   void createRepayment(
@@ -270,9 +249,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
       date: DateTime.now(),
       isLending: isLending,
     );
-    await ref
-        .read(ledgerViewModelProvider.notifier)
-        .createRepayment(newRepayment);
+    await ref.read(appViewModelProvider.notifier).createRepayment(newRepayment);
   }
 
   void handleCreateLoan(BuildContext context) {
@@ -297,9 +274,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
                           filled: true,
                           contentPadding: EdgeInsets.all(20))),
                   Consumer(
-                    builder:
-                        (BuildContext context, WidgetRef ref, Widget? child) {
-                      return ElevatedButton(
+                      builder: (context, ref, child) => ElevatedButton(
                           onPressed: () {
                             createLoan(
                                 context: context,
@@ -308,9 +283,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
                                     int.parse(amountController.text));
                             Navigator.pop(context);
                           },
-                          child: Text('대출 생성'));
-                    },
-                  )
+                          child: Text('대출 생성')))
                 ],
               ),
             ));

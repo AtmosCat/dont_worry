@@ -11,24 +11,24 @@ import 'package:dont_worry/service/person_service.dart';
 import 'package:dont_worry/service/query_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LedgerState {
+class AppState {
   final List<Person> people;
   final List<Loan> loans;
   final List<Repayment> repayments;
-  LedgerState({
+  AppState({
     required this.people,
     required this.loans,
     required this.repayments,
   });
 }
 
-class LedgerViewModel extends StateNotifier<LedgerState> {
+class AppViewModel extends StateNotifier<AppState> {
   final _queryService = QueryService();
   final _loanService = LoanService();
   final _personService = PersonService();
 
-  LedgerViewModel()
-      : super(LedgerState(people: [], loans: [], repayments: [])) {
+  AppViewModel()
+      : super(AppState(people: [], loans: [], repayments: [])) {
     _init();
   }
 
@@ -38,7 +38,7 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
       final loans = await SqlLoanCrudRepository.getList();
       final repayments = await SqlRepaymentCrudRepository.getList();
 
-      state = LedgerState(people: people, loans: loans, repayments: repayments);
+      state = AppState(people: people, loans: loans, repayments: repayments);
     } catch (e) {
       log('Error initializing data: $e');
     }
@@ -52,7 +52,7 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
           await SqlPersonCrudRepository.getList(); // ❌ 여기서 멈출 가능성
       log("DB에서 사람 목록 가져오기 완료");
 
-      state = LedgerState(
+      state = AppState(
         people: people,
         loans: state.loans,
         repayments: state.repayments,
@@ -64,11 +64,9 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
   }
 
   Future<void> createPerson(Person person) async {
-    log("createPerson() 시작");
     await SqlPersonCrudRepository.create(person);
-    log("DB에 person 추가 완료");
+    log("DB에 $person 추가 완료");
     await loadPeople();
-    log("loadPeople() 완료");
   }
 
   Future<void> updatePerson(Person person) async {
@@ -86,7 +84,7 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
     try {
       List<Person> people = await SqlPersonCrudRepository.getList();
       List<Loan> loans = await SqlLoanCrudRepository.getList();
-      state = LedgerState(
+      state = AppState(
         people: people,
         loans: loans,
         repayments: state.repayments,
@@ -123,7 +121,7 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
       List<Person> people = await SqlPersonCrudRepository.getList();
       List<Loan> loans = await SqlLoanCrudRepository.getList();
       List<Repayment> repayments = await SqlRepaymentCrudRepository.getList();
-      state = LedgerState(
+      state = AppState(
         people: people,
         loans: loans,
         repayments: repayments,
@@ -197,6 +195,6 @@ class LedgerViewModel extends StateNotifier<LedgerState> {
   }
 }
 
-final ledgerViewModelProvider =
-    StateNotifierProvider<LedgerViewModel, LedgerState>(
-        (ref) => LedgerViewModel());
+final appViewModelProvider =
+    StateNotifierProvider<AppViewModel, AppState>(
+        (ref) => AppViewModel());

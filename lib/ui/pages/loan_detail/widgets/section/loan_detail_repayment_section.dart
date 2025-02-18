@@ -1,4 +1,4 @@
-import 'package:dont_worry/data/ledger_view_model.dart';
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/repayment_card.dart';
 import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
@@ -54,7 +54,7 @@ class LoanDetailRepaymentSection extends StatelessWidget {
   Consumer repaymentList() {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-      var repaymentsState = ref.watch(ledgerViewModelProvider.select(
+      var repaymentsState = ref.watch(appViewModelProvider.select(
         (state) => state.repayments.where((repayment)=>repayment.loanId == loanId).toList()
       ));
       return repaymentsState.isEmpty

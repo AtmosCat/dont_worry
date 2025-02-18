@@ -1,4 +1,6 @@
-import 'package:dont_worry/data/ledger_view_model.dart';
+import 'dart:io';
+
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
 import 'package:dont_worry/theme/colors.dart';
@@ -91,24 +93,16 @@ class _HomePageState extends State<HomePage>
             child: Column(
               children: <Widget>[
                 Consumer(
-                  builder: (
-                    BuildContext context,
-                    WidgetRef ref,
-                    Widget? child,
-                  ) {
-                    return ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('TEST_Person 생성'),
-                      onTap: () {
-                        createPerson(
-                          context: context,
-                          ref: ref,
-                        );
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
+                    builder: (context, ref, child) => ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('TEST_Person 생성'),
+                        onTap: () {
+                          createPerson(
+                            context: context,
+                            ref: ref,
+                          );
+                          Navigator.pop(context);
+                        })),
                 ListTile(
                   leading: Icon(Icons.delete,
                       color: AppColor.primaryRed.of(context)),
@@ -133,11 +127,28 @@ class _HomePageState extends State<HomePage>
 
   void deleteDatabaseFile() async {
     await SqlDatabase.deleteDatabaseFile();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('경고'),
+          content: Text('데이터베이스가 초기화되었습니다. 앱을 종료합니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                exit(0); // 앱 종료
+              },
+              child: Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void createPerson(
       {required BuildContext context, required WidgetRef ref}) async {
     Person newPerson = Person(name: '이름');
-    await ref.read(ledgerViewModelProvider.notifier).createPerson(newPerson);
+    await ref.read(appViewModelProvider.notifier).createPerson(newPerson);
   }
 }

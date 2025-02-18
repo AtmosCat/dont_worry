@@ -1,13 +1,13 @@
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/create_loan/search_popup.dart';
 import 'package:dont_worry/utils/datetime_utils.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CreateLoanPage extends StatefulWidget {
   final bool isLending;
@@ -52,10 +52,6 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
         "${dueDate.year}-${dueDate.month}-${dueDate.day}";
   }
 
-  void getPeople() async {
-    people = await SqlPersonCrudRepository.getList();
-  }
-
   void _showSearchModal() {
     showModalBottomSheet(
       context: context,
@@ -64,16 +60,17 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
-        return SearchPopup(
-          onSelect: (Person _selectedPerson) {
-            setState(() {
-              getPeople();
-              selectedPerson = _selectedPerson;
-              selectedPersonName = _selectedPerson.name;
-            });
-            Navigator.pop(context); // 팝업 닫기
-          },
-        );
+        return Consumer(
+            builder: (context, ref, child) => SearchPopup(
+                  onSelect: (Person _selectedPerson) {
+                    setState(() {
+                      people = ref.read(appViewModelProvider).people;
+                      selectedPerson = _selectedPerson;
+                      selectedPersonName = _selectedPerson.name;
+                    });
+                    Navigator.pop(context); // 팝업 닫기
+                  },
+                ));
       },
     );
   }
@@ -88,9 +85,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
         backgroundColor: AppColor.containerWhite.of(context),
         appBar: AppBar(
           centerTitle: true,
-          title: widget.isLending
-              ? Text('빌려준 돈 기록')
-              : Text('빌린 돈 기록'),
+          title: widget.isLending ? Text('빌려준 돈 기록') : Text('빌린 돈 기록'),
           backgroundColor: AppColor.containerWhite.of(context),
           elevation: 0,
           leading: IconButton(
@@ -192,65 +187,69 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
               ),
               Spacer(),
               Container(
-                alignment: Alignment.bottomRight,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        AppColor.primaryBlue.of(context)),
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                  alignment: Alignment.bottomRight,
+                  child: Consumer(
+                    builder: (context, ref, child) => ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            AppColor.primaryBlue.of(context)),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (titleEdittingController.text.isEmpty) {
+                          SnackbarUtil.showSnackBar(context, "제목을 입력해주세요.");
+                          return;
+                        } else if (amountEdittingController.text.isEmpty) {
+                          SnackbarUtil.showSnackBar(context, "금액을 입력해주세요.");
+                          return;
+                        } else if (selectedPersonName.isEmpty) {
+                          SnackbarUtil.showSnackBar(context, "이름을 입력해주세요.");
+                          return;
+                        } else if (loanDateEdittingController.text.isEmpty) {
+                          SnackbarUtil.showSnackBar(context, "대출일을 선택해주세요.");
+                        } else if (dueDateEdittingController.text.isEmpty) {
+                          SnackbarUtil.showSnackBar(context, "상환일을 선택해주세요.");
+                        } else {
+                          Loan newLoan = Loan(
+                            personId: selectedPerson.personId,
+                            isLending: widget.isLending ? true : false,
+                            initialAmount:
+                                int.parse(amountEdittingController.text),
+                            loanDate: DateTime(
+                                loanDate.year, loanDate.month, loanDate.day),
+                            dueDate: DateTime(
+                                dueDate.year, dueDate.month, dueDate.day),
+                            title: titleEdittingController.text,
+                            memo: memoEdittingController.text,
+                          );
+                          await ref.read(appViewModelProvider.notifier).createLoan(newLoan);
+                          SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
+                          Navigator.pop(context);
+                          // if (loanUpdateResult) {
+                          //   SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
+                          //   Navigator.pop(context);
+                          // } else {
+                          //   SnackbarUtil.showSnackBar(
+                          //       context, "기록 추가에 실패했습니다.");
+                          // }
+                        }
+                      },
+                      child: Text(
+                        // "${widget.isLending ? "빌려준 돈" : "빌린 돈"} 기록 추가하기",
+                        "추가하기",
+                        style: TextStyle(
+                          color: AppColor.containerWhite.of(context),
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () async {
-                    if (titleEdittingController.text.isEmpty) {
-                      SnackbarUtil.showSnackBar(context, "제목을 입력해주세요.");
-                      return;
-                    } else if (amountEdittingController.text.isEmpty) {
-                      SnackbarUtil.showSnackBar(context, "금액을 입력해주세요.");
-                      return;
-                    } else if (selectedPersonName.isEmpty) {
-                      SnackbarUtil.showSnackBar(context, "이름을 입력해주세요.");
-                      return;
-                    } else if (loanDateEdittingController.text.isEmpty) {
-                      SnackbarUtil.showSnackBar(context, "대출일을 선택해주세요.");
-                    } else if (dueDateEdittingController.text.isEmpty) {
-                      SnackbarUtil.showSnackBar(context, "상환일을 선택해주세요.");
-                    } else {
-                      Loan newLoan = Loan(
-                        personId: selectedPerson.personId,
-                        isLending:
-                            widget.isLending? true : false,
-                        initialAmount: int.parse(amountEdittingController.text),
-                        loanDate: DateTime(
-                            loanDate.year, loanDate.month, loanDate.day),
-                        dueDate:
-                            DateTime(dueDate.year, dueDate.month, dueDate.day),
-                        title: titleEdittingController.text,
-                        memo: memoEdittingController.text,
-                      );
-                      var loanUpdateResult =
-                          await SqlLoanCrudRepository.create(newLoan);
-                      if (loanUpdateResult) {
-                        SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
-                        Navigator.pop(context);
-                      } else {
-                        SnackbarUtil.showSnackBar(context, "기록 추가에 실패했습니다.");
-                      }
-                    }
-                  },
-                  child: Text(
-                    // "${widget.isLending ? "빌려준 돈" : "빌린 돈"} 기록 추가하기",
-                    "추가하기",
-                    style: TextStyle(
-                      color: AppColor.containerWhite.of(context),
-                    ),
-                  ),
-                ),
-              ),
+                  )),
               SizedBox(height: 20),
             ],
           ),

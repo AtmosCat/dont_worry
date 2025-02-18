@@ -1,9 +1,10 @@
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
-import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SmallRepaymentButton extends StatefulWidget {
   final BuildContext context;
@@ -57,102 +58,88 @@ class _RepaymentButtonState extends State<SmallRepaymentButton> {
         onPressed: () {
           /* TODO: 해당 Loan을 전액 상환하는 로직 개발 필요 */
           showDialog(
-            context: context,
-            builder: (context) {
-              final TextEditingController repaymentAmountController =
-                  TextEditingController(text: "${widget.loan.initialAmount}");
-              return AlertDialog(
-                backgroundColor: AppColor.containerWhite.of(context),
-                title: Text("상환할 금액을 입력하세요.",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    )),
-                content: SizedBox(
-                  height: 70,
-                  width: 150,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Text("얼마를 상환 처리할까요?",
-                      // style: TextStyle(
-                      //   fontSize: 16,
-                      //   fontWeight: FontWeight.normal,
-                      // ),),
-                      TextFormField(
-                        controller: repaymentAmountController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: AppColor.primaryBlue.of(context),
-                                width: 2.0),
+              context: context,
+              builder: (context) {
+                final TextEditingController repaymentAmountController =
+                    TextEditingController(text: "${widget.loan.initialAmount}");
+                return AlertDialog(
+                    backgroundColor: AppColor.containerWhite.of(context),
+                    title: Text("상환할 금액을 입력하세요.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    content: SizedBox(
+                      height: 70,
+                      width: 150,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Text("얼마를 상환 처리할까요?",
+                          // style: TextStyle(
+                          //   fontSize: 16,
+                          //   fontWeight: FontWeight.normal,
+                          // ),),
+                          TextFormField(
+                            controller: repaymentAmountController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: AppColor.primaryBlue.of(context),
+                                    width: 2.0),
+                              ),
+                              labelText: "상환액",
+                              labelStyle: TextStyle(
+                                color: AppColor.gray30.of(context),
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
                           ),
-                          labelText: "상환액",
-                          labelStyle: TextStyle(
-                            color: AppColor.gray30.of(context),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context); // 다이얼로그 닫기
+                        },
+                        child: Text(
+                          "취소",
+                          style: TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.normal,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.primaryBlue.of(context),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context); // 다이얼로그 닫기
-                    },
-                    child: Text(
-                      "취소",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.primaryBlue.of(context),
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      final newRepayment = Repayment(
-                        personId: widget.loan.personId,
-                        loanId: widget.loan.loanId,
-                        isLending: widget.loan.isLending,
-                        amount: int.parse(repaymentAmountController.text),
-                      );
-                      var createRepaymentResult =
-                          await SqlRepaymentCrudRepository.create(newRepayment);
-                      if (createRepaymentResult) {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다."),
-                          ),
-                        );
-                      } else {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("상환 처리에 실패했습니다."),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(
-                      "확인",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.primaryBlue.of(context),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
+                      Consumer(
+                          builder: (context, ref, child) => TextButton(
+                              onPressed: () async {
+                                final newRepayment = Repayment(
+                                  personId: widget.loan.personId,
+                                  loanId: widget.loan.loanId,
+                                  isLending: widget.loan.isLending,
+                                  amount:
+                                      int.parse(repaymentAmountController.text),
+                                );
+                                await ref
+                                    .read(appViewModelProvider.notifier)
+                                    .createRepayment(newRepayment);
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(
+                                        "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다.")));
+                              },
+                              child: Text("확인",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          AppColor.primaryBlue.of(context)))))
+                    ]);
+              });
         },
         icon: const Icon(Icons.task_alt, size: 16),
         label: const Text(

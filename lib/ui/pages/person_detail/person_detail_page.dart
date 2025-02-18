@@ -1,4 +1,4 @@
-import 'package:dont_worry/data/ledger_view_model.dart';
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
@@ -48,7 +48,7 @@ class PersonDetailPage extends StatelessWidget {
   Consumer loanList() {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-      final loansState = ref.watch(ledgerViewModelProvider).loans;
+      final loansState = ref.watch(appViewModelProvider).loans;
 
       return loansState.isEmpty
           ? const Center(child: CircularProgressIndicator())
