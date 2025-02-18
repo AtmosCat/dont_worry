@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
@@ -135,11 +134,10 @@ class _HomePageState extends State<HomePage>
           content: Text('데이터베이스가 초기화되었습니다. 앱을 종료합니다.'),
           actions: [
             TextButton(
-              onPressed: () {
-                exit(0); // 앱 종료
-              },
-              child: Text('확인'),
-            ),
+                onPressed: () {
+                  exit(0); // 앱 종료
+                },
+                child: Text('확인'))
           ],
         );
       },

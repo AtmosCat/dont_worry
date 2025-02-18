@@ -1,41 +1,8 @@
-import 'dart:developer';
-
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 
 class QueryService {
-  // SQL 서버에서 List 얻기
-  Future<List<Person>> getPeople() async {
-    try {
-      return await SqlPersonCrudRepository.getList();
-    } catch (e) {
-      log('Error loading loans: $e');
-      return [];
-    }
-  }
-
-  Future<List<Loan>> getLoans() async {
-    try {
-      return await SqlLoanCrudRepository.getList();
-    } catch (e) {
-      log('Error loading loans: $e');
-      return [];
-    }
-  }
-
-  Future<List<Repayment>> getRepayments() async {
-    try {
-      return await SqlRepaymentCrudRepository.getList();
-    } catch (e) {
-      log('Error loading loans: $e');
-      return [];
-    }
-  }
-
   // List에서 Id로 객체 얻기
   Person getPersonById(
       {required String personId, required List<Person> people}) {

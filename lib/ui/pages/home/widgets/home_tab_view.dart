@@ -1,4 +1,5 @@
 import 'package:dont_worry/data/app_view_model.dart';
+import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/ui/pages/home/widgets/person_card.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:dont_worry/utils/enum.dart';
@@ -27,6 +28,7 @@ class HomeTabView extends StatelessWidget {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
       final peopleState = ref.watch(appViewModelProvider).people;
+      
 
       return peopleState.isEmpty
           ? const Center(child: CircularProgressIndicator()) // 로딩 중
