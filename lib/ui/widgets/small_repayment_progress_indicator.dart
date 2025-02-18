@@ -2,8 +2,8 @@ import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
-class RepaymentProgressIndicator extends StatelessWidget {
-  const RepaymentProgressIndicator({
+class SmallRepaymentProgressIndicator extends StatelessWidget {
+  const SmallRepaymentProgressIndicator({
     super.key,
     required this.repaymentRate,
     required this.initialAmount,
@@ -16,10 +16,10 @@ class RepaymentProgressIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         LinearProgressIndicator(
           value: repaymentRate,
-          minHeight: 4,
+          minHeight: 3,
           borderRadius: BorderRadius.circular(20),
           color: AppColor.primaryBlue.of(context),
           backgroundColor: AppColor.lightGray20.of(context),
@@ -28,7 +28,7 @@ class RepaymentProgressIndicator extends StatelessWidget {
         Text.rich(
           TextSpan(
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               color: AppColor.gray20.of(context),
             ),
             children: [

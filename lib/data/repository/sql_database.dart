@@ -33,7 +33,7 @@ class SqlDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'dont_worry.db');
     await deleteDatabase(path);
-    print('Database deleted');
+    log('Database deleted');
   }
 
   // SQL 테이블 구조 작성

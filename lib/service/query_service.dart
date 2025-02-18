@@ -11,7 +11,7 @@ class QueryService {
     try {
       return await SqlPersonCrudRepository.getList();
     } catch (e) {
-      print('Error loading loans: $e');
+      log('Error loading loans: $e');
       return [];
     }
   }
@@ -20,7 +20,7 @@ class QueryService {
     try {
       return await SqlLoanCrudRepository.getList();
     } catch (e) {
-      print('Error loading loans: $e');
+      log('Error loading loans: $e');
       return [];
     }
   }
@@ -29,7 +29,7 @@ class QueryService {
     try {
       return await SqlRepaymentCrudRepository.getList();
     } catch (e) {
-      print('Error loading loans: $e');
+      log('Error loading loans: $e');
       return [];
     }
   }

@@ -1,4 +1,5 @@
 import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/loan_detail_page.dart';
 import 'package:dont_worry/ui/widgets/repayment_button.dart';
@@ -9,7 +10,8 @@ import 'package:flutter/material.dart';
 class LoanCard extends StatelessWidget {
   final bool isLending;
   final Loan loan;
-  const LoanCard({required this.isLending, required this.loan, super.key});
+  final Person person;
+  const LoanCard({required this.isLending, required this.loan, required this.person, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class LoanCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoanDetailPage(isLending, loan: loan),
+          builder: (context) => LoanDetailPage(isLending, loan: loan, person: person),
         ),
       ),
       child: Container(
@@ -59,7 +61,7 @@ class LoanCard extends StatelessWidget {
                     children: [
                       amountText(amount, context, totalRepayment),
                       const Spacer(),
-                      RepaymentButton(isRepaid: isRepaid),
+                      RepaymentButton(isRepaid: isRepaid, loan: loan, person: person,),
                     ],
                   ),
                   Offstage(

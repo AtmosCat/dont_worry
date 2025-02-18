@@ -1,4 +1,5 @@
 import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_info_section.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_repayment_section.dart';
@@ -11,7 +12,12 @@ import 'package:flutter/material.dart';
 class LoanDetailPage extends StatelessWidget {
   final bool isLending;
   final Loan loan;
+<<<<<<< HEAD
   const LoanDetailPage(this.isLending, {required this.loan, super.key});
+=======
+  final Person person;
+  const LoanDetailPage(this.myAction, {required this.loan, required this.person, super.key});
+>>>>>>> origin/feature/new_ho
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +80,11 @@ class LoanDetailPage extends StatelessWidget {
       ),
       // #3. 하단 네비게이션바
       bottomNavigationBar: DetailBottomNavigationBar(
+<<<<<<< HEAD
           isLending: isLending, unitType: UnitType.loan),
+=======
+          myAction: myAction, category: Category.loan, person: person),
+>>>>>>> origin/feature/new_ho
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/repayment_button.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +25,7 @@ class LoanDetailSummarySection extends StatelessWidget {
           children: [
             Text(title, style: TextStyle(fontSize: 20)),
             Spacer(),
-            RepaymentButton(isRepaid: isRepaid),
+            // RepaymentButton(isRepaid: isRepaid, loan: ,),
           ],
         ),
         Offstage(

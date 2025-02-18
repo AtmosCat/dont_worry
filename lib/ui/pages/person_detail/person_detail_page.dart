@@ -42,7 +42,7 @@ class PersonDetailPage extends StatelessWidget {
         ),
         // #4. 하단 네비게이션바
         bottomNavigationBar: DetailBottomNavigationBar(
-            isLending: isLending, unitType: UnitType.person));
+            isLending: isLending, unitType: UnitType.person, person: person));
   }
 
   Consumer loanList() {

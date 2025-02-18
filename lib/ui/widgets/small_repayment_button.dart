@@ -1,24 +1,29 @@
 import 'package:dont_worry/data/model/loan.dart';
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:flutter/material.dart';
 
-class RepaymentButton extends StatefulWidget {
+class SmallRepaymentButton extends StatefulWidget {
+  final BuildContext context;
   final bool isRepaid;
   final Loan loan;
-  const RepaymentButton({
+  final Person person;
+
+  const SmallRepaymentButton({
     super.key,
+    required this.context,
     required this.isRepaid,
     required this.loan,
-
+    required this.person,
   });
 
   @override
-  State<RepaymentButton> createState() => _RepaymentButtonState();
+  State<SmallRepaymentButton> createState() => _RepaymentButtonState();
 }
 
-class _RepaymentButtonState extends State<RepaymentButton> {
+class _RepaymentButtonState extends State<SmallRepaymentButton> {
   @override
   void dispose() {
     super.dispose();
@@ -149,11 +154,11 @@ class _RepaymentButtonState extends State<RepaymentButton> {
             },
           );
         },
-        icon: const Icon(Icons.task_alt, size: 18),
+        icon: const Icon(Icons.task_alt, size: 16),
         label: const Text(
           '상환',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 12,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -163,8 +168,8 @@ class _RepaymentButtonState extends State<RepaymentButton> {
             borderRadius: BorderRadius.circular(4),
           ),
           padding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 8,
+            horizontal: 12,
+            vertical: 5,
           ),
           alignment: Alignment.center,
           backgroundColor: AppColor.primaryBlue.of(context),

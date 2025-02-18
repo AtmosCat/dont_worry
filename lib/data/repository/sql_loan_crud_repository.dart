@@ -1,32 +1,47 @@
+import 'dart:developer';
+
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
 
 class SqlLoanCrudRepository {
   // Create
-  static Future<Loan> create(Loan loan) async {
-    var db = await SqlDatabase().database;
-    await db.insert(Loan.tableName, loan.toJson());
-    return loan.clone();
+  static Future<bool> create(Loan loan) async {
+    try {
+      var db = await SqlDatabase().database;
+      int result = await db.insert(Loan.tableName, loan.toJson());
+      return result > 0;
+    } catch (e) {
+      log("Database insert error: $e");
+      return false;
+    }
   }
 
   // Update
-  static Future<int> update(Loan loan) async {
-    var db = await SqlDatabase().database;
-    int result = await db.update(
-      Loan.tableName,
-      loan.toJson(),
-      where: '${Loan.loanId_} = ? ',
-      whereArgs: [loan.loanId],
-    );
-    return result;
+  static Future<bool> update(Loan loan) async {
+    try {
+      var db = await SqlDatabase().database;
+      int updatedRows = await db.update(
+        Loan.tableName,
+        loan.toJson(),
+        where: '${Loan.loanId_} = ?',
+        whereArgs: [loan.loanId],
+      );
+      return updatedRows > 0; // 업데이트된 행이 있으면 true 반환
+    } catch (e) {
+      log("Loan 업데이트 실패: $e");
+      return false; // 실패 시 false 반환
+    }
   }
 
   // Delete
-  static Future<int> delete(Loan loan) async {
+  static Future<bool> delete(Loan loan) async {
     var db = await SqlDatabase().database;
-    int result = await db.delete(Loan.tableName,
-        where: '${Loan.loanId_} = ?', whereArgs: [loan.loanId]);
-    return result;
+    int result = await db.delete(
+      Loan.tableName,
+      where: '${Loan.loanId_} = ?',
+      whereArgs: [loan.loanId],
+    );
+    return result > 0; // 삭제된 행이 1개 이상이면 true, 아니면 false
   }
 
   // Read Single By Id
