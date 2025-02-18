@@ -22,7 +22,7 @@
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <unitType android:name="android.intent.unitType.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
