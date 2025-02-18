@@ -31,7 +31,7 @@ class LoanCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoanDetailPage(isLending, loan: loan, person: person),
+          builder: (context) => LoanDetailPage(isLending : isLending, loan: loan, person: person),
         ),
       ),
       child: Container(
@@ -61,7 +61,7 @@ class LoanCard extends StatelessWidget {
                     children: [
                       amountText(amount, context, totalRepayment),
                       const Spacer(),
-                      RepaymentButton(isRepaid: isRepaid, loan: loan, person: person,),
+                      RepaymentButton(isRepaid: isRepaid, loan: loan),
                     ],
                   ),
                   Offstage(

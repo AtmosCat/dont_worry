@@ -13,7 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PersonDetailPage extends StatelessWidget {
   final bool isLending;
   final Person person;
-  PersonDetailPage(this.isLending, {required this.person, super.key});
+  PersonDetailPage({required this.isLending, required this.person, super.key});
 
   // PersonDetailPage UI
   @override
@@ -56,7 +56,7 @@ class PersonDetailPage extends StatelessWidget {
               children: List.generate(
                   loansState.length,
                   (index) =>
-                      LoanCard(loan: loansState[index], isLending: isLending)),
+                      LoanCard(loan: loansState[index], isLending: isLending, person: person,)),
             );
     });
   }

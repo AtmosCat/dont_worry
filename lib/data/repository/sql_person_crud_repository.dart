@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
 
@@ -24,7 +26,7 @@ class SqlPersonCrudRepository {
         where: '${Person.personId_} =  ?',
         whereArgs: [person.personId],
       );
-      log(person.toJson());
+      log(person.toJson().toString());
       return updatedRows > 0; // 성공적으로 업데이트되면 true
     } catch (e) {
       log("업데이트 실패: $e"); // 예외 메시지 출력 (로그 확인용)

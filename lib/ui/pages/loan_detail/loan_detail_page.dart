@@ -12,12 +12,8 @@ import 'package:flutter/material.dart';
 class LoanDetailPage extends StatelessWidget {
   final bool isLending;
   final Loan loan;
-<<<<<<< HEAD
-  const LoanDetailPage(this.isLending, {required this.loan, super.key});
-=======
   final Person person;
-  const LoanDetailPage(this.myAction, {required this.loan, required this.person, super.key});
->>>>>>> origin/feature/new_ho
+  const LoanDetailPage({required this.isLending, required this.loan, required this.person, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +76,7 @@ class LoanDetailPage extends StatelessWidget {
       ),
       // #3. 하단 네비게이션바
       bottomNavigationBar: DetailBottomNavigationBar(
-<<<<<<< HEAD
-          isLending: isLending, unitType: UnitType.loan),
-=======
-          myAction: myAction, category: Category.loan, person: person),
->>>>>>> origin/feature/new_ho
+          isLending: isLending, unitType: UnitType.loan, person: person),
     );
   }
 }

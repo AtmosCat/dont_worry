@@ -3,14 +3,9 @@ import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/utils/enum.dart';
-import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
-import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
-import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
-import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:dont_worry/ui/widgets/small_loan_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,69 +29,6 @@ class DetailBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-<<<<<<< HEAD
-        decoration: BoxDecoration(
-            color: AppColor.containerWhite.of(context),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1), // 그림자 색상
-                blurRadius: 30, // 흐림 정도
-                spreadRadius: 6, // 그림자 크기
-                offset: Offset(0, -4), // ⬆ 위쪽 그림자 (기본은 아래로 가므로 -값)
-              )
-            ]),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Divider(height: 0, color: AppColor.divider.of(context)),
-            BottomNavigationBar(
-                items: [
-                  BottomNavigationBarItem(
-                      icon: Column(
-                        children: [
-                          Icon(
-                            unitType != UnitType.loan
-                                ? Icons.add
-                                : Icons.edit_note,
-                            color: AppColor.defaultBlack.of(context),
-                          ),
-                          Text(unitType != UnitType.loan
-                              ? isLending
-                                  ? '빌려준 돈 기록'
-                                  : '빌린 돈 기록'
-                              : isLending
-                                  ? '빌려준 돈 편집'
-                                  : '빌린 돈 편집')
-                        ],
-                      ),
-                      label: ''),
-                  BottomNavigationBarItem(
-                      icon: Column(
-                        children: [
-                          Icon(Icons.task_alt,
-                              color: AppColor.primaryBlue.of(context)),
-                          Text(isLending
-                              ? '받은 돈 기록'
-                              : '갚은 돈 기록')
-                        ],
-                      ),
-                      label: ''),
-                ],
-                onTap: (int index) {
-                  if (index == 0) {
-                    handleCreateLoan(context);
-                  } else if (index == 1) {
-                    handleCreateRepayment(context);
-                  }
-                },
-                backgroundColor: AppColor.containerWhite.of(context),
-                showSelectedLabels: false,
-                showUnselectedLabels: false,
-                elevation: 5,
-                type: BottomNavigationBarType.fixed),
-          ],
-        ));
-=======
       decoration:
           BoxDecoration(color: AppColor.containerWhite.of(context), boxShadow: [
         BoxShadow(
@@ -116,14 +48,14 @@ class DetailBottomNavigationBar extends StatelessWidget {
                   icon: Column(
                     children: [
                       Icon(
-                        category != Category.loan ? Icons.add : Icons.edit_note,
+                        unitType != UnitType.loan ? Icons.add : Icons.edit_note,
                         color: AppColor.defaultBlack.of(context),
                       ),
-                      Text(category != Category.loan
-                          ? myAction == MyAction.lend
+                      Text(unitType != UnitType.loan
+                          ? isLending
                               ? '빌려준 돈 기록'
                               : '빌린 돈 기록'
-                          : myAction == MyAction.lend
+                          : isLending
                               ? '빌려준 돈 편집'
                               : '빌린 돈 편집')
                     ],
@@ -134,7 +66,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
                     children: [
                       Icon(Icons.task_alt,
                           color: AppColor.primaryBlue.of(context)),
-                      Text(myAction == MyAction.lend ? '받은 돈 기록' : '갚은 돈 기록')
+                      Text(isLending ? '받은 돈 기록' : '갚은 돈 기록')
                     ],
                   ),
                   label: ''),
@@ -145,7 +77,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        CreateLoanPage(myAction: myAction, person: person),
+                        CreateLoanPage(isLending: isLending, person: person),
                   ),
                 );
               } else if (index == 1) {
@@ -218,17 +150,15 @@ class DetailBottomNavigationBar extends StatelessWidget {
                                       return element.personId ==
                                               person.personId &&
                                           element.isLending ==
-                                              (myAction == MyAction.lend
-                                                  ? true
-                                                  : false);
+                                              (isLending ? true : false);
                                     },
                                   ).toList();
                                   return Column(
                                       children: List.generate(
-                                          datas!.length,
+                                          datas.length,
                                           (index) => SmallLoanCard(
                                                 loan: datas[index],
-                                                myAction: myAction,
+                                                isLending: isLending,
                                                 person: person,
                                               )).toList());
                                 } else {
@@ -312,7 +242,6 @@ class DetailBottomNavigationBar extends StatelessWidget {
         ],
       ),
     );
->>>>>>> origin/feature/new_ho
   }
 
   void createLoan(

@@ -8,7 +8,6 @@ import 'package:dont_worry/ui/pages/home/widgets/home_tab_view.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -136,43 +135,9 @@ class _HomePageState extends State<HomePage>
     await SqlDatabase.deleteDatabaseFile();
   }
 
-<<<<<<< HEAD
   void createPerson(
       {required BuildContext context, required WidgetRef ref}) async {
     Person newPerson = Person(name: '이름');
     await ref.read(ledgerViewModelProvider.notifier).createPerson(newPerson);
   }
 }
-
-=======
-  void createPerson({required BuildContext context, required WidgetRef ref}) async {
-    Person newPerson = Person(name: '이름${Uuid().v1().substring(0, 5)}');
-    await ref.read(homeViewModelProvider.notifier).createPerson(newPerson);
->>>>>>> origin/feature/new_ho
-
-    // Loan newLoan = Loan(
-    //     personId: newPerson.personId,
-    //     isLending: true,
-    //     initialAmount: 10000,
-    //     repayments: [
-    //       Repayment(
-    //           personId: 'test001_person',
-    //           loanId: 'test001_loan',
-    //           repaymentId: 'test001_repayment',
-    //           amount: 300,
-    //           date: DateTime(2024, 2, 1))
-    //     ],
-    //     loanDate: DateTime(2024, 2, 1),
-    //     dueDate: DateTime(2024, 4, 1),
-    //     title: '제목',
-    //     memo: '빠른 상환을 부탁드립니다.');
-
-    // await SqlLoanCrudRepository.create(newLoan);
-
-    // Repayment newRepayment = Repayment(
-    //   personId: newPerson.personId,
-    //   loanId: newLoan.loanId,
-    //   amount: 3000,
-    // );
-
-    // await SqlRepaymentCrudRepository.create(newRepayment);

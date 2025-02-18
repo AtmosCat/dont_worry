@@ -1,15 +1,12 @@
-import 'package:dont_worry/data/ledger_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
+import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
-<<<<<<< HEAD
 import 'package:dont_worry/utils/enum.dart';
-=======
 import 'package:dont_worry/utils/snackbar_utils.dart';
->>>>>>> origin/feature/new_ho
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isLending;
@@ -101,49 +98,10 @@ class _BottomSheet extends StatelessWidget {
                 },
               ),
               ListTile(
-<<<<<<< HEAD
-                  leading: Icon(Icons.edit),
-                  title: Text('편집 (미구현)'),
-                  onTap: () {
-                    if (unitType == UnitType.person) {
-                      // 인물 정보수정
-                    } else {
-                      // 대출 정보수정
-                    }
-                    Navigator.pop(context);
-                  }),
-              Consumer(builder:
-                  (BuildContext context, WidgetRef ref, Widget? child) {
-                return ListTile(
-                  leading: Icon(Icons.delete,
-                      color: AppColor.primaryRed.of(context)),
-                  title: Text('삭제',
-                      style: TextStyle(
-                          color: AppColor.primaryRed.of(context),
-                          fontWeight: FontWeight.bold)),
-                  onTap: () {
-                    Navigator.pop(context);
-                    showDeleteBottomSheet(
-                        context: context,
-                        onConfirm: (unitType == UnitType.person)
-                            ? () async {
-                                await ref
-                                    .read(ledgerViewModelProvider.notifier)
-                                    .deletePerson(person!);
-                              }
-                            : () async {
-                                await ref
-                                    .read(ledgerViewModelProvider.notifier)
-                                    .deleteLoan(loan!);
-                              });
-                  },
-                );
-              })
-=======
                 leading: Icon(Icons.edit),
                 title: Text('편집 (미구현)'),
                 onTap: () {
-                  if (category == Category.person) {
+                  if (unitType == UnitType.person) {
                     // 인물 정보수정
                   } else {
                     // 대출 정보수정
@@ -163,7 +121,7 @@ class _BottomSheet extends StatelessWidget {
                   onTap: () {
                     final rootContext = context; // ✅ 모달 닫기 전, rootContext 저장
                     // ✅ 삭제 확인 콜백 설정
-                    var onConfirm = (category == Category.person)
+                    var onConfirm = (unitType == UnitType.person)
                         ? () async {
                             Navigator.pop(rootContext);
                             Navigator.pop(rootContext);
@@ -196,7 +154,6 @@ class _BottomSheet extends StatelessWidget {
                       onConfirm: onConfirm,
                     );
                   }),
->>>>>>> origin/feature/new_ho
             ],
           ),
         ));

@@ -32,7 +32,7 @@ class PersonCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => PersonDetailPage(isLending, person: person)),
+            builder: (context) => PersonDetailPage(isLending : isLending, person: person)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
