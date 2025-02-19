@@ -7,12 +7,12 @@ final ThemeData lightTheme = ThemeData(
 
   // 디바이더 색상 설정
   dividerTheme: DividerThemeData(
-    color: Colors.grey.withOpacity(0.2),
+    color: Colors.grey.withValues(alpha: 0.2),
     thickness: 1,
   ),
 
   tabBarTheme: TabBarTheme(
-    dividerColor: Colors.grey.withOpacity(0.2),
+    dividerColor: Colors.grey.withValues(alpha: 0.2),
   ),
 
   // 앱 바 설정
@@ -86,12 +86,12 @@ final ThemeData darkTheme = ThemeData(
 
   // 디바이더 색상 설정
   dividerTheme: DividerThemeData(
-    color: const Color.fromARGB(255, 36, 36, 36).withOpacity(0.1),
+    color: const Color.fromARGB(255, 36, 36, 36).withValues(alpha: 0.1),
     thickness: 1,
   ),
 
   tabBarTheme: TabBarTheme(
-    dividerColor: Colors.grey.withOpacity(0.2),
+    dividerColor: Colors.grey.withValues(alpha: 0.2),
   ),
 
   // 앱 바 설정

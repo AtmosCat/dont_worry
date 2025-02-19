@@ -1,20 +1,24 @@
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/pages/loan_detail/widgets/repayment_list.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
+import 'package:dont_worry/ui/pages/loan_detail/widgets/repayment_card.dart';
 import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoanDetailRepaymentSection extends StatelessWidget {
-  const LoanDetailRepaymentSection({
+  LoanDetailRepaymentSection({
     super.key,
-    required this.myAction,
+    required this.isLending,
+    required this.loanId,
     required this.totalRepayment,
     required this.initialAmount,
     required this.repaymentRate,
+
   });
 
-  final MyAction myAction;
+  final bool isLending;
+  final String loanId;
   final int totalRepayment;
   final int initialAmount;
   final double repaymentRate;
@@ -40,11 +44,25 @@ class LoanDetailRepaymentSection extends StatelessWidget {
             ],
           ),
           SizedBox(height: 30),
-          RepaymentList(),
+          repaymentList(),
           SizedBox(height: 60)
         ],
       ),
     );
+  }
+
+  Consumer repaymentList() {
+    return Consumer(
+        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+      var repaymentsState = ref.watch(appViewModelProvider.select(
+        (state) => state.repayments.where((repayment)=>repayment.loanId == loanId).toList()
+      ));
+      return repaymentsState.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: List.generate(repaymentsState.length,
+                  (index) => RepaymentCard(repayment: repaymentsState[index])));
+    });
   }
 
   // 갚는 중일 때 진행률 표기
@@ -52,7 +70,7 @@ class LoanDetailRepaymentSection extends StatelessWidget {
     return Column(
       children: [
         Row(children: [
-          Text(myAction == MyAction.lend ? '받은 금액' : '갚은 금액',
+          Text(isLending ? '받은 금액' : '갚은 금액',
               style: TextStyle(
                   fontSize: 16,
                   color: AppColor.gray20.of(context),
@@ -83,7 +101,7 @@ class LoanDetailRepaymentSection extends StatelessWidget {
           color: AppColor.primaryBlue.of(context),
         ),
         SizedBox(width: 10),
-        Text(myAction == MyAction.lend ? '빌려준 금액을 전부 받았어요' : '빌린 금액을 전부 갚았어요',
+        Text(isLending ? '빌려준 금액을 전부 받았어요' : '빌린 금액을 전부 갚았어요',
             style: TextStyle(
                 fontSize: 16,
                 color: AppColor.primaryBlue.of(context),

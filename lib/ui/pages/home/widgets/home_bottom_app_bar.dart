@@ -1,7 +1,9 @@
+import 'package:dont_worry/data/app_view_model.dart';
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeBottomAppBar extends StatelessWidget {
   final TabController _tabController;
@@ -14,14 +16,14 @@ class HomeBottomAppBar extends StatelessWidget {
         builder: (context, child) {
           final double value = _tabController.animation!.value;
           final int currentIndex = (value + 0.5).floor();
-          final MyAction myAction =
-              currentIndex == 0 ? MyAction.lend : MyAction.borrow;
+          final bool isLending =
+              currentIndex == 0 ? true : false;
           return Container(
             decoration: BoxDecoration(
                 color: AppColor.containerWhite.of(context),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1), // 그림자 색상
+                    color: Colors.black.withValues(alpha: 0.1), // 그림자 색상
                     blurRadius: 30, // 흐림 정도
                     spreadRadius: 6, // 그림자 크기
                     offset: Offset(0, -4), // ⬆ 위쪽 그림자 (기본은 아래로 가므로 -값)
@@ -36,7 +38,7 @@ class HomeBottomAppBar extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CreateLoanPage(myAction: myAction),
+                      builder: (context) => CreateLoanPage(isLending: isLending),
                     ),
                   );
                 },
@@ -50,11 +52,11 @@ class HomeBottomAppBar extends StatelessWidget {
                     Icon(
                       Icons.add,
                       size: 30,
-                      color: myAction == MyAction.lend
+                      color: isLending
                           ? AppColor.primaryBlue.of(context)
                           : AppColor.primaryRed.of(context),
                     ),
-                    Text(myAction == MyAction.lend ? '빌려준 돈 기록' : '빌린 돈 기록'),
+                    Text(isLending ? '빌려준 돈 기록' : '빌린 돈 기록'),
                   ],
                 ),
               ),
@@ -62,6 +64,27 @@ class HomeBottomAppBar extends StatelessWidget {
           );
         });
   }
-}
 
-// myAction == MyAction.lend ?AppColor.containerBlue30.of(context):AppColor.containerRed30.of(context)
+  void createPerson(
+      {required BuildContext context,
+      required WidgetRef ref,
+      required String name}) async {
+    Person newPerson = Person(name: name,
+        hasLend: false,
+        hasBorrow: false,
+        isLendPaidOff: false,
+        isBorrowPaidOff: false,
+        memo: null,
+        personId: null,
+        remainingLendAmount: 0,
+        remainingBorrowAmount: 0 ,
+        repaidLendAmount: 0,
+        repaidBorrowAmount: 0,
+        upcomingLendDueDate: null,
+        upcomingBorrowDueDate: null,
+        lastLendRepaidDate: null,
+        lastBorrowRepaidDate: null,
+        updatedAt: DateTime.now());
+    await ref.read(appViewModelProvider.notifier).createPerson(newPerson);
+  }
+}

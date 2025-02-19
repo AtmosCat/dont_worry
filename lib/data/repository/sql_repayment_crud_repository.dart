@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
-import 'package:sqflite/sqflite.dart';
 
 class SqlRepaymentCrudRepository {
   // Create
@@ -14,7 +15,7 @@ class SqlRepaymentCrudRepository {
       );
       return result > 0;
     } catch (e) {
-      print("Repayment 생성 실패: $e");
+      log("Repayment 생성 실패: $e");
       return false;
     }
   }
@@ -26,12 +27,12 @@ class SqlRepaymentCrudRepository {
       int updatedRows = await db.update(
         Repayment.tableName,
         repayment.toJson(),
-        where: '${RepaymentFields.repaymentId} = ?',
+        where: '${Repayment.repaymentId_} = ?',
         whereArgs: [repayment.repaymentId],
       );
       return updatedRows > 0; // 업데이트된 행이 있으면 true 반환
     } catch (e) {
-      print("Repayment 업데이트 실패: $e");
+      log("Repayment 업데이트 실패: $e");
       return false; // 실패 시 false 반환
     }
   }
@@ -41,7 +42,7 @@ class SqlRepaymentCrudRepository {
     var db = await SqlDatabase().database;
     return await db.delete(
       Repayment.tableName,
-      where: '${RepaymentFields.repaymentId} = ?',
+      where: '${Repayment.repaymentId_} = ?',
       whereArgs: [repayment.repaymentId],
     );
   }
@@ -51,14 +52,7 @@ class SqlRepaymentCrudRepository {
     var db = await SqlDatabase().database;
     var result = await db.query(
       Repayment.tableName,
-      columns: [
-        RepaymentFields.personId,
-        RepaymentFields.loanId,
-        RepaymentFields.repaymentId,
-        RepaymentFields.amount,
-        RepaymentFields.date,
-      ],
-      where: '${RepaymentFields.repaymentId} = ?',
+      where: '${Repayment.repaymentId_} = ?',
       whereArgs: [repaymentId],
     );
 
@@ -70,30 +64,18 @@ class SqlRepaymentCrudRepository {
   }
 
   // Read List By Parent Id
-  static Future<List<Repayment>> getList(
-      {String? personId, String? loanId}) async {
+  static Future<List<Repayment>> getList({String? loanId}) async {
     var db = await SqlDatabase().database;
     var whereClauses = <String>[];
     var whereArgs = <dynamic>[];
 
-    if (personId != null) {
-      whereClauses.add('${RepaymentFields.personId} = ?');
-      whereArgs.add(personId);
-    }
     if (loanId != null) {
-      whereClauses.add('${RepaymentFields.loanId} = ?');
+      whereClauses.add('${Repayment.loanId_} = ?');
       whereArgs.add(loanId);
     }
 
     var result = await db.query(
       Repayment.tableName,
-      columns: [
-        RepaymentFields.personId,
-        RepaymentFields.loanId,
-        RepaymentFields.repaymentId,
-        RepaymentFields.amount,
-        RepaymentFields.date,
-      ],
       where: whereClauses.isNotEmpty ? whereClauses.join(' AND ') : null,
       whereArgs: whereArgs.isNotEmpty ? whereArgs : null,
     );

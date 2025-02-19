@@ -1,23 +1,17 @@
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
-import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_repayment_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RepaymentButton extends StatefulWidget {
   final bool isRepaid;
   final Loan loan;
-  final Person person;
-
   const RepaymentButton({
     super.key,
     required this.isRepaid,
     required this.loan,
-    required this.person,
   });
 
   @override
@@ -25,7 +19,6 @@ class RepaymentButton extends StatefulWidget {
 }
 
 class _RepaymentButtonState extends State<RepaymentButton> {
-
   @override
   void dispose() {
     super.dispose();
@@ -115,24 +108,18 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () async {
-                      final newRepayment = Repayment(
-                        personId: widget.loan.personId,
-                        loanId: widget.loan.loanId,
-                        amount: int.parse(repaymentAmountController.text),
-                      );
-                      widget.loan.repayments.add(newRepayment);
-                      widget.person.loans.add(widget.loan);
-                      var createRepaymentResult =
-                          await SqlRepaymentCrudRepository.create(newRepayment);
-                      var updateLoanResult =
-                          await SqlLoanCrudRepository.update(widget.loan);
-                      var updatePersonResult =
-                          await SqlPersonCrudRepository.update(widget.person);
-                      if (createRepaymentResult &&
-                          updateLoanResult &&
-                          updatePersonResult) {
+                  Consumer(
+                    builder: (context, ref, child) => TextButton(
+                      onPressed: () async {
+                        final newRepayment = Repayment(
+                          personId: widget.loan.personId,
+                          loanId: widget.loan.loanId,
+                          isLending: widget.loan.isLending,
+                          amount: int.parse(repaymentAmountController.text),
+                        );
+                        await ref
+                            .read(appViewModelProvider.notifier)
+                            .createRepayment(newRepayment);
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -140,24 +127,17 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                                 "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다."),
                           ),
                         );
-                      } else {
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("상환 처리에 실패했습니다."),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(
-                      "확인",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.primaryBlue.of(context),
+                      },
+                      child: Text(
+                        "확인",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: AppColor.primaryBlue.of(context),
+                        ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               );
             },

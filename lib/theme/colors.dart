@@ -43,7 +43,7 @@ class AppColors {
       AppColor.primaryRed: Color(0xFFF2616A), // 중요한 레드
       AppColor.onPrimaryWhite: Colors.white, // 컬러배경 위에서 쓰이는 흰색 : 다크모드에서도 화이트 유지됨
       AppColor.shadowBlack: Color(0xFF000000), // 그림자로 쓰이는 검정 : 다크모드에서도 유지됨
-      AppColor.divider: Colors.grey.withOpacity(0.2),// 디바이더
+      AppColor.divider: Colors.grey.withValues(alpha: 0.2),// 디바이더
 
       // background 컬러 (배경, 흰색 컨테이너 배경, 회색박스 등에 사용)
       AppColor.scaffoldGray: Color(0xFFF1F1F1), // 맨 뒷배경용 회색 
@@ -80,7 +80,7 @@ class AppColors {
       AppColor.primaryRed: Color(0xFFDD7980),
       AppColor.onPrimaryWhite: Colors.white,
       AppColor.shadowBlack: Color(0xFF000000),
-      AppColor.divider: Colors.white.withOpacity(0.2),// 디바이더
+      AppColor.divider: Colors.white.withValues(alpha: 0.2),// 디바이더
 
       AppColor.scaffoldGray: Color(0xFF121212),
       AppColor.containerWhite: Color(0xFF1E1E1E),

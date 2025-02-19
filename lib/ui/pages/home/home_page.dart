@@ -1,15 +1,14 @@
-import 'package:dont_worry/data/home_view_model.dart';
+import 'dart:io';
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_view.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -73,8 +72,8 @@ class _HomePageState extends State<HomePage>
 
           // #2. 탭바 뷰 세팅 -> 위젯
           body: TabBarView(controller: _tabController, children: [
-            HomeTabView(myAction: MyAction.lend), // 빌려간 돈 위젯
-            HomeTabView(myAction: MyAction.borrow), // 빌린 돈 위젯
+            HomeTabView(isLending: true), // 빌려간 돈 위젯
+            HomeTabView(isLending: false), // 빌린 돈 위젯
           ]),
         ),
         // #3. 하단 네비게이션바 -> 위젯
@@ -93,26 +92,21 @@ class _HomePageState extends State<HomePage>
             child: Column(
               children: <Widget>[
                 Consumer(
-                  builder: (
-                    BuildContext context,
-                    WidgetRef ref,
-                    Widget? child,
-                  ) {
-                    return ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('TEST_Person 생성'),
-                      onTap: () {
-                        createPerson(context: context, ref: ref, );
-                        Navigator.pop(context);
-                      },
-                    );
-                  },
-                ),
+                    builder: (context, ref, child) => ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('TEST_Person 생성'),
+                        onTap: () {
+                          createPerson(
+                            context: context,
+                            ref: ref,
+                          );
+                          Navigator.pop(context);
+                        })),
                 ListTile(
                   leading: Icon(Icons.delete,
                       color: AppColor.primaryRed.of(context)),
                   title: Text(
-                    'TEST_DB 완전 삭제',
+                    'TEST_DB 완전 초기화',
                     style: TextStyle(
                         color: AppColor.primaryRed.of(context),
                         fontWeight: FontWeight.bold),
@@ -130,40 +124,29 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-
   void deleteDatabaseFile() async {
     await SqlDatabase.deleteDatabaseFile();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('경고'),
+          content: Text('데이터베이스가 초기화되었습니다. 앱을 종료합니다.'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  exit(0); // 앱 종료
+                },
+                child: Text('확인'))
+          ],
+        );
+      },
+    );
   }
 
-  void createPerson({required BuildContext context, required WidgetRef ref}) async {
-    Person newPerson = Person(name: '이름${Uuid().v1().substring(0, 5)}');
-    await ref.read(homeViewModelProvider.notifier).createPerson(newPerson);
-
-    // Loan newLoan = Loan(
-    //     personId: newPerson.personId,
-    //     isLending: true,
-    //     initialAmount: 10000,
-    //     repayments: [
-    //       Repayment(
-    //           personId: 'test001_person',
-    //           loanId: 'test001_loan',
-    //           repaymentId: 'test001_repayment',
-    //           amount: 300,
-    //           date: DateTime(2024, 2, 1))
-    //     ],
-    //     loanDate: DateTime(2024, 2, 1),
-    //     dueDate: DateTime(2024, 4, 1),
-    //     title: '제목',
-    //     memo: '빠른 상환을 부탁드립니다.');
-
-    // await SqlLoanCrudRepository.create(newLoan);
-
-    // Repayment newRepayment = Repayment(
-    //   personId: newPerson.personId,
-    //   loanId: newLoan.loanId,
-    //   amount: 3000,
-    // );
-
-    // await SqlRepaymentCrudRepository.create(newRepayment);
+  void createPerson(
+      {required BuildContext context, required WidgetRef ref}) async {
+    Person newPerson = Person(name: '이름');
+    await ref.read(appViewModelProvider.notifier).createPerson(newPerson);
   }
 }

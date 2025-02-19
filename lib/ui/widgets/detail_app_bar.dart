@@ -1,25 +1,22 @@
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
-import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
-import 'package:dont_worry/data/repository/sql_person_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
+import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
-
-enum MyAction { lend, borrow }
-
-enum Category { person, loan, repayment, home }
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final MyAction myAction;
-  final Category category;
+  final bool isLending;
+  final UnitType unitType;
   final Person? person;
   final Loan? loan;
 
   const DetailAppBar({
-    required this.myAction,
-    required this.category,
+    required this.isLending,
+    required this.unitType,
     this.person,
     this.loan,
     super.key,
@@ -28,9 +25,9 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(category == Category.person
-          ? (myAction == MyAction.lend ? '내가 빌려준 사람' : '내가 빌린 사람')
-          : (myAction == MyAction.lend ? '내가 빌려준 돈' : '내가 빌린 돈')),
+      title: Text(unitType == UnitType.person
+          ? (isLending ? '내가 빌려준 사람' : '내가 빌린 사람')
+          : (isLending ? '내가 빌려준 돈' : '내가 빌린 돈')),
       centerTitle: true,
       leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -43,8 +40,8 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
               context: context,
               builder: (BuildContext context) {
                 return _BottomSheet(
-                    myAction: myAction,
-                    category: category,
+                    isLending: isLending,
+                    unitType: unitType,
                     person: person,
                     loan: loan);
               },
@@ -60,14 +57,14 @@ class DetailAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class _BottomSheet extends StatelessWidget {
-  final MyAction myAction;
-  final Category category;
+  final bool isLending;
+  final UnitType unitType;
   final Person? person;
   final Loan? loan;
 
   const _BottomSheet({
-    required this.myAction,
-    required this.category,
+    required this.isLending,
+    required this.unitType,
     required this.person,
     required this.loan,
   });
@@ -92,7 +89,7 @@ class _BottomSheet extends StatelessWidget {
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  if (category == Category.person) {
+                  if (unitType == UnitType.person) {
                     // 이 사람의 모든 대출을 상환
                   } else {
                     // 이 대출을 상환
@@ -104,7 +101,7 @@ class _BottomSheet extends StatelessWidget {
                 leading: Icon(Icons.edit),
                 title: Text('편집 (미구현)'),
                 onTap: () {
-                  if (category == Category.person) {
+                  if (unitType == UnitType.person) {
                     // 인물 정보수정
                   } else {
                     // 대출 정보수정
@@ -112,51 +109,45 @@ class _BottomSheet extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-              ListTile(
-                  leading: Icon(Icons.delete,
-                      color: AppColor.primaryRed.of(context)),
-                  title: Text(
-                    '삭제',
-                    style: TextStyle(
-                        color: AppColor.primaryRed.of(context),
-                        fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {
-                    final rootContext = context; // ✅ 모달 닫기 전, rootContext 저장
-                    // ✅ 삭제 확인 콜백 설정
-                    var onConfirm = (category == Category.person)
-                        ? () async {
-                            Navigator.pop(rootContext);
-                            Navigator.pop(rootContext);
-                            var result =
-                                await SqlPersonCrudRepository.delete(person!);
-                            if (result) {
+              Consumer(
+                builder: (context, ref, child) => ListTile(
+                    leading: Icon(Icons.delete,
+                        color: AppColor.primaryRed.of(context)),
+                    title: Text(
+                      '삭제',
+                      style: TextStyle(
+                          color: AppColor.primaryRed.of(context),
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onTap: () {
+                      final rootContext = context; // ✅ 모달 닫기 전, rootContext 저장
+                      // ✅ 삭제 확인 콜백 설정
+                      var onConfirm = (unitType == UnitType.person)
+                          ? () async {
+                              Navigator.pop(rootContext);
+                              Navigator.pop(rootContext);
+                              await ref
+                                  .read(appViewModelProvider.notifier)
+                                  .deletePerson(person!);
                               SnackbarUtil.showSnackBar(
                                   rootContext, "사람 정보가 삭제되었습니다.");
-                            } else {
-                              SnackbarUtil.showSnackBar(
-                                  rootContext, "사람 정보 삭제에 실패했습니다.");
                             }
-                          }
-                        : () async {
-                            Navigator.pop(rootContext); // ✅ 모달 닫기
-                            var result =
-                                await SqlLoanCrudRepository.delete(loan!);
-                            if (result) {
+                          : () async {
+                              Navigator.pop(rootContext); // ✅ 모달 닫기
+                              await ref
+                                  .read(appViewModelProvider.notifier)
+                                  .deleteLoan(loan!);
                               SnackbarUtil.showSnackBar(
                                   rootContext, "대출 내역이 삭제되었습니다.");
-                            } else {
-                              SnackbarUtil.showSnackBar(
-                                  rootContext, "대출 내역 삭제에 실패했습니다.");
-                            }
-                          };
+                            };
 
-                    // ✅ 삭제 확인 모달 표시
-                    showDeleteBottomSheet(
-                      context: rootContext,
-                      onConfirm: onConfirm,
-                    );
-                  }),
+                      // ✅ 삭제 확인 모달 표시
+                      showDeleteBottomSheet(
+                        context: rootContext,
+                        onConfirm: onConfirm,
+                      );
+                    }),
+              )
             ],
           ),
         ));

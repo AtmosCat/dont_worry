@@ -1,20 +1,17 @@
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
-import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
-import 'package:dont_worry/ui/widgets/repayment_button.dart';
-import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
 import 'package:dont_worry/ui/widgets/small_repayment_button.dart';
 import 'package:dont_worry/ui/widgets/small_repayment_progress_indicator.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 
 class SmallLoanCard extends StatelessWidget {
-  final MyAction myAction;
+  final bool isLending;
   final Loan loan;
   final Person person;
   const SmallLoanCard(
-      {required this.myAction,
+      {required this.isLending,
       required this.loan,
       required this.person,
       super.key});

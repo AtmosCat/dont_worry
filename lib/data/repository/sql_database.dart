@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
@@ -27,52 +29,72 @@ class SqlDatabase {
     String path = join(databasePath, 'dont_worry.db');
     _database = await openDatabase(path, version: 1, onCreate: _databaseCreate);
   }
+
   // path 경로에 DB를 제거
   static Future<void> deleteDatabaseFile() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'dont_worry.db');
     await deleteDatabase(path);
-    print('Database deleted');
+    log('Database deleted');
   }
 
   // SQL 테이블 구조 작성
   void _databaseCreate(Database db, int version) async {
     var batch = db.batch();
     batch.execute('''
-      create table ${Person.tableName}(
-        ${PersonFields.personId} text not null primary key,
-        ${PersonFields.name} text not null,
-        ${PersonFields.loans} text not null,
-        ${PersonFields.memo} text
-      )
-    ''');
+  CREATE TABLE ${Person.tableName}(
+    ${Person.personId_} TEXT PRIMARY KEY,
+    ${Person.updatedAt_} TEXT DEFAULT CURRENT_TIMESTAMP,
+    ${Person.name_} TEXT NOT NULL,
+    ${Person.memo_} TEXT,
+    ${Person.hasLend_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.hasBorrow_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.repaidLendAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.repaidBorrowAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.remainingLendAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.remainingBorrowAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.isLendPaidOff_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.isBorrowPaidOff_} INTEGER NOT NULL DEFAULT 0,
+    ${Person.upcomingLendDueDate_} TEXT,
+    ${Person.upcomingBorrowDueDate_} TEXT,
+    ${Person.lastLendRepaidDate_} TEXT,
+    ${Person.lastBorrowRepaidDate_} TEXT
+  )
+''');
 
     batch.execute('''
-      create table ${Loan.tableName}(
-        ${LoanFields.personId} text not null,
-        ${LoanFields.loanId} text not null primary key,
-        ${LoanFields.isLending} integer not null,
-        ${LoanFields.initialAmount} integer not null,
-        ${LoanFields.repayments} text not null,
-        ${LoanFields.loanDate} text not null,
-        ${LoanFields.dueDate} text not null,
-        ${LoanFields.title} text not null,
-        ${LoanFields.memo} text not null,
-        foreign key (${LoanFields.personId}) references ${Person.tableName} (${PersonFields.personId}) on delete cascade
-      )
-    ''');
+  CREATE TABLE ${Loan.tableName}(
+    ${Loan.loanId_} TEXT PRIMARY KEY,
+    ${Loan.personId_} TEXT NOT NULL,
+    ${Loan.updatedAt_} TEXT DEFAULT CURRENT_TIMESTAMP,
+    ${Loan.isLending_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.initialAmount_} INTEGER NOT NULL,
+    ${Loan.loanDate_} TEXT NOT NULL,
+    ${Loan.dueDate_} TEXT,
+    ${Loan.title_} TEXT NOT NULL,
+    ${Loan.memo_} TEXT,
+    ${Loan.repaidAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.remainingAmount_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.repaymentRate_} REAL NOT NULL,
+    ${Loan.isPaidOff_} INTEGER NOT NULL DEFAULT 0,
+    ${Loan.lastRepaidDate_} TEXT,
+    FOREIGN KEY (${Loan.personId_}) REFERENCES ${Person.tableName} (${Person.personId_}) ON DELETE CASCADE
+  )
+''');
 
     batch.execute('''
-      create table ${Repayment.tableName}(
-        ${RepaymentFields.personId} text not null,
-        ${RepaymentFields.loanId} text not null,
-        ${RepaymentFields.repaymentId} text not null primary key,
-        ${RepaymentFields.amount} integer not null,
-        ${RepaymentFields.date} text not null,
-        foreign key(${RepaymentFields.personId}) references ${Person.tableName}(${PersonFields.personId}) on delete cascade
-        foreign key (${RepaymentFields.loanId}) references ${Loan.tableName} (${LoanFields.loanId}) on delete cascade
-      )
-    ''');
+  CREATE TABLE ${Repayment.tableName}(
+    ${Repayment.repaymentId_} TEXT PRIMARY KEY,
+    ${Repayment.personId_} TEXT NOT NULL,
+    ${Repayment.loanId_} TEXT NOT NULL,
+    ${Repayment.isLending_} INTEGER NOT NULL,
+    ${Repayment.amount_} INTEGER NOT NULL,
+    ${Repayment.date_} TEXT NOT NULL,
+    FOREIGN KEY(${Repayment.personId_}) REFERENCES ${Person.tableName}(${Person.personId_}) ON DELETE CASCADE,
+    FOREIGN KEY (${Repayment.loanId_}) REFERENCES ${Loan.tableName} (${Loan.loanId_}) ON DELETE CASCADE
+  )
+''');
+
     await batch.commit();
   }
 

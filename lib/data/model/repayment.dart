@@ -1,68 +1,74 @@
 import 'package:uuid/uuid.dart';
 
-/* SQL 사용을 위해,
-tableName과 Fields{} 클래스를 정의해줬습니다 */
-
-/* 모든 파라미터를 'string' key로
-- 반드시 Id를 가지고 있을 것
-- 상위 클래스 Person과 Loan Id를 가지고 있을 것 */
-
-class RepaymentFields {
-  static final String personId = 'person_id';
-  static final String loanId = 'loan_id';
-  static final String repaymentId = 'repayment_id';
-  static final String amount = 'amount';
-  static final String date = 'date';
-}
-
 class Repayment {
-  static String tableName = 'repayment'; // 테이블 이름을 'string' key로
+  // # key
+  static String tableName = 'repayment';
+  String repaymentId;
   String personId;
   String loanId;
-  String repaymentId;
-  int amount; // 상환액수 (원 단위)
-  DateTime date; // 상환일자
+  static String repaymentId_ = 'repayment_id';
+  static String personId_ = 'person_id';
+  static String loanId_ = 'loan_id';
 
+  // # input
+  bool isLending; // true 빌려준 돈, false 빌린 돈
+  int amount;
+  DateTime date;
+  static String isLending_ = 'is_lending';
+  static String amount_ = 'amount';
+  static String date_ = 'date';
+
+  // # 생성자
   Repayment({
+    String? repaymentId,
     required this.personId,
     required this.loanId,
-    String? repaymentId,
+    required this.isLending,
     required this.amount,
     DateTime? date,
-  })  : repaymentId = repaymentId ?? Uuid().v4(),
+  })
+  // # 생성자 초기화
+  : repaymentId = repaymentId ?? Uuid().v4(),
         date = date ?? DateTime.now();
 
+  // # 직렬화 toJson
   Map<String, dynamic> toJson() {
     return {
-      RepaymentFields.personId: personId,
-      RepaymentFields.loanId: loanId,
-      RepaymentFields.repaymentId: repaymentId,
-      RepaymentFields.amount: amount,
-      RepaymentFields.date: date.toIso8601String(),
+      repaymentId_: repaymentId,
+      personId_: personId,
+      loanId_: loanId,
+      isLending_: isLending ? 1 : 0,
+      amount_: amount,
+      date_: date.toIso8601String(),
     };
   }
 
+  // # 역직렬화 fromJson
   factory Repayment.fromJson(Map<String, dynamic> json) {
     return Repayment(
-      personId: json[RepaymentFields.personId] as String,
-      loanId: json[RepaymentFields.loanId] as String,
-      repaymentId: json[RepaymentFields.repaymentId] as String,
-      amount: json[RepaymentFields.amount] as int,
-      date: DateTime.parse(json[RepaymentFields.date] as String),
+      repaymentId: json[repaymentId_] as String,
+      personId: json[personId_] as String,
+      loanId: json[loanId_] as String,
+      isLending: json[isLending_] as int == 1,
+      amount: json[amount_] as int,
+      date: DateTime.parse(json[date_] as String),
     );
   }
 
+  // # clone
   Repayment clone({
+    String? repaymentId,
     String? personId,
     String? loanId,
-    String? repaymentId,
+    bool? isLending,
     int? amount,
     DateTime? date,
   }) {
     return Repayment(
+      repaymentId: repaymentId ?? this.repaymentId,
       personId: personId ?? this.personId,
       loanId: loanId ?? this.loanId,
-      repaymentId: repaymentId,
+      isLending: isLending ?? this.isLending,
       amount: amount ?? this.amount,
       date: date ?? this.date,
     );

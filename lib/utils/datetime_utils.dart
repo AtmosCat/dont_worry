@@ -13,11 +13,11 @@ class DatetimeUtils {
   }
 
   // DatePicker 호출 함수
-  static Future<DateTime?> selectDate(BuildContext context) async {
-    DateTime selectedDate = DateTime.now();
+  static Future<DateTime?> selectDate({required BuildContext context, DateTime? initialDate}) async {
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: initialDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
       helpText: '날짜를 선택하세요',
@@ -34,9 +34,6 @@ class DatetimeUtils {
       },
     );
 
-    if (picked != null && picked != selectedDate) {
-      selectedDate = picked;
-    }
-    return selectedDate; 
+    return picked;
   }
 }
