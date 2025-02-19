@@ -1,6 +1,9 @@
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 // 플렉서블 헤더
 class HomeFlexibleHeader extends StatelessWidget {
@@ -9,9 +12,6 @@ class HomeFlexibleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int totalLendAmount = 30000;
-    int totalBorrowedAmount = 3000000;
-
     return FlexibleSpaceBar(
         background: AnimatedBuilder(
             animation: _tabController.animation!,
@@ -26,46 +26,56 @@ class HomeFlexibleHeader extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(currentIndex == 0
-                        ? "내가 받아야 할 금액이"
-                        : "내가 갚아야 할 금액이",
+                        Text(
+                            currentIndex == 0 ? "내가 받아야 할 금액이" : "내가 갚아야 할 금액이",
                             style: TextStyle(fontSize: 18)),
-                        Text.rich(TextSpan(
-                            style: TextStyle(
-                                color: currentIndex == 0
-                                    ? AppColor.primaryBlue.of(context)
-                                    : AppColor.primaryRed.of(context)),
-                            children: [
-                              TextSpan(
-                                  text: NumberUtils.formatWithCommas(
-                                      currentIndex == 0
-                                          ? totalLendAmount
-                                          : totalBorrowedAmount),
-                                  style: TextStyle(
-                                      letterSpacing: -0.7,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w800)),
-                              TextSpan(
-                                text: '원',
-                                style: TextStyle(
-                                    fontSize: 24,
-                                    color: currentIndex == 0
-                                        ? AppColor.primaryBlue.of(context)
-                                        : AppColor.primaryRed.of(context)),
-                              ),
-                              TextSpan(
-                                  text: ' 남았어요',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      color: AppColor.defaultBlack.of(context)))
-                            ])),
+                        buildRemainingAmountText(currentIndex)
                       ],
                     ),
                     Spacer(),
-                    Icon(Icons.payments, size: 70,color: Colors.green,) //이미지 추가 예정
+                    Icon(
+                      Icons.payments,
+                      size: 70,
+                      color: Colors.green,
+                    ) //이미지 추가 예정
                   ],
                 ),
               );
             }));
+  }
+
+  Consumer buildRemainingAmountText(int currentIndex) {
+    return Consumer(builder: (context, ref, child) {
+      var peopleState = ref.watch(appViewModelProvider).people;
+      var remainingAmounts = (currentIndex == 0)
+          ? peopleState.map((person) => person.remainingLendAmount)
+          : peopleState.map((person) => person.remainingBorrowAmount);
+      return Text.rich(TextSpan(
+          style: TextStyle(
+              color: currentIndex == 0
+                  ? AppColor.primaryBlue.of(context)
+                  : AppColor.primaryRed.of(context)),
+          children: [
+            TextSpan(
+                text: NumberUtils.formatWithCommas(remainingAmounts.fold(
+                    0, (previousValue, element) => previousValue + element)),
+                style: TextStyle(
+                    letterSpacing: -0.7,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w800)),
+            TextSpan(
+              text: '원',
+              style: TextStyle(
+                  fontSize: 24,
+                  color: currentIndex == 0
+                      ? AppColor.primaryBlue.of(context)
+                      : AppColor.primaryRed.of(context)),
+            ),
+            TextSpan(
+                text: ' 남았어요',
+                style: TextStyle(
+                    fontSize: 18, color: AppColor.defaultBlack.of(context)))
+          ]));
+    });
   }
 }

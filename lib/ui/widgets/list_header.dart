@@ -75,12 +75,12 @@ class _ListHeaderState extends State<ListHeader> {
                       itemBuilder: (BuildContext context) {
                         return [
                           PopupMenuItem(
-                            child: Text('업데이트 순'),
                             value: '업데이트 순',
+                            child: Text('업데이트 순'),
                           ),
                           PopupMenuItem(
-                            child: Text('높은 가격 순'),
                             value: '높은 가격 순',
+                            child: Text('높은 가격 순'),
                           ),
                         ];
                       },

@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
+import 'package:dont_worry/data/shared_preferences/tab_preferences.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
@@ -23,7 +25,23 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    log('탭 컨트롤러 세팅!');
     _tabController = TabController(length: 2, vsync: this);
+    loadLastTab();
+    _tabController.addListener(() async {
+      if (_tabController.index != _tabController.previousIndex) {
+        await TabPreference.saveSelectedTab(_tabController.index);
+      }
+    });
+  }
+
+  Future<void> loadLastTab() async {
+    int lastTab = await TabPreference.getSelectedTab();
+    if (mounted) {
+      setState(() {
+        _tabController.index = lastTab;
+      });
+    }
   }
 
   @override

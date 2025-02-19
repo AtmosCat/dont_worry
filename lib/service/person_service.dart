@@ -3,7 +3,7 @@ import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/service/query_service.dart';
 
 class PersonService {
-  QueryService _queryService = QueryService();
+  final QueryService _queryService = QueryService();
 
   Person analyzePerson(
       {required Person person,

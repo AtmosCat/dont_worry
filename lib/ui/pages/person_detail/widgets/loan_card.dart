@@ -1,5 +1,4 @@
 import 'package:dont_worry/data/model/loan.dart';
-import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/loan_detail_page.dart';
 import 'package:dont_worry/ui/widgets/repayment_button.dart';
@@ -10,8 +9,10 @@ import 'package:flutter/material.dart';
 class LoanCard extends StatelessWidget {
   final bool isLending;
   final Loan loan;
-  final Person person;
-  const LoanCard({required this.isLending, required this.loan, required this.person, super.key});
+  const LoanCard(
+      {required this.isLending,
+      required this.loan,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +20,11 @@ class LoanCard extends StatelessWidget {
     final int remainingAmount = loan.remainingAmount;
     final int initialAmount = loan.initialAmount;
     final int totalRepayment = initialAmount - remainingAmount;
-    final double repaymentRate = totalRepayment/initialAmount;
+    final double repaymentRate = totalRepayment / initialAmount;
 
-    final int dDay = 0;
+    final int? dDay = loan.dueDate == null
+        ? null
+        : DateTime.now().difference(loan.dueDate!).inDays;
     final DateTime lastRepaymentDate = DateTime(2025, 2, 7);
 
     final bool isRepaid = remainingAmount == 0;
@@ -31,7 +34,8 @@ class LoanCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoanDetailPage(isLending : isLending, loan: loan, person: person),
+          builder: (context) => LoanDetailPage(
+              isLending: isLending, loanId: loan.loanId),
         ),
       ),
       child: Container(
@@ -51,7 +55,8 @@ class LoanCard extends StatelessWidget {
                     children: [
                       titleText(title, remainingAmount, context),
                       const Spacer(),
-                      dDayText(remainingAmount, lastRepaymentDate, context, dDay),
+                      dDayText(
+                          remainingAmount, lastRepaymentDate, context, dDay),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -94,7 +99,7 @@ class LoanCard extends StatelessWidget {
 
   // 디데이
   Visibility dDayText(
-      int amount, DateTime lastRepaymentDate, BuildContext context, int dDay) {
+      int amount, DateTime lastRepaymentDate, BuildContext context, int? dDay) {
     return Visibility(
       visible: amount != 0,
       // 상환 완료 시,
@@ -103,16 +108,20 @@ class LoanCard extends StatelessWidget {
           style: TextStyle(fontSize: 15, color: AppColor.disabled.of(context))),
       // 미상환 시,
       child: Text(
-          dDay > 0
-              ? 'D-$dDay'
-              : dDay == 0
-                  ? 'D-day'
-                  : '연체 중',
+          dDay == null
+              ? ''
+              : dDay < 0
+                  ? 'D$dDay'
+                  : dDay == 0
+                      ? 'D-day'
+                      : '연체 중',
           style: TextStyle(
               fontSize: 13,
-              color: dDay > 0
+              color: dDay == null
                   ? AppColor.primaryBlue.of(context)
-                  : AppColor.primaryRed.of(context),
+                  : dDay < 0
+                      ? AppColor.primaryBlue.of(context)
+                      : AppColor.primaryRed.of(context),
               fontWeight: FontWeight.bold)),
     );
   }
@@ -169,10 +178,7 @@ class LoanCard extends StatelessWidget {
     주의. 재사용할 가능성이 있습니다.
     가급적 Loan 클래스 내에서 메서드로 구현해주세요.
     */
-
-
     /*TODO: 날짜 관련 데이터 구하는 로직 개발 필요
-
     개발사항 1. dDay : 변제일
       loan의 변제일
     개발사항 2. lastRepaymentDate : 가장 최근에 상환한 날짜

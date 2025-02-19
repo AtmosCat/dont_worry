@@ -1,5 +1,4 @@
-import 'package:dont_worry/data/model/loan.dart';
-import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_info_section.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_repayment_section.dart';
@@ -8,76 +7,88 @@ import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/detail_bottom_navigation_bar.dart';
 import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoanDetailPage extends StatelessWidget {
   final bool isLending;
-  final Loan loan;
-  final Person person;
-  const LoanDetailPage({required this.isLending, required this.loan, required this.person, super.key});
+  final String loanId;
+  const LoanDetailPage(
+      {required this.isLending,
+      required this.loanId,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String title = loan.title;
-    final String memo = loan.memo ?? '';
+    return Consumer(builder: (context, ref, child) {
+      var loan = ref.watch(appViewModelProvider.select((state) =>
+          state.loans.firstWhere((element) => element.loanId == loanId)));
+      var person = ref.watch(appViewModelProvider.select((state) =>
+          state.people.firstWhere((element) => element.personId == loan.personId)));
 
-    final int amount = 5000;
-    final int initialAmount = loan.initialAmount;
-    final int totalRepayment = initialAmount - amount;
-    final double repaymentRate = totalRepayment / initialAmount;
+      final String title = loan.title;
+      final String memo = loan.memo ?? '';
 
-    final DateTime loanDate = loan.loanDate;
-    final DateTime? dueDate = loan.dueDate;
-    final int dDay = -1;
+      final int remainingAmount = loan.remainingAmount;
+      final int initialAmount = loan.initialAmount;
+      final int totalRepayment = initialAmount - remainingAmount;
+      final double repaymentRate = totalRepayment / initialAmount;
 
-    final String name = '김철수';
-    final bool isRepaid = amount == 0;
+      final DateTime loanDate = loan.loanDate;
+      final DateTime? dueDate = loan.dueDate;
+      final int dDay = dueDate != null ? dueDate.difference(DateTime.now()).inDays : 0;
 
-    // LoanDetailPage UI
-    return Scaffold(
-      backgroundColor: AppColor.containerWhite.of(context),
-      // #1. 상단 앱바
-      appBar: DetailAppBar(isLending: isLending, unitType: UnitType.loan, loan: loan),
-      body: ListView(
-        children: [
-          Container(
-            padding: EdgeInsets.all(24),
-            color: AppColor.containerWhite.of(context),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // #2-1. 핵심 요약 섹션
-              LoanDetailSummarySection(
-                title: title,
-                isRepaid: isRepaid,
-                memo: memo,
-                amount: amount,
-              ),
-              Divider(height: 80, color: AppColor.divider.of(context)),
-              // #2-2. 상세 정보 섹션
-              LoanDetailInfoSection(
-                isLending: isLending,
-                initialAmount: initialAmount,
-                name: name,
-                loanDate: loanDate,
-                dueDate: dueDate,
-                dDay: dDay,
-              ),
-              Divider(height: 80, color: AppColor.divider.of(context)),
-              // #2-3. 상환한 금액 섹션
-              LoanDetailRepaymentSection(
-                isLending: isLending,
-                loanId: loan.loanId,
-                totalRepayment: totalRepayment,
-                initialAmount: initialAmount,
-                repaymentRate: repaymentRate,
-              )
-            ]),
-          ),
-        ],
-      ),
-      // #3. 하단 네비게이션바
-      bottomNavigationBar: DetailBottomNavigationBar(
-          isLending: isLending, unitType: UnitType.loan, person: person),
-    );
+      final String name = person.name;
+      final bool isRepaid = remainingAmount == 0;
+
+      // LoanDetailPage UI
+      return Scaffold(
+        backgroundColor: AppColor.containerWhite.of(context),
+        // #1. 상단 앱바
+        appBar: DetailAppBar(
+            isLending: isLending, unitType: UnitType.loan, loan: loan),
+        body: ListView(
+          children: [
+            Container(
+              padding: EdgeInsets.all(24),
+              color: AppColor.containerWhite.of(context),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // #2-1. 핵심 요약 섹션
+                    LoanDetailSummarySection(
+                      title: title,
+                      isRepaid: isRepaid,
+                      memo: memo,
+                      amount: remainingAmount,
+                    ),
+                    Divider(height: 80, color: AppColor.divider.of(context)),
+                    // #2-2. 상세 정보 섹션
+                    LoanDetailInfoSection(
+                      isLending: isLending,
+                      initialAmount: initialAmount,
+                      name: name,
+                      loanDate: loanDate,
+                      dueDate: dueDate,
+                      dDay: dDay,
+                    ),
+                    Divider(height: 80, color: AppColor.divider.of(context)),
+                    // #2-3. 상환한 금액 섹션
+                    LoanDetailRepaymentSection(
+                      isLending: isLending,
+                      loanId: loan.loanId,
+                      totalRepayment: totalRepayment,
+                      initialAmount: initialAmount,
+                      repaymentRate: repaymentRate,
+                    )
+                  ]),
+            ),
+          ],
+        ),
+        // #3. 하단 네비게이션바
+        bottomNavigationBar: DetailBottomNavigationBar(
+            isLending: isLending, unitType: UnitType.loan, person: person),
+      );
+    });
   }
 }
 

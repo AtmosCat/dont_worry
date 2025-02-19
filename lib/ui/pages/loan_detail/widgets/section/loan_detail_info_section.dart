@@ -10,7 +10,7 @@ class LoanDetailInfoSection extends StatelessWidget {
     required this.name,
     required this.loanDate,
     this.dueDate,
-    this.dDay = 0,
+    required this.dDay,
   });
 
   final bool isLending;
@@ -93,7 +93,7 @@ class LoanDetailInfoSection extends StatelessWidget {
                                     : '갚기로 한 날로부터 '),
                         TextSpan(
                             text: dDay > 0
-                                ? '${dDay}일'
+                                ? '$dDay일'
                                 : dDay == 0
                                     ? '오늘'
                                     : '${-dDay}일',
