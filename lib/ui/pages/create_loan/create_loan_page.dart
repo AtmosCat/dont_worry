@@ -26,32 +26,23 @@ class CreateLoanPage extends StatefulWidget {
 }
 
 class _CreateLoanPageState extends State<CreateLoanPage> {
-  final nameEdittingController = TextEditingController();
-  late Person selectedPerson;
-  String selectedPersonName = "이름";
-
   final amountEdittingController = TextEditingController();
   final titleEdittingController = TextEditingController();
   final memoEdittingController = TextEditingController();
   final loanDateEdittingController = TextEditingController();
   final dueDateEdittingController = TextEditingController();
 
-  late final people;
-
+  Person? selectedPerson;
   DateTime loanDate = DateTime.now();
-  DateTime dueDate = DateTime.now();
+  DateTime? dueDate;
 
   @override
   void initState() {
-    super.initState();
-    if (widget.person != null) {
-      selectedPerson = widget.person!;
-      selectedPersonName = widget.person!.name;
-    }
+    selectedPerson = widget.person;
     loanDateEdittingController.text =
-        "${loanDate.year}-${loanDate.month}-${loanDate.day}";
-    dueDateEdittingController.text =
-        "${dueDate.year}-${dueDate.month}-${dueDate.day}";
+        "${loanDate.year}년 ${loanDate.month}월 ${loanDate.day}일";
+    dueDateEdittingController.text = "미정";
+    super.initState();
   }
 
   void _showSearchModal() {
@@ -66,9 +57,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
             builder: (context, ref, child) => SearchPopup(
                   onSelect: (Person _selectedPerson) {
                     setState(() {
-                      people = ref.read(appViewModelProvider).people;
                       selectedPerson = _selectedPerson;
-                      selectedPersonName = _selectedPerson.name;
                     });
                     Navigator.pop(context); // 팝업 닫기
                   },
@@ -109,15 +98,20 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(
+              TextFormField(
                 onTap: _showSearchModal,
-                child: AbsorbPointer(
-                  child: TextFormField(
-                    controller: nameEdittingController,
-                    decoration: InputDecoration(
-                      labelText: selectedPersonName,
-                    ),
+                controller:
+                    TextEditingController(text: selectedPerson?.name ?? ''),
+                readOnly: true, // 직접 입력 방지
+                decoration: InputDecoration(
+                  labelText: "이름",
+                  labelStyle: TextStyle(color: AppColor.gray30.of(context)),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: AppColor.primaryBlue.of(context),
+                        width: 2.0), // 포커스 시 테두리 색상
                   ),
+                  suffixIcon: Icon(Icons.search), // 캘린더 아이콘 추가
                 ),
               ),
               SizedBox(height: 10),
@@ -140,7 +134,9 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
               ),
               SizedBox(height: 10),
               TextFormField(
-                controller: loanDateEdittingController, // 컨트롤러 사용
+                controller: TextEditingController(
+                    text:
+                        "${loanDate.year}년 ${loanDate.month}월 ${loanDate.day}일"),
                 readOnly: true, // 직접 입력 방지
                 decoration: InputDecoration(
                   labelText: "대출일",
@@ -153,19 +149,21 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   suffixIcon: Icon(Icons.calendar_today), // 캘린더 아이콘 추가
                 ),
                 onTap: () async {
-                  final selectedDate = await DatetimeUtils.selectDate(context);
+                  final selectedDate = await DatetimeUtils.selectDate(
+                      context: context, initialDate: loanDate);
                   if (selectedDate != null) {
                     setState(() {
                       loanDate = selectedDate;
-                      loanDateEdittingController.text =
-                          "${loanDate.year}-${loanDate.month}-${loanDate.day}"; // 선택한 날짜 적용
                     });
                   }
                 },
               ),
               SizedBox(height: 10),
               TextFormField(
-                controller: dueDateEdittingController,
+                controller: TextEditingController(
+                    text: dueDate != null
+                         ? "${dueDate?.year}년 ${dueDate?.month}월 ${dueDate?.day}일"
+                         : "미정"),
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: "상환일",
@@ -177,12 +175,11 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () async {
-                  final selectedDate = await DatetimeUtils.selectDate(context);
+                  final selectedDate = await DatetimeUtils.selectDate(
+                      context: context, initialDate: dueDate);
                   if (selectedDate != null) {
                     setState(() {
                       dueDate = selectedDate;
-                      dueDateEdittingController.text =
-                          "${dueDate.year}-${dueDate.month}-${dueDate.day}"; // 선택한 날짜 적용
                     });
                   }
                 },
@@ -205,44 +202,34 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                         ),
                       ),
                       onPressed: () async {
-                        if (titleEdittingController.text.isEmpty) {
-                          SnackbarUtil.showSnackBar(context, "제목을 입력해주세요.");
-                          return;
-                        } else if (amountEdittingController.text.isEmpty) {
+                        if (amountEdittingController.text.isEmpty) {
                           SnackbarUtil.showSnackBar(context, "금액을 입력해주세요.");
                           return;
-                        } else if (selectedPersonName.isEmpty) {
+                        } else if (selectedPerson == null) {
                           SnackbarUtil.showSnackBar(context, "이름을 입력해주세요.");
                           return;
-                        } else if (loanDateEdittingController.text.isEmpty) {
-                          SnackbarUtil.showSnackBar(context, "대출일을 선택해주세요.");
-                        } else if (dueDateEdittingController.text.isEmpty) {
-                          SnackbarUtil.showSnackBar(context, "상환일을 선택해주세요.");
                         } else {
                           Loan newLoan = Loan(
-                            personId: selectedPerson.personId,
+                            personId: selectedPerson!.personId,
                             isLending: widget.isLending,
                             initialAmount:
                                 int.parse(amountEdittingController.text),
-                            loanDate: DateTime(
-                                loanDate.year, loanDate.month, loanDate.day),
-                            dueDate: DateTime(
-                                dueDate.year, dueDate.month, dueDate.day),
-                            title: titleEdittingController.text,
-                            memo: memoEdittingController.text,
+                            loanDate: loanDate,
+                            dueDate: dueDate,
+                            title: titleEdittingController.text.isEmpty
+                                ? null
+                                : titleEdittingController.text,
+                            memo: memoEdittingController.text.isEmpty
+                                ? null
+                                : memoEdittingController.text,
                           );
-                          await ref.read(appViewModelProvider.notifier).createLoan(newLoan);
+                          await ref
+                              .read(appViewModelProvider.notifier)
+                              .createLoan(newLoan);
                           log('추가한 Loan의 isLending: ${newLoan.isLending}');
                           log('추가한 Loan의 personId: ${newLoan.personId}');
                           SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
                           Navigator.pop(context);
-                          // if (loanUpdateResult) {
-                          //   SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
-                          //   Navigator.pop(context);
-                          // } else {
-                          //   SnackbarUtil.showSnackBar(
-                          //       context, "기록 추가에 실패했습니다.");
-                          // }
                         }
                       },
                       child: Text(

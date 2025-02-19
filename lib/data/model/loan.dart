@@ -58,7 +58,8 @@ class Loan {
         updatedAt = DateTime.now(),
         loanDate = loanDate ?? DateTime.now(),
         title = title ??
-            "${loanDate ?? DateTime.now().year}년 ${loanDate ?? DateTime.now().month}월 ${loanDate ?? DateTime.now().day}일",
+            "${loanDate?.month ?? DateTime.now().month}월 "
+                "${loanDate?.day ?? DateTime.now().day}일",
         repaidAmount = repaidAmount ?? 0,
         remainingAmount = remainingAmount ?? initialAmount,
         repaymentRate = repaymentRate ?? 0,
