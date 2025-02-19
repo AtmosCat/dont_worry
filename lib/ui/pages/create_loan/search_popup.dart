@@ -118,11 +118,6 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                                   .createPerson(newPerson);
                               SnackbarUtil.showSnackBar(
                                   context, "사람 정보가 추가되었습니다.");
-                              // if (result) {
-                              //   SnackbarUtil.showSnackBar(context, "사람 정보가 추가되었습니다.");
-                              // } else {
-                              //   SnackbarUtil.showSnackBar(context, "사람 정보 추가에 실패했습니다.");
-                              // }
                             }
                           },
                           child: Text(

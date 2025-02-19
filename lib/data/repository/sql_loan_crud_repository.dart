@@ -9,6 +9,7 @@ class SqlLoanCrudRepository {
     try {
       var db = await SqlDatabase().database;
       int result = await db.insert(Loan.tableName, loan.toJson());
+      log('loan이 생성되었고, db에 업데이트 되었습니다. personId: ${loan.personId}, ${loan.isLending}');
       return result > 0;
     } catch (e) {
       log("Database insert error: $e");

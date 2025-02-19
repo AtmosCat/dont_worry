@@ -9,7 +9,6 @@ class PersonService {
       {required Person person,
       required bool isLending,
       required List<Loan> stateLoans}) {
-    
     List<Loan> loansByPersonId = _queryService.getLoansBy(
         loans: stateLoans, isLending: isLending, personId: person.personId);
 
@@ -21,31 +20,32 @@ class PersonService {
     var lastRepaidDate = getLastRepaidDate(loansByPersonId: loansByPersonId);
 
     return isLending
-    ? person.clone(
-      hasLend: hasLoan,
-      repaidLendAmount: repaidAmount,
-      remainingLendAmount: remainingAmount,
-      isLendPaidOff: isPaidOff,
-      upcomingLendDueDate: upcomingDueDate,
-      lastLendRepaidDate: lastRepaidDate,
-    )
-    : person.clone(
-      hasBorrow: hasLoan,
-      repaidBorrowAmount: repaidAmount,
-      remainingBorrowAmount: remainingAmount,
-      isBorrowPaidOff: isPaidOff,
-      upcomingBorrowDueDate: upcomingDueDate,
-      lastBorrowRepaidDate: lastRepaidDate,
-    );
+        ? person.clone(
+            updatedAt: DateTime.now(),
+            hasLend: hasLoan,
+            repaidLendAmount: repaidAmount,
+            remainingLendAmount: remainingAmount,
+            isLendPaidOff: isPaidOff,
+            upcomingLendDueDate: upcomingDueDate,
+            lastLendRepaidDate: lastRepaidDate,
+          )
+        : person.clone(
+            updatedAt: DateTime.now(),
+            hasBorrow: hasLoan,
+            repaidBorrowAmount: repaidAmount,
+            remainingBorrowAmount: remainingAmount,
+            isBorrowPaidOff: isPaidOff,
+            upcomingBorrowDueDate: upcomingDueDate,
+            lastBorrowRepaidDate: lastRepaidDate,
+          );
   }
 
-bool getHasLoan({required List<Loan> loansByPersonId}) {
-  return loansByPersonId.isNotEmpty;
-}
+  bool getHasLoan({required List<Loan> loansByPersonId}) {
+    return loansByPersonId.isNotEmpty;
+  }
 
-int getRepaidAmount({required List<Loan> loansByPersonId}) {
-    return loansByPersonId.fold<int>(
-        0, (sum, loan) => sum + loan.repaidAmount);
+  int getRepaidAmount({required List<Loan> loansByPersonId}) {
+    return loansByPersonId.fold<int>(0, (sum, loan) => sum + loan.repaidAmount);
   }
 
   int getRemainingAmount({required List<Loan> loansByPersonId}) {
@@ -59,19 +59,19 @@ int getRepaidAmount({required List<Loan> loansByPersonId}) {
 
   DateTime? getUpcomingDueDate({required List<Loan> loansByPersonId}) {
     List<DateTime>? dueDates = loansByPersonId
-            .where((loan) => loan.dueDate != null && !loan.isPaidOff)
-            .map((loan) => loan.dueDate!).toList();
+        .where((loan) => loan.dueDate != null && !loan.isPaidOff)
+        .map((loan) => loan.dueDate!)
+        .toList();
     return dueDates.isEmpty
-      ? null
-      : dueDates.reduce((a, b) => a.isBefore(b) ? a : b);
+        ? null
+        : dueDates.reduce((a, b) => a.isBefore(b) ? a : b);
   }
 
   DateTime? getLastRepaidDate({required List<Loan> loansByPersonId}) {
     List<DateTime>? dates = loansByPersonId
-    .where((loan)=> loan.lastRepaidDate != null)
-            .map((loan) => loan.lastRepaidDate!).toList();
-    return  dates.isEmpty
-      ? null
-      : dates.reduce((a, b) => a.isAfter(b) ? a : b);
+        .where((loan) => loan.lastRepaidDate != null)
+        .map((loan) => loan.lastRepaidDate!)
+        .toList();
+    return dates.isEmpty ? null : dates.reduce((a, b) => a.isAfter(b) ? a : b);
   }
 }

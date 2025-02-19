@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
@@ -219,7 +221,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                         } else {
                           Loan newLoan = Loan(
                             personId: selectedPerson.personId,
-                            isLending: widget.isLending ? true : false,
+                            isLending: widget.isLending,
                             initialAmount:
                                 int.parse(amountEdittingController.text),
                             loanDate: DateTime(
@@ -230,6 +232,8 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                             memo: memoEdittingController.text,
                           );
                           await ref.read(appViewModelProvider.notifier).createLoan(newLoan);
+                          log('추가한 Loan의 isLending: ${newLoan.isLending}');
+                          log('추가한 Loan의 personId: ${newLoan.personId}');
                           SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
                           Navigator.pop(context);
                           // if (loanUpdateResult) {

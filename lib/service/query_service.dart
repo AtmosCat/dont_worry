@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/model/repayment.dart';
@@ -46,6 +48,14 @@ class QueryService {
         .where(
             (loan) => loan.personId == personId && loan.isLending == isLending)
         .toList();
+
+    log('${isLending}이 같은 Loans 목록: ${loans.where((loan) => loan.isLending == isLending).length}');
+    log('${personId}이 같은 Loans 목록: ${loans.where((loan) => loan.personId == personId).length}');
+
+    for (var loan in loans) {
+      log('Loan personId: ${loan.personId}');
+    }
+
     return isPaidOff == null
         ? result
         : result.where((loan) => loan.isPaidOff == isPaidOff).toList();

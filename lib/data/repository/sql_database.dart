@@ -44,7 +44,7 @@ class SqlDatabase {
     batch.execute('''
   CREATE TABLE ${Person.tableName}(
     ${Person.personId_} TEXT PRIMARY KEY,
-    ${Person.updatedAt_} TEXT NOT NULL,
+    ${Person.updatedAt_} TEXT DEFAULT CURRENT_TIMESTAMP
     ${Person.name_} TEXT NOT NULL,
     ${Person.memo_} TEXT,
     ${Person.hasLend_} INTEGER NOT NULL DEFAULT 0,
@@ -66,7 +66,7 @@ class SqlDatabase {
   CREATE TABLE ${Loan.tableName}(
     ${Loan.loanId_} TEXT PRIMARY KEY,
     ${Loan.personId_} TEXT NOT NULL,
-    ${Loan.updatedAt_} TEXT NOT NULL,
+    ${Loan.updatedAt_} TEXT DEFAULT CURRENT_TIMESTAMP
     ${Loan.isLending_} INTEGER NOT NULL DEFAULT 0,
     ${Loan.initialAmount_} INTEGER NOT NULL,
     ${Loan.loanDate_} TEXT NOT NULL,

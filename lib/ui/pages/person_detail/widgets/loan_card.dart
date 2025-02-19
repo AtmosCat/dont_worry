@@ -16,15 +16,15 @@ class LoanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String title = loan.title;
-    final int amount = 100;
+    final int remainingAmount = loan.remainingAmount;
     final int initialAmount = loan.initialAmount;
-    final int totalRepayment = initialAmount - amount;
+    final int totalRepayment = initialAmount - remainingAmount;
     final double repaymentRate = totalRepayment/initialAmount;
 
     final int dDay = 0;
     final DateTime lastRepaymentDate = DateTime(2025, 2, 7);
 
-    final bool isRepaid = amount == 0;
+    final bool isRepaid = remainingAmount == 0;
 
     // LoanCard UI
     return GestureDetector(
@@ -35,7 +35,7 @@ class LoanCard extends StatelessWidget {
         ),
       ),
       child: Container(
-        color: amount != 0 // 상환여부 따라 배경색 변경
+        color: remainingAmount != 0 // 상환여부 따라 배경색 변경
             ? AppColor.containerWhite.of(context)
             : AppColor.containerLightGray20.of(context),
         child: Column(
@@ -49,9 +49,9 @@ class LoanCard extends StatelessWidget {
                     // 1열 : 제목, 디데이
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      titleText(title, amount, context),
+                      titleText(title, remainingAmount, context),
                       const Spacer(),
-                      dDayText(amount, lastRepaymentDate, context, dDay),
+                      dDayText(remainingAmount, lastRepaymentDate, context, dDay),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -59,14 +59,14 @@ class LoanCard extends StatelessWidget {
                     // 2열 : 남은 금액, 버튼
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      amountText(amount, context, totalRepayment),
+                      amountText(remainingAmount, context, totalRepayment),
                       const Spacer(),
                       RepaymentButton(isRepaid: isRepaid, loan: loan),
                     ],
                   ),
                   Offstage(
                       // 3열 : 상환 비율 그래프 (0%, 100% 일 땐 숨김처리)
-                      offstage: amount == 0 ||
+                      offstage: remainingAmount == 0 ||
                           repaymentRate == 0 ||
                           repaymentRate >= 1,
                       child: RepaymentProgressIndicator(

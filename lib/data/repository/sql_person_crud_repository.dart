@@ -9,6 +9,8 @@ class SqlPersonCrudRepository {
     var db = await SqlDatabase().database;
     try {
       var result = await db.insert(Person.tableName, person.toJson());
+      log('Insert result: $result');
+      log('Person data: ${person.toJson()}');
       return result > 0;
     } catch (e) {
       log('Error inserting person: $e');

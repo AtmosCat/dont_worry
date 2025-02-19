@@ -27,8 +27,7 @@ class AppViewModel extends StateNotifier<AppState> {
   final _loanService = LoanService();
   final _personService = PersonService();
 
-  AppViewModel()
-      : super(AppState(people: [], loans: [], repayments: [])) {
+  AppViewModel() : super(AppState(people: [], loans: [], repayments: [])) {
     _init();
   }
 
@@ -96,6 +95,7 @@ class AppViewModel extends StateNotifier<AppState> {
 
   Future<void> createLoan(Loan loan) async {
     await SqlLoanCrudRepository.create(loan);
+    log("DB에 $loan 추가 완료");
     await analyzeLoan(loan: loan);
     await analyzePerson(loan: loan);
     await loadLoans();
@@ -158,10 +158,11 @@ class AppViewModel extends StateNotifier<AppState> {
     }
 
     // 동일한 ID의 Loan을 찾아내서, 분석 데이터를 업데이트
-    loan ??= _queryService.getLoanById(
-        loans: state.loans, loanId: repayment!.loanId);
+    List<Loan> loans = await SqlLoanCrudRepository.getList();
+    List<Repayment> repayments = await SqlRepaymentCrudRepository.getList();
+    loan ??= _queryService.getLoanById(loans: loans, loanId: repayment!.loanId);
     var updatedLoan =
-        _loanService.analyzeLoan(loan: loan, stateRepayments: state.repayments);
+        _loanService.analyzeLoan(loan: loan, stateRepayments: repayments);
     await SqlLoanCrudRepository.update(updatedLoan);
   }
 
@@ -170,31 +171,27 @@ class AppViewModel extends StateNotifier<AppState> {
       throw Exception("Either loan or repayment must be provided");
     }
 
-    // Loan 분석 데이터가 갱신된 State
-    loan ??= _queryService.getLoanById(
-        loans: state.loans, loanId: repayment!.loanId);
-    var updatedLoan =
-        _loanService.analyzeLoan(loan: loan, stateRepayments: state.repayments);
-    var stateLoans = state.loans
-        .map((loan) => loan.loanId == updatedLoan.loanId ? updatedLoan : loan)
-        .toList();
+    List<Person> people = await SqlPersonCrudRepository.getList();
+    List<Loan> loans = await SqlLoanCrudRepository.getList();
+
+    loan ??= _queryService.getLoanById(loans: loans, loanId: repayment!.loanId);
 
     // 동일한 ID의 Person 찾기
     var person = _queryService.getPersonById(
-      people: state.people,
+      people: people,
       personId: loan.personId,
     );
-
     // Person 분석 데이터를 업데이트
     var updatedPerson = _personService.analyzePerson(
-        person: person, isLending: loan.isLending, stateLoans: stateLoans);
+        person: person, isLending: loan.isLending, stateLoans: loans);
 
+    log('삭제 검증 시작');
     (!updatedPerson.hasBorrow && !updatedPerson.hasLend)
         ? await SqlPersonCrudRepository.delete(updatedPerson)
         : await SqlPersonCrudRepository.update(updatedPerson);
+    log('삭제 완료');
   }
 }
 
 final appViewModelProvider =
-    StateNotifierProvider<AppViewModel, AppState>(
-        (ref) => AppViewModel());
+    StateNotifierProvider<AppViewModel, AppState>((ref) => AppViewModel());

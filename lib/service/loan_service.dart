@@ -9,8 +9,7 @@ class LoanService {
       {required Loan loan, required List<Repayment> stateRepayments}) {
     List<Repayment> repaymentsByLoanId = _queryService.getRepaymentsBy(
         repayments: stateRepayments, loanId: loan.loanId);
-    var repaidAmount =
-        getRepaidAmount(repaymentsByLoanId: repaymentsByLoanId);
+    var repaidAmount = getRepaidAmount(repaymentsByLoanId: repaymentsByLoanId);
     var remainingAmount =
         getRemainingAmount(loan: loan, repaidAmount: repaidAmount);
     var repaymentRate =
@@ -20,6 +19,7 @@ class LoanService {
         getLastRepaidDate(repaymentsByLoanId: repaymentsByLoanId);
 
     return loan.clone(
+        updatedAt: DateTime.now(),
         repaidAmount: repaidAmount,
         remainingAmount: remainingAmount,
         repaymentRate: repaymentRate,
