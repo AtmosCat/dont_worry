@@ -4,6 +4,7 @@ import 'package:dont_worry/data/repository/sql_loan_crud_repository.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
+import 'package:dont_worry/ui/widgets/check_all_possible_loans_checkbox.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
 import 'package:dont_worry/ui/widgets/list_header.dart';
 import 'package:dont_worry/ui/widgets/small_loan_card.dart';
@@ -95,79 +96,89 @@ class DetailBottomNavigationBar extends StatelessWidget {
                       content: SizedBox(
                         height: 500,
                         width: 200,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "상환할 금액을 입력하세요.",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            TextFormField(
-                              controller: repaymentAmountController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: AppColor.primaryBlue.of(context),
-                                      width: 2.0),
-                                ),
-                                labelText: "상환액",
-                                labelStyle: TextStyle(
-                                  color: AppColor.gray30.of(context),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "상환할 금액을 입력하세요.",
+                                style: TextStyle(
                                   fontSize: 14,
-                                  fontWeight: FontWeight.normal,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 30),
-                            Text(
-                              "상환할 내역을 모두 선택하세요.",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
+                              TextFormField(
+                                controller: repaymentAmountController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: AppColor.primaryBlue.of(context),
+                                        width: 2.0),
+                                  ),
+                                  labelText: "상환액",
+                                  labelStyle: TextStyle(
+                                    color: AppColor.gray30.of(context),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 20),
-                            FutureBuilder<List<Loan>>(
-                              future: _loadLoanData(),
-                              builder: (
-                                BuildContext context,
-                                AsyncSnapshot<List<Loan>> snapshot,
-                              ) {
-                                if (snapshot.hasError) {
-                                  return const Center(
-                                      child: Text('Not Support Sqflite'));
-                                }
-                                ;
-                                if (snapshot.hasData && snapshot.data != null) {
-                                  var datas = snapshot.data!.where(
-                                    (element) {
-                                      return element.personId ==
-                                              person.personId &&
-                                          element.isLending ==
-                                              (myAction == MyAction.lend
-                                                  ? true
-                                                  : false);
-                                    },
-                                  ).toList();
-                                  return Column(
-                                      children: List.generate(
-                                          datas!.length,
-                                          (index) => SmallLoanCard(
-                                                loan: datas[index],
-                                                myAction: myAction,
-                                                person: person,
-                                              )).toList());
-                                } else {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                              },
-                            ),
-                          ],
+                              SizedBox(height: 30),
+                              Text(
+                                "상환할 내역을 모두 선택하세요.",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              CheckAllPossibleLoansCheckbox(),
+                              SizedBox(height: 20),
+                              FutureBuilder<List<Loan>>(
+                                future: _loadLoanData(),
+                                builder: (
+                                  BuildContext context,
+                                  AsyncSnapshot<List<Loan>> snapshot,
+                                ) {
+                                  if (snapshot.hasError) {
+                                    return const Center(
+                                        child: Text('Not Support Sqflite'));
+                                  }
+                                  ;
+                                  if (snapshot.hasData &&
+                                      snapshot.data != null) {
+                                    var datas = snapshot.data!.where(
+                                      (element) {
+                                        return element.personId ==
+                                                person.personId &&
+                                            element.isLending ==
+                                                (myAction == MyAction.lend
+                                                    ? true
+                                                    : false);
+                                      },
+                                    ).toList();
+                                    return SizedBox(
+                                      height: 400, // 리스트 영역에 스크롤 가능하도록 높이 지정
+                                      child: ListView.builder(
+                                        itemCount: datas.length,
+                                        itemBuilder: (context, index) {
+                                          return SmallLoanCard(
+                                            loan: datas[index],
+                                            myAction: myAction,
+                                            person: person,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       actions: [
