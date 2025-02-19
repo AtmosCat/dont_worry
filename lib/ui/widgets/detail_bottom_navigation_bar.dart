@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DetailBottomNavigationBar extends StatelessWidget {
+class DetailBottomNavigationBar extends StatefulWidget {
   final bool isLending;
   final UnitType unitType;
   final Person person;
@@ -21,6 +21,24 @@ class DetailBottomNavigationBar extends StatelessWidget {
     required this.person,
     super.key,
   });
+
+  @override
+  State<DetailBottomNavigationBar> createState() =>
+      _DetailBottomNavigationBarState();
+}
+
+class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
+  bool isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +62,16 @@ class DetailBottomNavigationBar extends StatelessWidget {
                   icon: Column(
                     children: [
                       Icon(
-                        unitType != UnitType.loan ? Icons.add : Icons.edit_note,
+                        widget.unitType != UnitType.loan
+                            ? Icons.add
+                            : Icons.edit_note,
                         color: AppColor.defaultBlack.of(context),
                       ),
-                      Text(unitType != UnitType.loan
-                          ? isLending
+                      Text(widget.unitType != UnitType.loan
+                          ? widget.isLending
                               ? '빌려준 돈 기록'
                               : '빌린 돈 기록'
-                          : isLending
+                          : widget.isLending
                               ? '빌려준 돈 편집'
                               : '빌린 돈 편집')
                     ],
@@ -62,7 +82,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
                     children: [
                       Icon(Icons.task_alt,
                           color: AppColor.primaryBlue.of(context)),
-                      Text(isLending ? '받은 돈 기록' : '갚은 돈 기록')
+                      Text(widget.isLending ? '받은 돈 기록' : '갚은 돈 기록')
                     ],
                   ),
                   label: ''),
@@ -72,8 +92,8 @@ class DetailBottomNavigationBar extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        CreateLoanPage(isLending: isLending, person: person),
+                    builder: (context) => CreateLoanPage(
+                        isLending: widget.isLending, person: widget.person),
                   ),
                 );
               } else if (index == 1) {
@@ -82,131 +102,164 @@ class DetailBottomNavigationBar extends StatelessWidget {
                   context: context,
                   builder: (context) {
                     final TextEditingController repaymentAmountController =
-                        TextEditingController(text: "55");
-                    return AlertDialog(
-                      backgroundColor: AppColor.containerWhite.of(context),
-                      title: Text("상환하기",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      content: SizedBox(
-                        height: 500,
-                        width: 200,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "상환할 금액을 입력하세요.",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            TextFormField(
-                              controller: repaymentAmountController,
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: AppColor.primaryBlue.of(context),
-                                      width: 2.0),
-                                ),
-                                labelText: "상환액",
-                                labelStyle: TextStyle(
-                                  color: AppColor.gray30.of(context),
+                        TextEditingController(text: "");
+                    return GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: AlertDialog(
+                        backgroundColor: AppColor.containerWhite.of(context),
+                        title: Text("상환하기",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        content: SizedBox(
+                          height: 500,
+                          width: 200,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "상환할 금액을 입력하세요.",
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 30),
-                            Text(
-                              "상환할 내역을 모두 선택하세요.",
+                              SizedBox(height: 10),
+                              TextFormField(
+                                controller: repaymentAmountController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: AppColor.primaryBlue.of(context),
+                                        width: 2.0),
+                                  ),
+                                  labelText: "상환액",
+                                  labelStyle: TextStyle(
+                                    color: AppColor.gray30.of(context),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 30),
+                              Text(
+                                "원하는 내역을 상환 처리하세요.",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              ElevatedButton.icon(
+                                onPressed: () {},
+                                icon: Icon(Icons.check,
+                                    color: AppColor.onPrimaryWhite
+                                        .of(context)), // 아이콘 색상 지정
+                                label: Text(
+                                  "오래된 내역부터 자동 상환",
+                                  style: TextStyle(
+                                    color: AppColor.onPrimaryWhite
+                                        .of(context), // 텍스트 색상 지정
+                                    fontSize: 12, // 텍스트 크기 지정
+                                    fontWeight: FontWeight.bold, // 텍스트 두께
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      AppColor.primaryBlue.of(context),
+                                  shape: RoundedRectangleBorder(
+                                    // 버튼 모서리 둥글게
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Consumer(builder: (context, ref, child) {
+                                var filteredLoans = QueryService().getLoansBy(
+                                  personId: widget.person.personId,
+                                  isLending: widget.isLending,
+                                  isPaidOff: false,
+                                  loans: ref.watch(appViewModelProvider).loans,
+                                );
+                      
+                                return Expanded(
+                                  child: ListView.builder(
+                                    itemCount: filteredLoans.length,
+                                    itemBuilder: (context, index) =>
+                                        SmallLoanCard(
+                                      loan: filteredLoans[index],
+                                      isLending: widget.isLending,
+                                      person: widget.person,
+                                    ),
+                                  ),
+                                );
+                              })
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // 다이얼로그 닫기
+                            },
+                            child: Text(
+                              "취소",
                               style: TextStyle(
                                 fontSize: 14,
-                                fontWeight: FontWeight.normal,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primaryBlue.of(context),
                               ),
                             ),
-                            SizedBox(height: 20),
-                            Consumer(builder: (context, ref, child) {
-                              var filteredLoans = QueryService().getLoansBy(
-                                personId: person.personId,
-                                isLending: isLending,
-                                isPaidOff: false,
-                                loans: ref.watch(appViewModelProvider).loans,
-                              );
-
-                              return ListView.builder(
-                                itemCount: filteredLoans.length,
-                                itemBuilder: (context, index) => SmallLoanCard(
-                                  loan: filteredLoans[index],
-                                  isLending: isLending,
-                                  person: person,
-                                ),
-                              );
-                            })
-                          ],
-                        ),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              // final newRepayment = Repayment(
+                              //   personId: widget.loan.personId,
+                              //   loanId: widget.loan.loanId,
+                              //   amount: int.parse(repaymentAmountController.text),
+                              // );
+                              // widget.loan.repayments.add(newRepayment);
+                              // widget.person.loans.add(widget.loan);
+                              // var createRepaymentResult =
+                              //     await SqlRepaymentCrudRepository.create(newRepayment);
+                              // var updateLoanResult =
+                              //     await SqlLoanCrudRepository.update(widget.loan);
+                              // var updatePersonResult =
+                              //     await SqlPersonCrudRepository.update(widget.person);
+                              // if (createRepaymentResult &&
+                              //     updateLoanResult &&
+                              //     updatePersonResult) {
+                              //   Navigator.pop(context);
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     SnackBar(
+                              //       content: Text(
+                              //           "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다."),
+                              //     ),
+                              //   );
+                              // } else {
+                              //   Navigator.pop(context);
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     SnackBar(
+                              //       content: Text("상환 처리에 실패했습니다."),
+                              //     ),
+                              //   );
+                              // }
+                            },
+                            child: Text(
+                              "확인",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primaryBlue.of(context),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context); // 다이얼로그 닫기
-                          },
-                          child: Text(
-                            "취소",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.primaryBlue.of(context),
-                            ),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () async {
-                            // final newRepayment = Repayment(
-                            //   personId: widget.loan.personId,
-                            //   loanId: widget.loan.loanId,
-                            //   amount: int.parse(repaymentAmountController.text),
-                            // );
-                            // widget.loan.repayments.add(newRepayment);
-                            // widget.person.loans.add(widget.loan);
-                            // var createRepaymentResult =
-                            //     await SqlRepaymentCrudRepository.create(newRepayment);
-                            // var updateLoanResult =
-                            //     await SqlLoanCrudRepository.update(widget.loan);
-                            // var updatePersonResult =
-                            //     await SqlPersonCrudRepository.update(widget.person);
-                            // if (createRepaymentResult &&
-                            //     updateLoanResult &&
-                            //     updatePersonResult) {
-                            //   Navigator.pop(context);
-                            //   ScaffoldMessenger.of(context).showSnackBar(
-                            //     SnackBar(
-                            //       content: Text(
-                            //           "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다."),
-                            //     ),
-                            //   );
-                            // } else {
-                            //   Navigator.pop(context);
-                            //   ScaffoldMessenger.of(context).showSnackBar(
-                            //     SnackBar(
-                            //       content: Text("상환 처리에 실패했습니다."),
-                            //     ),
-                            //   );
-                            // }
-                          },
-                          child: Text(
-                            "확인",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.primaryBlue.of(context),
-                            ),
-                          ),
-                        ),
-                      ],
                     );
                   },
                 );
@@ -230,7 +283,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
     Loan newLoan = Loan(
         initialAmount: initialAmount,
         personId: 'personId',
-        isLending: isLending,
+        isLending: widget.isLending,
         loanDate: DateTime(2024, 2, 1),
         dueDate: DateTime(2024, 4, 1),
         title: '제목',
@@ -247,7 +300,7 @@ class DetailBottomNavigationBar extends StatelessWidget {
       loanId: 'loanId',
       amount: amount,
       date: DateTime.now(),
-      isLending: isLending,
+      isLending: widget.isLending,
     );
     await ref.read(appViewModelProvider.notifier).createRepayment(newRepayment);
   }

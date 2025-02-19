@@ -4,6 +4,7 @@ import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 class RepaymentButton extends StatefulWidget {
   final bool isRepaid;
@@ -55,7 +56,7 @@ class _RepaymentButtonState extends State<RepaymentButton> {
             context: context,
             builder: (context) {
               final TextEditingController repaymentAmountController =
-                  TextEditingController(text: "${widget.loan.initialAmount}");
+                  TextEditingController(text: "${NumberFormat("#,###").format(widget.loan.remainingAmount)}");
               return AlertDialog(
                 backgroundColor: AppColor.containerWhite.of(context),
                 title: Text("상환할 금액을 입력하세요.",
