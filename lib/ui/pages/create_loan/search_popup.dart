@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SearchPopup extends ConsumerStatefulWidget {
-  final Function(Person) onSelect;
+  final Function({required Person person, required bool isCreated}) onSelect;
 
   SearchPopup({required this.onSelect});
 
@@ -75,7 +75,7 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                     onTap: () {
                       searchController.text = filteredPeopleNames[index];
                       selectedPerson = filteredPeople[index];
-                      widget.onSelect(selectedPerson);
+                      widget.onSelect(person: selectedPerson, isCreated: false);
                     },
                   );
                 },
@@ -112,12 +112,9 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                             } else {
                               final newPerson =
                                   Person(name: searchController.text);
-                              widget.onSelect(newPerson);
-                              await ref
-                                  .read(appViewModelProvider.notifier)
-                                  .createPerson(newPerson);
+                              widget.onSelect(person: newPerson, isCreated: true);
                               SnackbarUtil.showSnackBar(
-                                  context, "사람 정보가 추가되었습니다.");
+                                  context, "사람을 선택하였습니다.");
                             }
                           },
                           child: Text(

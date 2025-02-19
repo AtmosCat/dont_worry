@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
@@ -33,6 +32,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
   final dueDateEdittingController = TextEditingController();
 
   Person? selectedPerson;
+  bool? isCreatedPerson;
   DateTime loanDate = DateTime.now();
   DateTime? dueDate;
 
@@ -55,9 +55,10 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
       builder: (context) {
         return Consumer(
             builder: (context, ref, child) => SearchPopup(
-                  onSelect: (Person _selectedPerson) {
+                  onSelect: ({required person, required isCreated}) {
                     setState(() {
-                      selectedPerson = _selectedPerson;
+                      selectedPerson = person;
+                      isCreatedPerson = isCreated;
                     });
                     Navigator.pop(context); // 팝업 닫기
                   },
@@ -162,8 +163,8 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
               TextFormField(
                 controller: TextEditingController(
                     text: dueDate != null
-                         ? "${dueDate?.year}년 ${dueDate?.month}월 ${dueDate?.day}일"
-                         : "미정"),
+                        ? "${dueDate?.year}년 ${dueDate?.month}월 ${dueDate?.day}일"
+                        : "미정"),
                 readOnly: true,
                 decoration: InputDecoration(
                   labelText: "상환일",
@@ -223,6 +224,11 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                                 ? null
                                 : memoEdittingController.text,
                           );
+                          if (isCreatedPerson??false) {
+                            await ref
+                                .read(appViewModelProvider.notifier)
+                                .createPerson(selectedPerson!);
+                          }
                           await ref
                               .read(appViewModelProvider.notifier)
                               .createLoan(newLoan);
