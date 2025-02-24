@@ -156,7 +156,7 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                               SizedBox(height: 10),
                               ElevatedButton.icon(
                                 onPressed: () {},
-                                icon: Icon(Icons.check,
+                                icon: Icon(Icons.task_alt, size: 16,
                                     color: AppColor.onPrimaryWhite
                                         .of(context)), // 아이콘 색상 지정
                                 label: Text(
@@ -173,7 +173,7 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                                       AppColor.primaryBlue.of(context),
                                   shape: RoundedRectangleBorder(
                                     // 버튼 모서리 둥글게
-                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderRadius: BorderRadius.circular(4.0),
                                   ),
                                 ),
                               ),
