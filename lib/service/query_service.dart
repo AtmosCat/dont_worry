@@ -49,8 +49,8 @@ class QueryService {
             (loan) => loan.personId == personId && loan.isLending == isLending)
         .toList();
 
-    log('${isLending}이 같은 Loans 목록: ${loans.where((loan) => loan.isLending == isLending).length}');
-    log('${personId}이 같은 Loans 목록: ${loans.where((loan) => loan.personId == personId).length}');
+    log('$isLending이 같은 Loans 목록: ${loans.where((loan) => loan.isLending == isLending).length}');
+    log('$personId이 같은 Loans 목록: ${loans.where((loan) => loan.personId == personId).length}');
 
     for (var loan in loans) {
       log('Loan personId: ${loan.personId}');

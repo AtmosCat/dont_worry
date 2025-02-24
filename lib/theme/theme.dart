@@ -69,7 +69,7 @@ final ThemeData lightTheme = ThemeData(
   iconButtonTheme: IconButtonThemeData(
     style: ButtonStyle(
       foregroundColor:
-          MaterialStateProperty.all<Color>(Color(0xFF333333)), // 어두운 회색
+          WidgetStateProperty.all<Color>(Color(0xFF333333)), // 어두운 회색
     ),
   ),
 
@@ -145,7 +145,7 @@ final ThemeData darkTheme = ThemeData(
   iconButtonTheme: IconButtonThemeData(
     style: ButtonStyle(
       foregroundColor:
-          MaterialStateProperty.all<Color>(Color(0xFFDDDDDD)), // 부드러운 흰색
+          WidgetStateProperty.all<Color>(Color(0xFFDDDDDD)), // 부드러운 흰색
     ),
   ),
 

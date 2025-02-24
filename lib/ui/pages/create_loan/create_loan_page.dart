@@ -14,7 +14,7 @@ class CreateLoanPage extends StatefulWidget {
   final bool isLending;
   final Person? person;
 
-  CreateLoanPage({
+  const CreateLoanPage({
     super.key,
     required this.isLending,
     this.person,
@@ -191,12 +191,12 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   child: Consumer(
                     builder: (context, ref, child) => ElevatedButton(
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
+                        backgroundColor: WidgetStateProperty.all<Color>(
                             AppColor.primaryBlue.of(context)),
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                        padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                             EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
                         shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -257,34 +257,34 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
 
   TextFormField CreateLoanPageTextFormField(
     BuildContext context,
-    TextEditingController _controller,
-    String _labelText,
+    TextEditingController controller,
+    String labelText,
   ) {
     return TextFormField(
       maxLines: 1,
-      controller: _controller,
-      keyboardType: _controller != amountEdittingController
+      controller: controller,
+      keyboardType: controller != amountEdittingController
           ? TextInputType.text
           : TextInputType.number,
-      inputFormatters: _controller != amountEdittingController
+      inputFormatters: controller != amountEdittingController
           ? []
           : [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
-        labelText: _labelText,
+        labelText: labelText,
         labelStyle: TextStyle(color: AppColor.gray30.of(context)),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
               color: AppColor.primaryBlue.of(context),
               width: 2.0), // 포커스 시 테두리 색상
         ),
-        suffixIcon: _controller.text.isNotEmpty // 텍스트가 있을 때만 X 버튼 표시
+        suffixIcon: controller.text.isNotEmpty // 텍스트가 있을 때만 X 버튼 표시
             ? IconButton(
                 icon: Icon(
                   Icons.cancel,
                   color: AppColor.gray10.of(context),
                 ),
                 onPressed: () {
-                  _controller.clear(); // 입력 내용 지우기
+                  controller.clear(); // 입력 내용 지우기
                 },
               )
             : null, // 텍스트가 없을 땐 버튼 숨기기

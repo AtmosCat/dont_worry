@@ -3,7 +3,7 @@ import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/service/query_service.dart';
 
 class LoanService {
-  QueryService _queryService = QueryService();
+  final QueryService _queryService = QueryService();
 
   Loan analyzeLoan(
       {required Loan loan, required List<Repayment> stateRepayments}) {

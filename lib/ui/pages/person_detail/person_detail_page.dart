@@ -1,5 +1,4 @@
 import 'package:dont_worry/data/app_view_model.dart';
-import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/person_detail_header.dart';
@@ -13,7 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class PersonDetailPage extends StatelessWidget {
   final bool isLending;
   final Person person;
-  PersonDetailPage({required this.isLending, required this.person, super.key});
+  const PersonDetailPage(
+      {required this.isLending, required this.person, super.key});
 
   // PersonDetailPage UI
   @override
@@ -28,16 +28,51 @@ class PersonDetailPage extends StatelessWidget {
         body: ListView(
           children: [
             // #2. 헤더
-            PersonDetailHeader(person: person),
-            SizedBox(height: 10),
-            // #3-1. 미상환 대출 List
-            ListHeader(isLending: isLending, unitType: UnitType.loan),
-            loanList(),
-            SizedBox(height: 10),
-            // #3-2. 상환완료 대출 List
-            ListHeader(unitType: UnitType.loan),
-            loanList(),
-            SizedBox(height: 60)
+            PersonDetailHeader(personId: person.personId, isLending: isLending),
+            Consumer(builder: (context, ref, child) {
+              var stateLoans = ref.watch(appViewModelProvider.select((state) =>
+                  state.loans.where((loan) =>
+                      loan.personId == person.personId &&
+                      loan.isLending == isLending)));
+              var inPaidList = stateLoans.where((loan) => !loan.isPaidOff);
+              var paidOffList = stateLoans.where((loan) => loan.isPaidOff);
+
+              return Visibility(
+                  visible: stateLoans.isNotEmpty,
+                  child: Column(
+                    children: [
+                      Offstage(
+                          offstage: inPaidList.isEmpty,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10),
+                              // #3-1. 미상환 대출 List
+                              ListHeader(
+                                  isLending: isLending,
+                                  unitType: UnitType.loan),
+                              loanList(
+                                isLending: isLending,
+                                loansState: inPaidList.toList(),
+                              ),
+                            ],
+                          )),
+                      Offstage(
+                          offstage: paidOffList.isEmpty,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 10),
+                              // #3-2. 상환완료 대출 List
+                              ListHeader(unitType: UnitType.loan),
+                              loanList(
+                                isLending: isLending,
+                                loansState: paidOffList.toList(),
+                              ),
+                            ],
+                          )),
+                      SizedBox(height: 60)
+                    ],
+                  ));
+            })
           ],
         ),
         // #4. 하단 네비게이션바
@@ -45,30 +80,14 @@ class PersonDetailPage extends StatelessWidget {
             isLending: isLending, unitType: UnitType.person, person: person));
   }
 
-  Consumer loanList() {
-    return Consumer(
-        builder: (BuildContext context, WidgetRef ref, Widget? child) {
-      final loansState = ref.watch(appViewModelProvider).loans;
-
-      return loansState.isEmpty
+  Widget loanList({required bool isLending, required loansState}) {
+    return loansState.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: List.generate(
                   loansState.length,
                   (index) =>
-                      LoanCard(loan: loansState[index], isLending: isLending, person: person,)),
+                      LoanCard(loan: loansState[index], isLending: isLending)),
             );
-    });
   }
-
-  // 더미데이터
-  final Loan dummyLoan1 = Loan(
-      personId: 'test001_person',
-      loanId: 'test001_loan',
-      isLending: true, // 빌려주는 돈
-      initialAmount: 100000,
-      loanDate: DateTime(2024, 2, 1),
-      dueDate: DateTime(2024, 4, 1),
-      title: '김철수에게 빌려준 돈',
-      memo: '빠른 상환을 부탁드립니다.');
 }

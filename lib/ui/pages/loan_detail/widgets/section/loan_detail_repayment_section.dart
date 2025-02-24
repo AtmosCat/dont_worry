@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoanDetailRepaymentSection extends StatelessWidget {
-  LoanDetailRepaymentSection({
+  const LoanDetailRepaymentSection({
     super.key,
     required this.isLending,
     required this.loanId,
