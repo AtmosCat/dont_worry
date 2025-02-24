@@ -7,6 +7,7 @@ import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/ui/pages/create_loan/create_loan_page.dart';
 import 'package:dont_worry/ui/widgets/small_loan_card.dart';
+import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,6 +30,7 @@ class DetailBottomNavigationBar extends StatefulWidget {
 
 class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
   bool isChecked = false;
+  late List<Loan> _filteredLoans;
 
   @override
   void initState() {
@@ -42,6 +44,8 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController repaymentAmountController =
+        TextEditingController();
     return Container(
       decoration:
           BoxDecoration(color: AppColor.containerWhite.of(context), boxShadow: [
@@ -101,8 +105,6 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    final TextEditingController repaymentAmountController =
-                        TextEditingController(text: "");
                     return GestureDetector(
                       onTap: () {
                         FocusScope.of(context).unfocus();
@@ -153,30 +155,93 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
+                              //             Consumer(
+                              //   builder: (context, ref, child) => TextButton(
+                              //     onPressed: () async {
+                              //       final newRepayment = Repayment(
+                              //         personId: widget.loan.personId,
+                              //         loanId: widget.loan.loanId,
+                              //         isLending: widget.loan.isLending,
+                              //         amount: int.parse(repaymentAmountController.text.replaceAll(',', '')),
+                              //       );
+                              //       await ref
+                              //           .read(appViewModelProvider.notifier)
+                              //           .createRepayment(newRepayment);
+                              //       Navigator.pop(context);
+                              //       ScaffoldMessenger.of(context).showSnackBar(
+                              //         SnackBar(
+                              //           content: Text(
+                              //               "${repaymentAmountController.text}원이 상환 처리되었습니다."),
+                              //         ),
+                              //       );
+                              //     },
+                              //     child: Text(
+                              //       "확인",
+                              //       style: TextStyle(
+                              //         fontSize: 14,
+                              //         fontWeight: FontWeight.bold,
+                              //         color: AppColor.primaryBlue.of(context),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // )
                               SizedBox(height: 10),
-                              ElevatedButton.icon(
-                                onPressed: () {},
-                                icon: Icon(Icons.task_alt, size: 16,
-                                    color: AppColor.onPrimaryWhite
-                                        .of(context)), // 아이콘 색상 지정
-                                label: Text(
-                                  "오래된 내역부터 자동 상환",
-                                  style: TextStyle(
-                                    color: AppColor.onPrimaryWhite
-                                        .of(context), // 텍스트 색상 지정
-                                    fontSize: 12, // 텍스트 크기 지정
-                                    fontWeight: FontWeight.bold, // 텍스트 두께
+                              Consumer(builder: (context, ref, child) {
+                                return ElevatedButton.icon(
+                                  onPressed: () async {
+                                    var repaymentAmount = int.parse(
+                                        repaymentAmountController.text);
+                                    for (var loan in _filteredLoans) {
+                                      if (loan.remainingAmount <= repaymentAmount) {
+                                        final newRepayment = Repayment(
+                                          personId: loan.personId,
+                                          loanId: loan.loanId,
+                                          isLending: loan.isLending,
+                                          amount: loan.remainingAmount,
+                                        );
+                                        await ref
+                                            .watch(appViewModelProvider.notifier)
+                                            .createRepayment(newRepayment);
+                                        repaymentAmount -= loan.remainingAmount;
+                                      } else {
+                                        final newRepayment = Repayment(
+                                          personId: loan.personId,
+                                          loanId: loan.loanId,
+                                          isLending: loan.isLending,
+                                          amount: repaymentAmount,
+                                        );
+                                        await ref
+                                            .watch(appViewModelProvider.notifier)
+                                            .createRepayment(newRepayment);
+                                        repaymentAmount = 0;
+                                      }
+                                    }
+                                    SnackbarUtil.showToastMessage("오래된 내역부터 총 ${repaymentAmountController.text}원의 상환이 완료되었습니다.");
+                                    repaymentAmountController.text = "0";
+                                  },
+                                  icon: Icon(Icons.task_alt,
+                                      size: 16,
+                                      color: AppColor.onPrimaryWhite
+                                          .of(context)), // 아이콘 색상 지정
+                                  label: Text(
+                                    "오래된 내역부터 자동 상환",
+                                    style: TextStyle(
+                                      color: AppColor.onPrimaryWhite
+                                          .of(context), // 텍스트 색상 지정
+                                      fontSize: 12, // 텍스트 크기 지정
+                                      fontWeight: FontWeight.bold, // 텍스트 두께
+                                    ),
                                   ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      AppColor.primaryBlue.of(context),
-                                  shape: RoundedRectangleBorder(
-                                    // 버튼 모서리 둥글게
-                                    borderRadius: BorderRadius.circular(4.0),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        AppColor.primaryBlue.of(context),
+                                    shape: RoundedRectangleBorder(
+                                      // 버튼 모서리 둥글게
+                                      borderRadius: BorderRadius.circular(4.0),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              }),
                               SizedBox(height: 20),
                               Consumer(builder: (context, ref, child) {
                                 var filteredLoans = QueryService().getLoansBy(
@@ -185,7 +250,9 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                                   isPaidOff: false,
                                   loans: ref.watch(appViewModelProvider).loans,
                                 );
-                      
+                                filteredLoans.sort(
+                                    (a, b) => a.loanDate.compareTo(b.loanDate));
+                                _filteredLoans = filteredLoans;
                                 return Expanded(
                                   child: ListView.builder(
                                     itemCount: filteredLoans.length,
@@ -194,6 +261,8 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                                       loan: filteredLoans[index],
                                       isLending: widget.isLending,
                                       person: widget.person,
+                                      repaymentAmountController:
+                                          repaymentAmountController,
                                     ),
                                   ),
                                 );
@@ -217,6 +286,7 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                           ),
                           TextButton(
                             onPressed: () async {
+                              Navigator.pop(context);
                               // final newRepayment = Repayment(
                               //   personId: widget.loan.personId,
                               //   loanId: widget.loan.loanId,

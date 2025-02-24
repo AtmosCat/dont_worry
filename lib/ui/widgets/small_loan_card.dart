@@ -10,10 +10,12 @@ class SmallLoanCard extends StatelessWidget {
   final bool isLending;
   final Loan loan;
   final Person person;
+  final TextEditingController repaymentAmountController;
   const SmallLoanCard(
       {required this.isLending,
       required this.loan,
       required this.person,
+      required this.repaymentAmountController,
       super.key});
 
   @override
@@ -59,6 +61,7 @@ class SmallLoanCard extends StatelessWidget {
                     isRepaid: isRepaid,
                     loan: loan,
                     person: person,
+                    repaymentAmountController: repaymentAmountController,
                   ),
                 ],
               ),

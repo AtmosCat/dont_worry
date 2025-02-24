@@ -116,7 +116,7 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                           personId: widget.loan.personId,
                           loanId: widget.loan.loanId,
                           isLending: widget.loan.isLending,
-                          amount: int.parse(repaymentAmountController.text),
+                          amount: int.parse(repaymentAmountController.text.replaceAll(',', '')),
                         );
                         await ref
                             .read(appViewModelProvider.notifier)
@@ -125,7 +125,7 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다."),
+                                "${repaymentAmountController.text}원이 상환 처리되었습니다."),
                           ),
                         );
                       },
