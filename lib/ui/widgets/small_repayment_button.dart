@@ -99,6 +99,13 @@ class _RepaymentButtonState extends State<SmallRepaymentButton> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                               ),
+                              suffixIcon: amountController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: Icon(Icons.clear),
+                                      onPressed: () {
+                                        amountController.clear();
+                                      })
+                                  : null,
                             ),
                           ),
                         ],

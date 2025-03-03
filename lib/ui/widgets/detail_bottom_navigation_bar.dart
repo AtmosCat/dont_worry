@@ -30,6 +30,7 @@ class DetailBottomNavigationBar extends StatefulWidget {
 
 class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
   bool isChecked = false;
+  final repaymentAmountController = TextEditingController();
   late List<Loan> _filteredLoans;
 
   @override
@@ -44,8 +45,6 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController repaymentAmountController =
-        TextEditingController();
     return Container(
       decoration:
           BoxDecoration(color: AppColor.containerWhite.of(context), boxShadow: [
@@ -111,11 +110,22 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                       },
                       child: AlertDialog(
                         backgroundColor: AppColor.containerWhite.of(context),
-                        title: Text("상환하기",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            )),
+                        title: Row(
+                          children: [
+                            Text("상환하기",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            Spacer(),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  repaymentAmountController.text = "";
+                                },
+                                child: Icon(Icons.close)),
+                          ],
+                        ),
                         content: SizedBox(
                           height: 500,
                           width: 200,
@@ -145,6 +155,14 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                                     fontSize: 14,
                                     fontWeight: FontWeight.normal,
                                   ),
+                                  suffixIcon: repaymentAmountController
+                                          .text.isNotEmpty
+                                      ? IconButton(
+                                          icon: Icon(Icons.clear),
+                                          onPressed: () {
+                                            repaymentAmountController.clear();
+                                          })
+                                      : null,
                                 ),
                               ),
                               SizedBox(height: 30),
@@ -189,10 +207,13 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                               Consumer(builder: (context, ref, child) {
                                 return ElevatedButton.icon(
                                   onPressed: () async {
-                                    var repaymentAmount = int.parse(
+                                    int repaymentAmount = int.parse(
                                         repaymentAmountController.text);
+                                    final initialRepaymentAmount =
+                                        repaymentAmount;
                                     for (var loan in _filteredLoans) {
-                                      if (loan.remainingAmount <= repaymentAmount) {
+                                      if (loan.remainingAmount <=
+                                          repaymentAmount) {
                                         final newRepayment = Repayment(
                                           personId: loan.personId,
                                           loanId: loan.loanId,
@@ -200,7 +221,8 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                                           amount: loan.remainingAmount,
                                         );
                                         await ref
-                                            .watch(appViewModelProvider.notifier)
+                                            .watch(
+                                                appViewModelProvider.notifier)
                                             .createRepayment(newRepayment);
                                         repaymentAmount -= loan.remainingAmount;
                                       } else {
@@ -211,13 +233,19 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                                           amount: repaymentAmount,
                                         );
                                         await ref
-                                            .watch(appViewModelProvider.notifier)
+                                            .watch(
+                                                appViewModelProvider.notifier)
                                             .createRepayment(newRepayment);
                                         repaymentAmount = 0;
                                       }
                                     }
-                                    SnackbarUtil.showToastMessage("오래된 내역부터 총 ${repaymentAmountController.text}원의 상환이 완료되었습니다.");
-                                    repaymentAmountController.text = "0";
+                                    SnackbarUtil.showToastMessage(
+                                        "오래된 내역부터 총 ${initialRepaymentAmount - repaymentAmount}원의 상환이 완료되었습니다.");
+                                    repaymentAmountController.text =
+                                        "$repaymentAmount";
+                                    if (repaymentAmount == 0) {
+                                      // Navigator.pop(context);
+                                    }
                                   },
                                   icon: Icon(Icons.task_alt,
                                       size: 16,
@@ -270,65 +298,6 @@ class _DetailBottomNavigationBarState extends State<DetailBottomNavigationBar> {
                             ],
                           ),
                         ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context); // 다이얼로그 닫기
-                            },
-                            child: Text(
-                              "취소",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.primaryBlue.of(context),
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.pop(context);
-                              // final newRepayment = Repayment(
-                              //   personId: widget.loan.personId,
-                              //   loanId: widget.loan.loanId,
-                              //   amount: int.parse(repaymentAmountController.text),
-                              // );
-                              // widget.loan.repayments.add(newRepayment);
-                              // widget.person.loans.add(widget.loan);
-                              // var createRepaymentResult =
-                              //     await SqlRepaymentCrudRepository.create(newRepayment);
-                              // var updateLoanResult =
-                              //     await SqlLoanCrudRepository.update(widget.loan);
-                              // var updatePersonResult =
-                              //     await SqlPersonCrudRepository.update(widget.person);
-                              // if (createRepaymentResult &&
-                              //     updateLoanResult &&
-                              //     updatePersonResult) {
-                              //   Navigator.pop(context);
-                              //   ScaffoldMessenger.of(context).showSnackBar(
-                              //     SnackBar(
-                              //       content: Text(
-                              //           "${int.parse(repaymentAmountController.text)}원이 상환 처리되었습니다."),
-                              //     ),
-                              //   );
-                              // } else {
-                              //   Navigator.pop(context);
-                              //   ScaffoldMessenger.of(context).showSnackBar(
-                              //     SnackBar(
-                              //       content: Text("상환 처리에 실패했습니다."),
-                              //     ),
-                              //   );
-                              // }
-                            },
-                            child: Text(
-                              "확인",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.primaryBlue.of(context),
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     );
                   },

@@ -56,7 +56,9 @@ class _RepaymentButtonState extends State<RepaymentButton> {
             context: context,
             builder: (context) {
               final TextEditingController repaymentAmountController =
-                  TextEditingController(text: "${NumberFormat("#,###").format(widget.loan.remainingAmount)}");
+                  TextEditingController(
+                      text:
+                          "${NumberFormat("#,###").format(widget.loan.remainingAmount)}");
               return AlertDialog(
                 backgroundColor: AppColor.containerWhite.of(context),
                 title: Text("상환할 금액을 입력하세요.",
@@ -90,6 +92,13 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                             fontSize: 14,
                             fontWeight: FontWeight.normal,
                           ),
+                          suffixIcon: repaymentAmountController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(Icons.clear),
+                                  onPressed: () {
+                                    repaymentAmountController.clear();
+                                  })
+                              : null,
                         ),
                       ),
                     ],
@@ -116,7 +125,8 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                           personId: widget.loan.personId,
                           loanId: widget.loan.loanId,
                           isLending: widget.loan.isLending,
-                          amount: int.parse(repaymentAmountController.text.replaceAll(',', '')),
+                          amount: int.parse(repaymentAmountController.text
+                              .replaceAll(',', '')),
                         );
                         await ref
                             .read(appViewModelProvider.notifier)
