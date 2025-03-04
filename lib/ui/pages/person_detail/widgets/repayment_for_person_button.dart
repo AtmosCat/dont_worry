@@ -112,6 +112,13 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                 ),
+                          suffixIcon: repaymentAmountController.text.isNotEmpty
+                              ? IconButton(
+                                  icon: Icon(Icons.clear),
+                                  onPressed: () {
+                                    repaymentAmountController.clear();
+                                  })
+                              : null,
                               ),
                             ),
                             SizedBox(height: 30),
