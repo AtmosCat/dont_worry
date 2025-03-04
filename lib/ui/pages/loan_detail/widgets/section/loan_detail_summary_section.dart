@@ -1,3 +1,4 @@
+import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
@@ -5,12 +6,16 @@ import 'package:flutter/material.dart';
 class LoanDetailSummarySection extends StatelessWidget {
   const LoanDetailSummarySection({
     super.key,
+    required this.isLending,
+    required this.person,
     required this.title,
     required this.isRepaid,
     required this.memo,
     required this.amount,
   });
 
+  final bool isLending;
+  final Person person;
   final String title;
   final bool isRepaid;
   final String memo;
@@ -63,6 +68,7 @@ class LoanDetailSummarySection extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(height: 10),
       ],
     );
   }

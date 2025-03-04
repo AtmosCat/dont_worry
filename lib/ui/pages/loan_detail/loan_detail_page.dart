@@ -4,7 +4,6 @@ import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_info
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_repayment_section.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_summary_section.dart';
 import 'package:dont_worry/ui/widgets/detail_app_bar.dart';
-import 'package:dont_worry/ui/widgets/detail_bottom_navigation_bar.dart';
 import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,17 +12,15 @@ class LoanDetailPage extends StatelessWidget {
   final bool isLending;
   final String loanId;
   const LoanDetailPage(
-      {required this.isLending,
-      required this.loanId,
-      super.key});
+      {required this.isLending, required this.loanId, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
       var loan = ref.watch(appViewModelProvider.select((state) =>
           state.loans.firstWhere((element) => element.loanId == loanId)));
-      var person = ref.watch(appViewModelProvider.select((state) =>
-          state.people.firstWhere((element) => element.personId == loan.personId)));
+      var person = ref.watch(appViewModelProvider.select((state) => state.people
+          .firstWhere((element) => element.personId == loan.personId)));
 
       final String title = loan.title;
       final String memo = loan.memo ?? '';
@@ -35,7 +32,8 @@ class LoanDetailPage extends StatelessWidget {
 
       final DateTime loanDate = loan.loanDate;
       final DateTime? dueDate = loan.dueDate;
-      final int dDay = dueDate != null ? dueDate.difference(DateTime.now()).inDays : 0;
+      final int dDay =
+          dueDate != null ? dueDate.difference(DateTime.now()).inDays : 0;
 
       final String name = person.name;
       final bool isRepaid = remainingAmount == 0;
@@ -56,6 +54,8 @@ class LoanDetailPage extends StatelessWidget {
                   children: [
                     // #2-1. 핵심 요약 섹션
                     LoanDetailSummarySection(
+                      isLending: isLending,
+                      person: person,
                       title: title,
                       isRepaid: isRepaid,
                       memo: memo,
@@ -75,18 +75,15 @@ class LoanDetailPage extends StatelessWidget {
                     // #2-3. 상환한 금액 섹션
                     LoanDetailRepaymentSection(
                       isLending: isLending,
-                      loanId: loan.loanId,
+                      loan: loan,
                       totalRepayment: totalRepayment,
                       initialAmount: initialAmount,
                       repaymentRate: repaymentRate,
-                    )
+                    ),
                   ]),
-            ),
+            )
           ],
         ),
-        // #3. 하단 네비게이션바
-        bottomNavigationBar: DetailBottomNavigationBar(
-            isLending: isLending, unitType: UnitType.loan, person: person),
       );
     });
   }

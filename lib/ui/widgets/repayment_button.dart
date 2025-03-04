@@ -9,10 +9,12 @@ import 'package:intl/intl.dart';
 class RepaymentButton extends StatefulWidget {
   final bool isRepaid;
   final Loan loan;
+  final bool isLending;
   const RepaymentButton({
     super.key,
     required this.isRepaid,
     required this.loan,
+    required this.isLending,
   });
 
   @override
@@ -36,7 +38,7 @@ class _RepaymentButtonState extends State<RepaymentButton> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
-          padding: const EdgeInsets.symmetric(
+          padding: EdgeInsets.symmetric(
             horizontal: 14,
             vertical: 8,
           ),
@@ -50,13 +52,39 @@ class _RepaymentButtonState extends State<RepaymentButton> {
 
       // 미상환 시,
       child: TextButton.icon(
+        icon: Icon(Icons.task_alt, size: 18),
+        label: Text(
+          '상환',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        iconAlignment: IconAlignment.end,
+        style: TextButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          padding: EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 8,
+          ),
+          alignment: Alignment.center,
+          backgroundColor: widget.isLending
+              ? AppColor.primaryBlue.of(context)
+              : AppColor.primaryRed.of(context),
+          foregroundColor: AppColor.onPrimaryWhite.of(context),
+          iconColor: AppColor.onPrimaryWhite.of(context),
+        ),
         onPressed: () {
           /* TODO: 해당 Loan을 전액 상환하는 로직 개발 필요 */
           showDialog(
             context: context,
             builder: (context) {
               final TextEditingController repaymentAmountController =
-                  TextEditingController(text: "${NumberFormat("#,###").format(widget.loan.remainingAmount)}");
+                  TextEditingController(
+                      text:
+                          "${NumberFormat("#,###").format(widget.loan.remainingAmount)}");
               return AlertDialog(
                 backgroundColor: AppColor.containerWhite.of(context),
                 title: Text("상환할 금액을 입력하세요.",
@@ -116,7 +144,8 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                           personId: widget.loan.personId,
                           loanId: widget.loan.loanId,
                           isLending: widget.loan.isLending,
-                          amount: int.parse(repaymentAmountController.text.replaceAll(',', '')),
+                          amount: int.parse(repaymentAmountController.text
+                              .replaceAll(',', '')),
                         );
                         await ref
                             .read(appViewModelProvider.notifier)
@@ -144,28 +173,6 @@ class _RepaymentButtonState extends State<RepaymentButton> {
             },
           );
         },
-        icon: const Icon(Icons.task_alt, size: 18),
-        label: const Text(
-          '상환',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        iconAlignment: IconAlignment.end,
-        style: TextButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 8,
-          ),
-          alignment: Alignment.center,
-          backgroundColor: AppColor.primaryBlue.of(context),
-          foregroundColor: AppColor.onPrimaryWhite.of(context),
-          iconColor: AppColor.onPrimaryWhite.of(context),
-        ),
       ),
     );
   }

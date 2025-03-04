@@ -9,10 +9,7 @@ import 'package:flutter/material.dart';
 class LoanCard extends StatelessWidget {
   final bool isLending;
   final Loan loan;
-  const LoanCard(
-      {required this.isLending,
-      required this.loan,
-      super.key});
+  const LoanCard({required this.isLending, required this.loan, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +31,8 @@ class LoanCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoanDetailPage(
-              isLending: isLending, loanId: loan.loanId),
+          builder: (context) =>
+              LoanDetailPage(isLending: isLending, loanId: loan.loanId),
         ),
       ),
       child: Container(
@@ -66,7 +63,8 @@ class LoanCard extends StatelessWidget {
                     children: [
                       amountText(remainingAmount, context, totalRepayment),
                       const Spacer(),
-                      RepaymentButton(isRepaid: isRepaid, loan: loan),
+                      RepaymentButton(
+                          isLending: isLending, isRepaid: isRepaid, loan: loan),
                     ],
                   ),
                   Offstage(
