@@ -1,6 +1,8 @@
 import 'package:dont_worry/data/app_view_model.dart';
+import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/repayment_card.dart';
+import 'package:dont_worry/ui/widgets/repayment_button.dart';
 import 'package:dont_worry/ui/widgets/repayment_progress_indicator.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +12,14 @@ class LoanDetailRepaymentSection extends StatelessWidget {
   const LoanDetailRepaymentSection({
     super.key,
     required this.isLending,
-    required this.loanId,
+    required this.loan,
     required this.totalRepayment,
     required this.initialAmount,
     required this.repaymentRate,
-
   });
 
   final bool isLending;
-  final String loanId;
+  final Loan loan;
   final int totalRepayment;
   final int initialAmount;
   final double repaymentRate;
@@ -37,10 +38,13 @@ class LoanDetailRepaymentSection extends StatelessWidget {
           ),
           SizedBox(height: 50),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('상환 내역',
                   style: TextStyle(
-                      fontSize: 16, color: AppColor.gray10.of(context)))
+                      fontSize: 16, color: AppColor.gray10.of(context))),
+              RepaymentButton(
+                  isRepaid: loan.isPaidOff, isLending: isLending, loan: loan),
             ],
           ),
           SizedBox(height: 30),
@@ -54,9 +58,10 @@ class LoanDetailRepaymentSection extends StatelessWidget {
   Consumer repaymentList() {
     return Consumer(
         builder: (BuildContext context, WidgetRef ref, Widget? child) {
-      var repaymentsState = ref.watch(appViewModelProvider.select(
-        (state) => state.repayments.where((repayment)=>repayment.loanId == loanId).toList()
-      ));
+      var repaymentsState = ref.watch(appViewModelProvider.select((state) =>
+          state.repayments
+              .where((repayment) => repayment.loanId == loan.loanId)
+              .toList()));
       return repaymentsState.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Column(
@@ -122,6 +127,9 @@ class LoanDetailRepaymentSection extends StatelessWidget {
                 fontSize: 16,
                 color: AppColor.gray20.of(context),
                 fontWeight: FontWeight.w600)),
+                Spacer(),
+                 RepaymentButton(
+                  isRepaid: loan.isPaidOff, isLending: isLending, loan: loan),
       ],
     );
   }
