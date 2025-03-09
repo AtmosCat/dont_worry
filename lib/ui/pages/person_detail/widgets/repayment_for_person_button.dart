@@ -34,13 +34,19 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
 
   @override
   Widget build(BuildContext context) {
+    int initialText = 0;
+    for (var loan in _filteredLoans) {
+      initialText += loan.remainingAmount;
+    };
     final TextEditingController repaymentAmountController =
-        TextEditingController();
+        TextEditingController(text: initialText.toString());
     return Row(
       children: [
         Expanded(
           child: TextButton.icon(
-            icon: Icon(widget.isLending? Icons.arrow_downward : Icons.arrow_upward, size: 20),
+            icon: Icon(
+                widget.isLending ? Icons.arrow_downward : Icons.arrow_upward,
+                size: 20),
             label: Text.rich(
               TextSpan(children: [
                 TextSpan(
@@ -63,7 +69,9 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                 vertical: 14,
               ),
               alignment: Alignment.center,
-              backgroundColor: widget.isLending ? AppColor.primaryBlue.of(context) : AppColor.primaryRed.of(context),
+              backgroundColor: widget.isLending
+                  ? AppColor.primaryBlue.of(context)
+                  : AppColor.primaryRed.of(context),
               foregroundColor: AppColor.onPrimaryWhite.of(context),
               iconColor: AppColor.onPrimaryWhite.of(context),
             ),
@@ -112,13 +120,14 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                 ),
-                          suffixIcon: repaymentAmountController.text.isNotEmpty
-                              ? IconButton(
-                                  icon: Icon(Icons.clear),
-                                  onPressed: () {
-                                    repaymentAmountController.clear();
-                                  })
-                              : null,
+                                suffixIcon:
+                                    repaymentAmountController.text.isNotEmpty
+                                        ? IconButton(
+                                            icon: Icon(Icons.clear),
+                                            onPressed: () {
+                                              repaymentAmountController.clear();
+                                            })
+                                        : null,
                               ),
                             ),
                             SizedBox(height: 30),
@@ -166,7 +175,8 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                                   var repaymentAmount =
                                       int.parse(repaymentAmountController.text);
                                   for (var loan in _filteredLoans) {
-                                    if (loan.remainingAmount <= repaymentAmount) {
+                                    if (loan.remainingAmount <=
+                                        repaymentAmount) {
                                       final newRepayment = Repayment(
                                         personId: loan.personId,
                                         loanId: loan.loanId,
@@ -208,7 +218,8 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                                   ),
                                 ),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColor.primaryBlue.of(context),
+                                  backgroundColor:
+                                      AppColor.primaryBlue.of(context),
                                   shape: RoundedRectangleBorder(
                                     // 버튼 모서리 둥글게
                                     borderRadius: BorderRadius.circular(4.0),
@@ -224,13 +235,14 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                                 isPaidOff: false,
                                 loans: ref.watch(appViewModelProvider).loans,
                               );
-                              filteredLoans
-                                  .sort((a, b) => a.loanDate.compareTo(b.loanDate));
+                              filteredLoans.sort(
+                                  (a, b) => a.loanDate.compareTo(b.loanDate));
                               _filteredLoans = filteredLoans;
                               return Expanded(
                                 child: ListView.builder(
                                   itemCount: filteredLoans.length,
-                                  itemBuilder: (context, index) => SmallLoanCard(
+                                  itemBuilder: (context, index) =>
+                                      SmallLoanCard(
                                     loan: filteredLoans[index],
                                     isLending: widget.isLending,
                                     person: widget.person,
