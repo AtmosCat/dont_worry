@@ -33,13 +33,15 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
   late List<Loan> _filteredLoans;
 
   @override
+  void initState() {
+    super.initState();
+    _filteredLoans = [];
+  }
+
+  @override
   Widget build(BuildContext context) {
-    int initialText = 0;
-    for (var loan in _filteredLoans) {
-      initialText += loan.remainingAmount;
-    };
     final TextEditingController repaymentAmountController =
-        TextEditingController(text: initialText.toString());
+        TextEditingController();
     return Row(
       children: [
         Expanded(
@@ -114,7 +116,6 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                                       color: AppColor.primaryBlue.of(context),
                                       width: 2.0),
                                 ),
-                                labelText: "상환액",
                                 labelStyle: TextStyle(
                                   color: AppColor.gray30.of(context),
                                   fontSize: 14,
@@ -238,6 +239,15 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                               filteredLoans.sort(
                                   (a, b) => a.loanDate.compareTo(b.loanDate));
                               _filteredLoans = filteredLoans;
+                              int initialText = 0;
+                              for (var loan in _filteredLoans) {
+                                initialText += loan.remainingAmount;
+                              }
+                              if (repaymentAmountController.text.isEmpty) {
+                                repaymentAmountController.text =
+                                    initialText.toString();
+                              }
+
                               return Expanded(
                                 child: ListView.builder(
                                   itemCount: filteredLoans.length,

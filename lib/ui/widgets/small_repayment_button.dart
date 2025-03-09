@@ -59,13 +59,15 @@ class _RepaymentButtonState extends State<SmallRepaymentButton> {
       // 미상환 시,
       child: TextButton.icon(
         onPressed: () {
-          /* TODO: 해당 Loan을 전액 상환하는 로직 개발 필요 */
           showDialog(
               context: context,
               builder: (context) {
+                final initialText = int.parse(widget.repaymentAmountController.text) < widget.loan.remainingAmount
+                    ? widget.repaymentAmountController.text
+                    : widget.loan.remainingAmount.toString();
                 final TextEditingController amountController =
                     TextEditingController(
-                        text: "${widget.loan.remainingAmount}");
+                        text: initialText);
                 return AlertDialog(
                     backgroundColor: AppColor.containerWhite.of(context),
                     title: Text("상환할 금액을 입력하세요.",
