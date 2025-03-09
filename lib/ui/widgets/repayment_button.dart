@@ -2,6 +2,7 @@ import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -77,7 +78,6 @@ class _RepaymentButtonState extends State<RepaymentButton> {
           iconColor: AppColor.onPrimaryWhite.of(context),
         ),
         onPressed: () {
-          /* TODO: 해당 Loan을 전액 상환하는 로직 개발 필요 */
           showDialog(
             context: context,
             builder: (context) {
@@ -98,11 +98,6 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Text("얼마를 상환 처리할까요?",
-                      // style: TextStyle(
-                      //   fontSize: 16,
-                      //   fontWeight: FontWeight.normal,
-                      // ),),
                       TextFormField(
                         controller: repaymentAmountController,
                         keyboardType: TextInputType.number,
@@ -147,23 +142,29 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                   Consumer(
                     builder: (context, ref, child) => TextButton(
                       onPressed: () async {
-                        final newRepayment = Repayment(
-                          personId: widget.loan.personId,
-                          loanId: widget.loan.loanId,
-                          isLending: widget.loan.isLending,
-                          amount: int.parse(repaymentAmountController.text
-                              .replaceAll(',', '')),
-                        );
-                        await ref
-                            .read(appViewModelProvider.notifier)
-                            .createRepayment(newRepayment);
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "${repaymentAmountController.text}원이 상환 처리되었습니다."),
-                          ),
-                        );
+                        if (int.parse(repaymentAmountController.text) >
+                            widget.loan.remainingAmount) {
+                                  SnackbarUtil.showToastMessage(
+                                      "잔액인 ${widget.loan.remainingAmount}원보다 적은 금액을 입력해주세요.");
+                        } else {
+                          final newRepayment = Repayment(
+                            personId: widget.loan.personId,
+                            loanId: widget.loan.loanId,
+                            isLending: widget.loan.isLending,
+                            amount: int.parse(repaymentAmountController.text
+                                .replaceAll(',', '')),
+                          );
+                          await ref
+                              .read(appViewModelProvider.notifier)
+                              .createRepayment(newRepayment);
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "${repaymentAmountController.text}원이 상환 처리되었습니다."),
+                            ),
+                          );
+                        }
                       },
                       child: Text(
                         "확인",
