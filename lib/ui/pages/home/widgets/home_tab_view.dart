@@ -78,21 +78,15 @@ class HomeTabView extends StatelessWidget {
                     PersonCard(
                         person: Person(
                             name: '후배 김민수 (밥값)',
-                            repaidLendAmount: 100000,
+                            repaidLendAmount: 18000,
                             lastLendRepaidDate: DateTime.now()),
                         isLending: true),
                     PersonCard(
                         person: Person(
-                            name: '후배 김민수 (밥값)',
-                            repaidLendAmount: 100000,
+                            name: '동생 이사비용',
+                            repaidLendAmount: 250000,
                             lastLendRepaidDate: DateTime.now()),
-                        isLending: true),
-                    PersonCard(
-                        person: Person(
-                            name: '후배 김민수 (밥값)',
-                            repaidLendAmount: 100000,
-                            lastLendRepaidDate: DateTime.now()),
-                        isLending: true),
+                        isLending: true)
                   ],
                 ),
               ),
@@ -101,36 +95,36 @@ class HomeTabView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.block,
-                      size: 100,
-                      color: AppColor.deepBlack.of(context),
-                      shadows: [
-                        Shadow(
-                            offset: Offset(1.0, 1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                        Shadow(
-                            offset: Offset(-1.0, -1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                        Shadow(
-                            offset: Offset(1.0, -1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                        Shadow(
-                            offset: Offset(-1.0, 1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                      ]),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  // Icon(Icons.block,
+                  //     size: 100,
+                  //     color: AppColor.deepBlack.of(context),
+                  //     shadows: [
+                  //       Shadow(
+                  //           offset: Offset(1.0, 1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //       Shadow(
+                  //           offset: Offset(-1.0, -1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //       Shadow(
+                  //           offset: Offset(1.0, -1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //       Shadow(
+                  //           offset: Offset(-1.0, 1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //     ]),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
                   Text(
-                    isLending ? '빌려준 기록이 없습니다' : '빌린 기록이 없습니다',
+                    isLending ? '아직 빌려준 기록이 없습니다' : '아직 빌린 기록이 없습니다',
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
-                        color: AppColor.deepBlack.of(context),
+                        color: isLending? AppColor.primaryBlue.of(context) :  AppColor.primaryRed.of(context), 
                         shadows: [
                           Shadow(
                               offset: Offset(2.0, 2.0),
@@ -155,8 +149,8 @@ class HomeTabView extends StatelessWidget {
                   ),
                   Text(
                     isLending
-                        ? '받아야 할 금액을 기록하고, 관리해보세요'
-                        : '갚아야 할 금액을 기록하고, 관리해보세요',
+                        ? '받아야 할 금액을 기록하고 관리해보세요'
+                        : '갚아야 할 금액을 기록하고 관리해보세요',
                     style: TextStyle(
                         fontSize: 14,
                         color: AppColor.gray30.of(context),
@@ -164,25 +158,6 @@ class HomeTabView extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 40,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            AppColor.deepBlack.of(context)),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                            AppColor.onPrimaryWhite.of(context)),
-                        iconColor: MaterialStateProperty.all<Color>(
-                            AppColor.onPrimaryWhite.of(context)),
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 14)),
-                      ),
-                      child: Text('기록 시작하기', style: TextStyle(fontSize: 16)),
-                    ),
                   )
                 ]),
           ],

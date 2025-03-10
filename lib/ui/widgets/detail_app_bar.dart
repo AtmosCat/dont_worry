@@ -2,6 +2,7 @@ import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
 import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
@@ -72,84 +73,60 @@ class _BottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: SizedBox(
-          height: 200,
-          child: Column(
-            children: <Widget>[
-              ListTile(
-                leading: Icon(
-                  Icons.task_alt,
-                  color: AppColor.primaryBlue.of(context),
-                ),
-                title: Text(
-                  '전액 상환 완료 (미구현)',
-                  style: TextStyle(
-                      color: AppColor.primaryBlue.of(context),
-                      fontWeight: FontWeight.bold),
-                ),
-                onTap: () {
-                  if (unitType == UnitType.person) {
-                    // 이 사람의 모든 대출을 상환
-                  } else {
-                    // 이 대출을 상환
-                  }
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.edit),
-                title: Text('편집 (미구현)'),
-                onTap: () {
-                  if (unitType == UnitType.person) {
-                    // 인물 정보수정
-                  } else {
-                    // 대출 정보수정
-                  }
-                  Navigator.pop(context);
-                },
-              ),
-              Consumer(
-                builder: (context, ref, child) => ListTile(
-                    leading: Icon(Icons.delete,
-                        color: AppColor.primaryRed.of(context)),
-                    title: Text(
-                      '삭제',
-                      style: TextStyle(
-                          color: AppColor.primaryRed.of(context),
-                          fontWeight: FontWeight.bold),
-                    ),
-                    onTap: () {
-                      final rootContext = context; // ✅ 모달 닫기 전, rootContext 저장
-                      // ✅ 삭제 확인 콜백 설정
-                      var onConfirm = (unitType == UnitType.person)
-                          ? () async {
-                              Navigator.pop(rootContext);
-                              Navigator.pop(rootContext);
-                              await ref
-                                  .read(appViewModelProvider.notifier)
-                                  .deletePerson(person!);
-                              SnackbarUtil.showSnackBar(
-                                  rootContext, "사람 정보가 삭제되었습니다.");
-                            }
-                          : () async {
-                              Navigator.pop(rootContext); // ✅ 모달 닫기
-                              await ref
-                                  .read(appViewModelProvider.notifier)
-                                  .deleteLoan(loan!);
-                              SnackbarUtil.showSnackBar(
-                                  rootContext, "대출 내역이 삭제되었습니다.");
-                            };
+        padding: const EdgeInsets.only(
+            top: 14.0, left: 14.0, right: 14.0, bottom: 40.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Consumer(
+              builder: (context, ref, child) => ListTile(
+                  leading: Icon(Icons.delete,
+                      color: AppColor.primaryRed.of(context)),
+                  title: Text(
+                    (unitType == UnitType.person) ? '사람 정보 삭제' : '대출 내역 삭제',
+                    style: TextStyle(
+                        color: AppColor.primaryRed.of(context),
+                        fontWeight: FontWeight.bold),
+                  ),
+                  onTap: () {
+                    final rootContext = context; // ✅ 모달 닫기 전, rootContext 저장
+                    void _backToHome() {
+                      Future.delayed(Duration(milliseconds: 100), () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                          (route) => false,
+                        );
+                      });
+                    }
 
-                      // ✅ 삭제 확인 모달 표시
-                      showDeleteBottomSheet(
-                        context: rootContext,
-                        onConfirm: onConfirm,
-                      );
-                    }),
-              )
-            ],
-          ),
+                    // ✅ 삭제 확인 콜백 설정
+                    var onConfirm = (unitType == UnitType.person)
+                        ? () async {
+                            await ref
+                                .read(appViewModelProvider.notifier)
+                                .deletePerson(person!);
+                            SnackbarUtil.showSnackBar(
+                                rootContext, "사람 정보가 삭제되었습니다.");
+                            _backToHome();
+                          }
+                        : () async {
+                            await ref
+                                .read(appViewModelProvider.notifier)
+                                .deleteLoan(loan!);
+                            SnackbarUtil.showSnackBar(
+                                rootContext, "대출 내역이 삭제되었습니다.");
+                            _backToHome();
+                          };
+
+                    // ✅ 삭제 확인 모달 표시
+                    showDeleteBottomSheet(
+                      context: rootContext,
+                      onConfirm: onConfirm,
+                    );
+                  }),
+            )
+          ],
         ));
   }
 }

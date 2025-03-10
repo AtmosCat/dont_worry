@@ -70,13 +70,6 @@ class _HomePageState extends State<HomePage>
                           fontSize: 20,
                           fontWeight: FontWeight.w900,
                           color: AppColor.primaryBlue.of(context)))),
-              actions: [
-                IconButton(
-                    icon: const Icon(Icons.more_vert),
-                    onPressed: () {
-                      showMoreBottomSheet(context); // more 버튼 바텀시트
-                    })
-              ],
               // #1-2. (확장) 플렉서블 헤더 -> 위젯
               flexibleSpace: HomeFlexibleHeader(_tabController),
               expandedHeight: 240.0, //최대 높이
@@ -97,51 +90,6 @@ class _HomePageState extends State<HomePage>
       ),
       // #3. 하단 네비게이션바 -> 위젯
       // bottomNavigationBar: HomeBottomAppBar(_tabController)
-    );
-  }
-
-
-  // more 버튼 바텀시트 호출 메서드
-  Future<dynamic> showMoreBottomSheet(BuildContext context) {
-    return showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: SizedBox(
-            height: 200,
-            child: Column(
-              children: <Widget>[
-                Consumer(
-                    builder: (context, ref, child) => ListTile(
-                        leading: Icon(Icons.edit),
-                        title: Text('TEST_Person 생성'),
-                        onTap: () {
-                          createPerson(
-                            context: context,
-                            ref: ref,
-                          );
-                          Navigator.pop(context);
-                        })),
-                ListTile(
-                  leading: Icon(Icons.delete,
-                      color: AppColor.primaryRed.of(context)),
-                  title: Text(
-                    'TEST_DB 완전 초기화',
-                    style: TextStyle(
-                        color: AppColor.primaryRed.of(context),
-                        fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {
-                    deleteDatabaseFile();
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 
