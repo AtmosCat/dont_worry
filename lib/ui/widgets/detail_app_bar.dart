@@ -3,7 +3,6 @@ import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
-import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
 import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';

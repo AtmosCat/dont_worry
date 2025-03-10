@@ -7,7 +7,7 @@ import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeTabView extends StatelessWidget {
+class HomeTabView extends StatefulWidget {
   final bool isLending;
   const HomeTabView({
     required this.isLending,
@@ -15,15 +15,58 @@ class HomeTabView extends StatelessWidget {
   });
 
   @override
+  State<HomeTabView> createState() => _HomeTabViewState();
+}
+
+class _HomeTabViewState extends State<HomeTabView> {
+  bool? isSortedByUpdate;
+
+  @override
+  void initState() {
+    super.initState();
+    isSortedByUpdate = true;
+  }
+
+
+  void onSortOptionSelected(String value) {
+    setState(() {
+      isSortedByUpdate = value == '업데이트 순';
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      var statePeople = ref.watch(appViewModelProvider.select((state) => state
-          .people
-          .where((person) => isLending ? person.hasLend : person.hasBorrow)));
-      var inPaidList = statePeople.where((person) =>
-          isLending ? !person.isLendPaidOff : !person.isBorrowPaidOff);
-      var paidOffList = statePeople.where((person) =>
-          isLending ? person.isLendPaidOff : person.isBorrowPaidOff);
+      var statePeople = ref.watch(appViewModelProvider.select((state) =>
+          state.people.where((person) =>
+              widget.isLending ? person.hasLend : person.hasBorrow)));
+      var inPaidList = statePeople
+          .where((person) => widget.isLending
+              ? !person.isLendPaidOff
+              : !person.isBorrowPaidOff)
+          .toList();
+      var paidOffList = statePeople
+          .where((person) =>
+              widget.isLending ? person.isLendPaidOff : person.isBorrowPaidOff)
+          .toList();
+
+      if (isSortedByUpdate ?? true) {
+        inPaidList.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+        paidOffList.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+      }
+
+      // 높은 가격 순 정렬 (대출 금액 기준)
+      else if (widget.isLending) {
+        inPaidList.sort(
+            (a, b) => a.remainingLendAmount.compareTo(b.remainingLendAmount));
+        paidOffList.sort(
+            (a, b) => a.repaidLendAmount.compareTo(b.repaidLendAmount));
+      } else {
+        inPaidList.sort(
+            (a, b) => a.remainingBorrowAmount.compareTo(b.remainingBorrowAmount));
+        paidOffList.sort(
+            (a, b) => a.repaidBorrowAmount.compareTo(b.repaidBorrowAmount));
+      }
 
       return Visibility(
           visible: statePeople.isNotEmpty,
@@ -33,9 +76,10 @@ class HomeTabView extends StatelessWidget {
                 offstage: inPaidList.isEmpty,
                 child: Column(
                   children: [
-                    ListHeader(isLending: isLending, unitType: UnitType.person),
+                    ListHeader(
+                        isLending: widget.isLending, unitType: UnitType.person),
                     personList(
-                        isLending: isLending, peopleState: inPaidList.toList())
+                        isLending: widget.isLending, peopleState: inPaidList)
                   ],
                 )),
             Offstage(
@@ -43,7 +87,7 @@ class HomeTabView extends StatelessWidget {
                 child: Column(children: [
                   ListHeader(unitType: UnitType.person),
                   personList(
-                      isLending: isLending, peopleState: paidOffList.toList())
+                      isLending: widget.isLending, peopleState: paidOffList)
                 ])),
             SizedBox(height: 60)
           ]));
@@ -74,7 +118,10 @@ class HomeTabView extends StatelessWidget {
                 opacity: 0.3,
                 child: Column(
                   children: [
-                    ListHeader(isLending: isLending, unitType: UnitType.person),
+                    ListHeader(
+                        isLending: widget.isLending,
+                        unitType: UnitType.person,
+                        onSortOptionSelected: onSortOptionSelected),
                     PersonCard(
                         person: Person(
                             name: '후배 김민수 (밥값)',
@@ -120,11 +167,13 @@ class HomeTabView extends StatelessWidget {
                   //   height: 20,
                   // ),
                   Text(
-                    isLending ? '아직 빌려준 기록이 없습니다' : '아직 빌린 기록이 없습니다',
+                    widget.isLending ? '아직 빌려준 기록이 없습니다' : '아직 빌린 기록이 없습니다',
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
-                        color: isLending? AppColor.primaryBlue.of(context) :  AppColor.primaryRed.of(context), 
+                        color: widget.isLending
+                            ? AppColor.primaryBlue.of(context)
+                            : AppColor.primaryRed.of(context),
                         shadows: [
                           Shadow(
                               offset: Offset(2.0, 2.0),
@@ -148,7 +197,7 @@ class HomeTabView extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    isLending
+                    widget.isLending
                         ? '받아야 할 금액을 기록하고 관리해보세요'
                         : '갚아야 할 금액을 기록하고 관리해보세요',
                     style: TextStyle(
