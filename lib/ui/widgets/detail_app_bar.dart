@@ -3,6 +3,7 @@ import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
+import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:dont_worry/ui/widgets/delete_bottom_sheet.dart';
 import 'package:dont_worry/utils/enum.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
@@ -74,7 +75,11 @@ class _BottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.only(
-            top: 14.0, left: 14.0, right: 14.0, bottom: 40.0),
+          top: 14.0,
+          left: 14.0,
+          right: 14.0,
+          bottom: 40.0,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -89,40 +94,33 @@ class _BottomSheet extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   ),
                   onTap: () {
-                    final rootContext = context; // ✅ 모달 닫기 전, rootContext 저장
-                    void _backToHome() {
-                      Future.delayed(Duration(milliseconds: 100), () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                          (route) => false,
-                        );
-                      });
-                    }
+                    final rootContext = context;
 
-                    // ✅ 삭제 확인 콜백 설정
-                    var onConfirm = (unitType == UnitType.person)
-                        ? () async {
-                            await ref
-                                .read(appViewModelProvider.notifier)
-                                .deletePerson(person!);
-                            SnackbarUtil.showSnackBar(
-                                rootContext, "사람 정보가 삭제되었습니다.");
-                            _backToHome();
-                          }
-                        : () async {
-                            await ref
-                                .read(appViewModelProvider.notifier)
-                                .deleteLoan(loan!);
-                            SnackbarUtil.showSnackBar(
-                                rootContext, "대출 내역이 삭제되었습니다.");
-                            _backToHome();
-                          };
-
-                    // ✅ 삭제 확인 모달 표시
                     showDeleteBottomSheet(
                       context: rootContext,
-                      onConfirm: onConfirm,
+                      onConfirm: () async {
+                        Future.delayed(Duration(milliseconds: 100), () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                            (route) => false,
+                          );
+                        }); // 모든 pop스택 제거 후, 홈으로
+
+                        if (unitType == UnitType.person) {
+                          await ref
+                              .read(appViewModelProvider.notifier)
+                              .deletePerson(person!);
+                          SnackbarUtil.showSnackBar(
+                              rootContext, "사람 정보가 삭제되었습니다.");
+                        } else {
+                          await ref
+                              .read(appViewModelProvider.notifier)
+                              .deleteLoan(loan!);
+                          SnackbarUtil.showSnackBar(
+                              rootContext, "대출 내역이 삭제되었습니다.");
+                        } // 사람/대출 삭제
+                      },
                     );
                   }),
             )

@@ -71,7 +71,7 @@ class HomeTabView extends StatelessWidget {
           children: [
             IgnorePointer(
               child: Opacity(
-                opacity: 0.5,
+                opacity: 0.3,
                 child: Column(
                   children: [
                     ListHeader(isLending: isLending, unitType: UnitType.person),
