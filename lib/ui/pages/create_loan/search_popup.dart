@@ -63,12 +63,8 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                     labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-<<<<<<< HEAD
                           color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                           width: 2.0), // 포커스 시 테두리 색상
-=======
-                          color: AppColor.primaryBlue.of(context), width: 2.0),
->>>>>>> origin/feature/new_ho
                     ),
                     border: OutlineInputBorder())),
             Expanded(
