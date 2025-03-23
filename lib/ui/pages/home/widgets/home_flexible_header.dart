@@ -62,7 +62,7 @@ class HomeFlexibleHeader extends StatelessWidget {
                     fontSize: 30,
                     fontWeight: FontWeight.w800)),
             TextSpan(
-              text: '원',
+              text: '원\n',
               style: TextStyle(
                   fontSize: 24,
                   color: currentIndex == 0
@@ -70,7 +70,7 @@ class HomeFlexibleHeader extends StatelessWidget {
                       : AppColor.primaryRed.of(context)),
             ),
             TextSpan(
-                text: ' 남았어요',
+                text: '남았어요',
                 style: TextStyle(
                     fontSize: 18, color: AppColor.defaultBlack.of(context)))
           ]));
