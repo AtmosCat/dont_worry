@@ -59,10 +59,10 @@ class LoanCard extends StatelessWidget {
                   const SizedBox(height: 12),
                   Row(
                     // 2열 : 남은 금액, 버튼
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      amountText(remainingAmount, context, totalRepayment),
-                      const Spacer(),
+                      Flexible(child: amountText(remainingAmount, context, totalRepayment)),
                       RepaymentButton(
                           isLending: isLending, isRepaid: isRepaid, loan: loan),
                     ],
@@ -151,6 +151,7 @@ class LoanCard extends StatelessWidget {
           ),
         ],
       ),
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

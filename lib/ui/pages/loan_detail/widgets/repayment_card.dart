@@ -27,12 +27,18 @@ class RepaymentCard extends StatelessWidget {
                   color: AppColor.gray20.of(context),
                 ),
               ),
-              Spacer(),
-              Text('${NumberUtils.formatWithCommas(repayment.amount)}원',
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: AppColor.gray20.of(context),
-                      fontWeight: FontWeight.bold)),
+              SizedBox(width: 20),
+              Flexible(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('${NumberUtils.formatWithCommas(repayment.amount)}원',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: AppColor.gray20.of(context),
+                          fontWeight: FontWeight.bold)),
+                ),
+              ),
               Consumer(
                   builder: (context, ref, child) => IconButton(
                       onPressed: () {

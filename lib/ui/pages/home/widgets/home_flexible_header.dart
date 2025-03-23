@@ -23,17 +23,18 @@ class HomeFlexibleHeader extends StatelessWidget {
                 padding: EdgeInsets.only(top: 50, left: 20, right: 20),
                 child: Row(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                            currentIndex == 0 ? "내가 받아야 할 금액이" : "내가 갚아야 할 금액이",
-                            style: TextStyle(fontSize: 18)),
-                        buildRemainingAmountText(currentIndex)
-                      ],
+                    Flexible(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              currentIndex == 0 ? "내가 받아야 할 금액이" : "내가 갚아야 할 금액이",
+                              style: TextStyle(fontSize: 18)),
+                          buildRemainingAmountText(currentIndex)
+                        ],
+                      ),
                     ),
-                    Spacer(),
                     Image.asset(currentIndex == 0 ? 'lib/assets/lottie/lend.gif' : 'lib/assets/lottie/borrow.gif')
                     // Lottie.asset('lib/assets/lottie/lend.json', width: 160, height: 160)
                   ],
@@ -62,7 +63,7 @@ class HomeFlexibleHeader extends StatelessWidget {
                     fontSize: 30,
                     fontWeight: FontWeight.w800)),
             TextSpan(
-              text: '원\n',
+              text: '원 ',
               style: TextStyle(
                   fontSize: 24,
                   color: currentIndex == 0
