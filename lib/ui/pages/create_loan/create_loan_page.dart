@@ -179,9 +179,13 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   final selectedDate = await DatetimeUtils.selectDate(
                       context: context, initialDate: dueDate);
                   if (selectedDate != null) {
-                    setState(() {
-                      dueDate = selectedDate;
-                    });
+                    if (selectedDate.isBefore(loanDate)) {
+                      SnackbarUtil.showToastMessage("상환일은 대출일보다 이전일 수 없습니다");
+                    } else {
+                      setState(() {
+                        dueDate = selectedDate;
+                      });
+                    }
                   }
                 },
               ),
@@ -195,8 +199,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                             AppColor.primaryBlue.of(context)),
                         padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                             EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                        shape:
-                            WidgetStateProperty.all<RoundedRectangleBorder>(
+                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -224,7 +227,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                                 ? null
                                 : memoEdittingController.text,
                           );
-                          if (isCreatedPerson??false) {
+                          if (isCreatedPerson ?? false) {
                             await ref
                                 .read(appViewModelProvider.notifier)
                                 .createPerson(selectedPerson!);
