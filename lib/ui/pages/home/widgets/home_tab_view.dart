@@ -8,7 +8,7 @@ import 'package:dont_worry/utils/enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeTabView extends StatelessWidget {
+class HomeTabView extends StatefulWidget {
   final bool isLending;
   const HomeTabView({
     required this.isLending,
@@ -16,15 +16,58 @@ class HomeTabView extends StatelessWidget {
   });
 
   @override
+  State<HomeTabView> createState() => _HomeTabViewState();
+}
+
+class _HomeTabViewState extends State<HomeTabView> {
+  bool? isSortedByUpdate;
+
+  @override
+  void initState() {
+    super.initState();
+    isSortedByUpdate = true;
+  }
+
+
+  void onSortOptionSelected(String value) {
+    setState(() {
+      isSortedByUpdate = value == '업데이트 순';
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      var statePeople = ref.watch(appViewModelProvider.select((state) => state
-          .people
-          .where((person) => isLending ? person.hasLend : person.hasBorrow)));
-      var inPaidList = statePeople.where((person) =>
-          isLending ? !person.isLendPaidOff : !person.isBorrowPaidOff);
-      var paidOffList = statePeople.where((person) =>
-          isLending ? person.isLendPaidOff : person.isBorrowPaidOff);
+      var statePeople = ref.watch(appViewModelProvider.select((state) =>
+          state.people.where((person) =>
+              widget.isLending ? person.hasLend : person.hasBorrow)));
+      var inPaidList = statePeople
+          .where((person) => widget.isLending
+              ? !person.isLendPaidOff
+              : !person.isBorrowPaidOff)
+          .toList();
+      var paidOffList = statePeople
+          .where((person) =>
+              widget.isLending ? person.isLendPaidOff : person.isBorrowPaidOff)
+          .toList();
+
+      if (isSortedByUpdate ?? true) {
+        inPaidList.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+        paidOffList.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+      }
+
+      // 높은 가격 순 정렬 (대출 금액 기준)
+      else if (widget.isLending) {
+        inPaidList.sort(
+            (a, b) => a.remainingLendAmount.compareTo(b.remainingLendAmount));
+        paidOffList.sort(
+            (a, b) => a.repaidLendAmount.compareTo(b.repaidLendAmount));
+      } else {
+        inPaidList.sort(
+            (a, b) => a.remainingBorrowAmount.compareTo(b.remainingBorrowAmount));
+        paidOffList.sort(
+            (a, b) => a.repaidBorrowAmount.compareTo(b.repaidBorrowAmount));
+      }
 
       return Visibility(
           visible: statePeople.isNotEmpty,
@@ -34,9 +77,10 @@ class HomeTabView extends StatelessWidget {
                 offstage: inPaidList.isEmpty,
                 child: Column(
                   children: [
-                    ListHeader(isLending: isLending, unitType: UnitType.person),
+                    ListHeader(
+                        isLending: widget.isLending, unitType: UnitType.person),
                     personList(
-                        isLending: isLending, peopleState: inPaidList.toList())
+                        isLending: widget.isLending, peopleState: inPaidList)
                   ],
                 )),
             Offstage(
@@ -44,7 +88,7 @@ class HomeTabView extends StatelessWidget {
                 child: Column(children: [
                   ListHeader(unitType: UnitType.person),
                   personList(
-                      isLending: isLending, peopleState: paidOffList.toList())
+                      isLending: widget.isLending, peopleState: paidOffList)
                 ])),
             SizedBox(height: 60)
           ]));
@@ -72,31 +116,26 @@ class HomeTabView extends StatelessWidget {
           children: [
             IgnorePointer(
               child: Opacity(
-                opacity: 0.5,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ListHeader(isLending: isLending, unitType: UnitType.person),
-                      PersonCard(
-                          person: Person(
-                              name: '후배 김민수 (밥값)',
-                              repaidLendAmount: 100000,
-                              lastLendRepaidDate: DateTime.now()),
-                          isLending: true),
-                      PersonCard(
-                          person: Person(
-                              name: '후배 김민수 (밥값)',
-                              repaidLendAmount: 100000,
-                              lastLendRepaidDate: DateTime.now()),
-                          isLending: true),
-                      PersonCard(
-                          person: Person(
-                              name: '후배 김민수 (밥값)',
-                              repaidLendAmount: 100000,
-                              lastLendRepaidDate: DateTime.now()),
-                          isLending: true),
-                    ],
-                  ),
+                opacity: 0.3,
+                child: Column(
+                  children: [
+                    ListHeader(
+                        isLending: widget.isLending,
+                        unitType: UnitType.person,
+                        onSortOptionSelected: onSortOptionSelected),
+                    PersonCard(
+                        person: Person(
+                            name: '후배 김민수 (밥값)',
+                            repaidLendAmount: 18000,
+                            lastLendRepaidDate: DateTime.now()),
+                        isLending: true),
+                    PersonCard(
+                        person: Person(
+                            name: '동생 이사비용',
+                            repaidLendAmount: 250000,
+                            lastLendRepaidDate: DateTime.now()),
+                        isLending: true)
+                  ],
                 ),
               ),
             ),
@@ -104,36 +143,38 @@ class HomeTabView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.block,
-                      size: 100,
-                      color: AppColor.deepBlack.of(context),
-                      shadows: [
-                        Shadow(
-                            offset: Offset(1.0, 1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                        Shadow(
-                            offset: Offset(-1.0, -1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                        Shadow(
-                            offset: Offset(1.0, -1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                        Shadow(
-                            offset: Offset(-1.0, 1.0),
-                            color: AppColor.onPrimaryWhite.of(context),
-                            blurRadius: 2),
-                      ]),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  // Icon(Icons.block,
+                  //     size: 100,
+                  //     color: AppColor.deepBlack.of(context),
+                  //     shadows: [
+                  //       Shadow(
+                  //           offset: Offset(1.0, 1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //       Shadow(
+                  //           offset: Offset(-1.0, -1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //       Shadow(
+                  //           offset: Offset(1.0, -1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //       Shadow(
+                  //           offset: Offset(-1.0, 1.0),
+                  //           color: AppColor.onPrimaryWhite.of(context),
+                  //           blurRadius: 2),
+                  //     ]),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
                   Text(
-                    isLending ? '빌려준 기록이 없습니다' : '빌린 기록이 없습니다',
+                    widget.isLending ? '아직 빌려준 기록이 없습니다' : '아직 빌린 기록이 없습니다',
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
-                        color: AppColor.deepBlack.of(context),
+                        color: widget.isLending
+                            ? AppColor.primaryBlue.of(context)
+                            : AppColor.primaryRed.of(context),
                         shadows: [
                           Shadow(
                               offset: Offset(2.0, 2.0),
@@ -157,9 +198,9 @@ class HomeTabView extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    isLending
-                        ? '받아야 할 금액을 기록하고, 관리해보세요'
-                        : '갚아야 할 금액을 기록하고, 관리해보세요',
+                    widget.isLending
+                        ? '받아야 할 금액을 기록하고 관리해보세요'
+                        : '갚아야 할 금액을 기록하고 관리해보세요',
                     style: TextStyle(
                         fontSize: 14,
                         color: AppColor.gray30.of(context),
@@ -167,33 +208,6 @@ class HomeTabView extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 40,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0,
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CreateLoanPage(isLending: isLending),
-                    ),
-                  );
-
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            AppColor.deepBlack.of(context)),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                            AppColor.onPrimaryWhite.of(context)),
-                        iconColor: MaterialStateProperty.all<Color>(
-                            AppColor.onPrimaryWhite.of(context)),
-                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                            EdgeInsets.symmetric(horizontal: 30, vertical: 14)),
-                      ),
-                      child: Text('기록 시작하기', style: TextStyle(fontSize: 16)),
-                    ),
                   )
                 ]),
           ],

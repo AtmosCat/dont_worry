@@ -244,6 +244,15 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                               filteredLoans.sort(
                                   (a, b) => a.loanDate.compareTo(b.loanDate));
                               _filteredLoans = filteredLoans;
+                              int initialText = 0;
+                              for (var loan in _filteredLoans) {
+                                initialText += loan.remainingAmount;
+                              }
+                              if (repaymentAmountController.text.isEmpty) {
+                                repaymentAmountController.text =
+                                    initialText.toString();
+                              }
+
                               return Expanded(
                                 child: ListView.builder(
                                   itemCount: filteredLoans.length,

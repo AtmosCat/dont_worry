@@ -5,7 +5,12 @@ import 'package:flutter/material.dart';
 class ListHeader extends StatefulWidget {
   final bool? isLending;
   final UnitType unitType;
-  const ListHeader({this.isLending, required this.unitType, super.key});
+  final Function(String)? onSortOptionSelected;
+  const ListHeader(
+      {this.isLending,
+      this.onSortOptionSelected,
+      required this.unitType,
+      super.key});
 
   @override
   State<ListHeader> createState() => _ListHeaderState();
@@ -19,8 +24,9 @@ class _ListHeaderState extends State<ListHeader> {
     return Column(
       children: [
         Offstage(
-            offstage: widget.unitType == UnitType.person,
-            child: Divider(height: 0, color: AppColor.divider.of(context)),),
+          offstage: widget.unitType == UnitType.person,
+          child: Divider(height: 0, color: AppColor.divider.of(context)),
+        ),
         Container(
           color: widget.unitType == UnitType.person
               ? Colors.transparent
@@ -88,13 +94,8 @@ class _ListHeaderState extends State<ListHeader> {
                         setState(() {
                           selectedSortOption = value; // 선택된 값으로 업데이트
                         });
-                        switch (value) {
-                          case '업데이트 순':
-                            //정렬 로직
-                            break;
-                          case '높은 가격 순':
-                            //정렬 로직
-                            break;
+                        if (widget.onSortOptionSelected != null) {
+                          widget.onSortOptionSelected!(value);
                         }
                       }),
                 ),
@@ -104,8 +105,9 @@ class _ListHeaderState extends State<ListHeader> {
           ),
         ),
         Offstage(
-            offstage: widget.unitType == UnitType.person,
-            child: Divider(height: 0, color: AppColor.divider.of(context)),)
+          offstage: widget.unitType == UnitType.person,
+          child: Divider(height: 0, color: AppColor.divider.of(context)),
+        )
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/utils/number_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 
 
 // 플렉서블 헤더
@@ -33,11 +34,8 @@ class HomeFlexibleHeader extends StatelessWidget {
                       ],
                     ),
                     Spacer(),
-                    Icon(
-                      Icons.payments,
-                      size: 70,
-                      color: Colors.green,
-                    ) //이미지 추가 예정
+                    Image.asset('lib/assets/lottie/borrow.gif')
+                    // Lottie.asset('lib/assets/lottie/lend.json', width: 160, height: 160)
                   ],
                 ),
               );
