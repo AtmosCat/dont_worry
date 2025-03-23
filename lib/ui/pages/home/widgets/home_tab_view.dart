@@ -80,7 +80,7 @@ class _HomeTabViewState extends State<HomeTabView> {
                   ListHeader(
                     isLending: widget.isLending,
                     unitType: UnitType.person,
-                    onSortOptionSelected: onSortOptionSelected, // ✅ 추가!
+                    onSortOptionSelected: onSortOptionSelected, 
                   ),
                   personList(
                       isLending: widget.isLending, peopleState: inPaidList),
@@ -91,7 +91,7 @@ class _HomeTabViewState extends State<HomeTabView> {
               child: Column(children: [
                 ListHeader(
                   unitType: UnitType.person,
-                  onSortOptionSelected: onSortOptionSelected, // ✅ 추가!
+                  onSortOptionSelected: onSortOptionSelected,
                 ),
                 personList(
                     isLending: widget.isLending, peopleState: paidOffList),
