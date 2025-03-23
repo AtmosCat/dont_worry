@@ -38,8 +38,6 @@ class _PersonDetailPageState extends State<PersonDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    log('${person.updatedAt}');
-
     return Scaffold(
       floatingActionButton: CreateLoanFloatingActionButton(
           isLending: widget.isLending, person: widget.person),
