@@ -55,7 +55,7 @@ class Loan {
   })  
   // # 생성자 초기화
   : loanId = loanId ?? Uuid().v4(),
-        updatedAt = DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now(),
         loanDate = loanDate ?? DateTime.now(),
         title = title ??
             "${loanDate?.month ?? DateTime.now().month}월 "
