@@ -62,14 +62,25 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                     labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: AppColor.primaryBlue.of(context),
-                          width: 2.0), // 포커스 시 테두리 색상
+                          color: AppColor.primaryBlue.of(context), width: 2.0),
                     ),
                     border: OutlineInputBorder())),
             Expanded(
               child: ListView.builder(
-                itemCount: filteredPeopleNames.length,
+                itemCount: filteredPeopleNames.isEmpty
+                    ? 1
+                    : filteredPeopleNames.length,
                 itemBuilder: (context, index) {
+                  if (filteredPeopleNames.isEmpty) {
+                    return ListTile(
+                      title: Center(
+                        child: Text(
+                          "일치하는 사람이 없습니다.",
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      ),
+                    );
+                  }
                   return ListTile(
                     title: Text(filteredPeopleNames[index]),
                     onTap: () {
@@ -92,8 +103,8 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                                 WidgetStateProperty.all<EdgeInsetsGeometry>(
                                     EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 10)),
-                            shape: WidgetStateProperty.all<
-                                RoundedRectangleBorder>(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
@@ -112,7 +123,8 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                             } else {
                               final newPerson =
                                   Person(name: searchController.text);
-                              widget.onSelect(person: newPerson, isCreated: true);
+                              widget.onSelect(
+                                  person: newPerson, isCreated: true);
                               SnackbarUtil.showSnackBar(
                                   context, "사람을 선택하였습니다.");
                             }
