@@ -72,28 +72,30 @@ class HomeTabView extends StatelessWidget {
             IgnorePointer(
               child: Opacity(
                 opacity: 0.5,
-                child: Column(
-                  children: [
-                    ListHeader(isLending: isLending, unitType: UnitType.person),
-                    PersonCard(
-                        person: Person(
-                            name: '후배 김민수 (밥값)',
-                            repaidLendAmount: 100000,
-                            lastLendRepaidDate: DateTime.now()),
-                        isLending: true),
-                    PersonCard(
-                        person: Person(
-                            name: '후배 김민수 (밥값)',
-                            repaidLendAmount: 100000,
-                            lastLendRepaidDate: DateTime.now()),
-                        isLending: true),
-                    PersonCard(
-                        person: Person(
-                            name: '후배 김민수 (밥값)',
-                            repaidLendAmount: 100000,
-                            lastLendRepaidDate: DateTime.now()),
-                        isLending: true),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      ListHeader(isLending: isLending, unitType: UnitType.person),
+                      PersonCard(
+                          person: Person(
+                              name: '후배 김민수 (밥값)',
+                              repaidLendAmount: 100000,
+                              lastLendRepaidDate: DateTime.now()),
+                          isLending: true),
+                      PersonCard(
+                          person: Person(
+                              name: '후배 김민수 (밥값)',
+                              repaidLendAmount: 100000,
+                              lastLendRepaidDate: DateTime.now()),
+                          isLending: true),
+                      PersonCard(
+                          person: Person(
+                              name: '후배 김민수 (밥값)',
+                              repaidLendAmount: 100000,
+                              lastLendRepaidDate: DateTime.now()),
+                          isLending: true),
+                    ],
+                  ),
                 ),
               ),
             ),
