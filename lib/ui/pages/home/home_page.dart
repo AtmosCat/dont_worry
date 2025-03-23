@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage>
               pinned: true,
               // #1-2. (확장) 플렉서블 헤더 -> 위젯
               flexibleSpace: HomeFlexibleHeader(_tabController),
-              expandedHeight: 240.0, //최대 높이
+              expandedHeight: 220.0, //최대 높이
               // #1-3. (축소) 탭바 -> 위젯
               bottom: PreferredSize(
                 preferredSize: const Size.fromHeight(0.0), // 최소 높이
