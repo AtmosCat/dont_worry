@@ -85,8 +85,8 @@ class _ListHeaderState extends State<ListHeader> {
                             child: Text('업데이트 순'),
                           ),
                           PopupMenuItem(
-                            value: '높은 가격 순',
-                            child: Text('높은 가격 순'),
+                            value: '높은 금액 순',
+                            child: Text('높은 금액 순'),
                           ),
                         ];
                       },

@@ -61,7 +61,7 @@ class Person {
   })  
   // # 생성자 초기화
   : personId = personId ?? Uuid().v4(),
-        updatedAt = DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now(),
         hasLend = hasLend ?? false,
         hasBorrow = hasBorrow ?? false,
         isLendPaidOff = isLendPaidOff ?? false,

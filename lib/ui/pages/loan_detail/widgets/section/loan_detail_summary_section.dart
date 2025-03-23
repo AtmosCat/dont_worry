@@ -49,22 +49,28 @@ class LoanDetailSummarySection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text('남은 금액',
-                style: TextStyle(
-                    fontSize: 16, color: AppColor.disabled.of(context))),
-            SizedBox(width: 14),
-            Text(
-              NumberUtils.formatWithCommas(amount),
-              style: TextStyle(
-                  letterSpacing: -0.7,
-                  color: AppColor.deepBlack.of(context),
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(width: 4),
-            Text(
-              '원',
-              style: TextStyle(fontSize: 20),
+            Flexible(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text.rich(
+                  TextSpan(children: [
+                    TextSpan(
+                        text: '남은 금액   ',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: AppColor.disabled.of(context))),
+                    TextSpan(
+                        text: NumberUtils.formatWithCommas(amount),
+                        style: TextStyle(
+                            letterSpacing: -0.7,
+                            color: AppColor.deepBlack.of(context),
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold)),
+                    TextSpan(text: ' 원', style: TextStyle(fontSize: 20))
+                  ]),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
           ],
         ),

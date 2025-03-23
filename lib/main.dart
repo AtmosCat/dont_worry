@@ -3,6 +3,7 @@ import 'package:dont_worry/theme/colors.dart';
 import 'package:dont_worry/theme/theme.dart';
 import 'package:dont_worry/ui/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ void main() async {
   // SQL 사용을 위한 세팅
   WidgetsFlutterBinding.ensureInitialized();
   SqlDatabase();
+  debugPaintSizeEnabled = false; 
   runApp(ProviderScope(child: const MyApp()));
 }
 

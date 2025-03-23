@@ -54,7 +54,8 @@ class SmallLoanCard extends StatelessWidget {
                 // 2열 : 남은 금액, 버튼
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  amountText(loan.remainingAmount, context, totalRepaymentAmount),
+                  amountText(
+                      loan.remainingAmount, context, totalRepaymentAmount),
                   const Spacer(),
                   SmallRepaymentButton(
                     context: context,
@@ -68,8 +69,9 @@ class SmallLoanCard extends StatelessWidget {
               ),
               Offstage(
                   // 3열 : 상환 비율 그래프 (0%, 100% 일 땐 숨김처리)
-                  offstage:
-                      loan.remainingAmount == 0 || repaymentRate == 0 || repaymentRate >= 1,
+                  offstage: loan.remainingAmount == 0 ||
+                      repaymentRate == 0 ||
+                      repaymentRate >= 1,
                   child: SmallRepaymentProgressIndicator(
                       repaymentRate: repaymentRate,
                       initialAmount: initialAmount,
@@ -111,14 +113,17 @@ class SmallLoanCard extends StatelessWidget {
           style: TextStyle(
               fontSize: 11,
               color: dDay > 0
-                  ? AppColor.primaryYellow.of(context)
-                  : AppColor.primaryGreen.of(context),
+                  ? isLending
+                      ? AppColor.primaryYellow.of(context)
+                      : AppColor.primaryGreen.of(context)
+                  : AppColor.negative.of(context),
               fontWeight: FontWeight.bold)),
     );
   }
 
   // 금액
-  Text amountText(int remainingAmount, BuildContext context, int totalRepayment) {
+  Text amountText(
+      int remainingAmount, BuildContext context, int totalRepayment) {
     return Text.rich(
       style: TextStyle(
         color: remainingAmount != 0 // 상환여부 따라 글씨색상 변경
