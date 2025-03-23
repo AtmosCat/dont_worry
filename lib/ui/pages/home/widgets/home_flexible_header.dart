@@ -38,9 +38,8 @@ class HomeFlexibleHeader extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Center(child: Align( alignment: Alignment(0, -0.2),
-                      child: Image.asset(currentIndex == 0 ? 'lib/assets/lottie/lend.gif' : 'lib/assets/lottie/borrow.gif', width:120)))
-                    // Lottie.asset('lib/assets/lottie/lend.json', width: 160, height: 160)
+                      Center(child: Align( alignment: Alignment(0, -0.2),
+                      child: Lottie.asset(currentIndex == 0 ? 'lib/assets/lottie/lend.json' : 'lib/assets/lottie/borrow.json', width:120)))
                   ],
                 ),
               );
