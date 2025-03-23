@@ -20,22 +20,26 @@ class HomeFlexibleHeader extends StatelessWidget {
               final double value = _tabController.animation!.value;
               final int currentIndex = (value + 0.5).floor();
               return Container(
-                padding: EdgeInsets.only(top: 50, left: 20, right: 20),
+                padding: EdgeInsets.only(top: 0, left: 20, right: 20),
                 child: Row(
                   children: [
                     Flexible(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              currentIndex == 0 ? "내가 받아야 할 금액이" : "내가 갚아야 할 금액이",
-                              style: TextStyle(fontSize: 18)),
-                          buildRemainingAmountText(currentIndex)
-                        ],
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                currentIndex == 0 ? "내가 받아야 할 금액이" : "내가 갚아야 할 금액이",
+                                style: TextStyle(fontSize: 16)),
+                            buildRemainingAmountText(currentIndex)
+                          ],
+                        ),
                       ),
                     ),
-                    Image.asset(currentIndex == 0 ? 'lib/assets/lottie/lend.gif' : 'lib/assets/lottie/borrow.gif')
+                    Center(child: Align( alignment: Alignment(0, -0.2),
+                      child: Image.asset(currentIndex == 0 ? 'lib/assets/lottie/lend.gif' : 'lib/assets/lottie/borrow.gif', width:120)))
                     // Lottie.asset('lib/assets/lottie/lend.json', width: 160, height: 160)
                   ],
                 ),
@@ -65,7 +69,7 @@ class HomeFlexibleHeader extends StatelessWidget {
             TextSpan(
               text: '원 ',
               style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 20,
                   color: currentIndex == 0
                       ? AppColor.primaryYellow.of(context)
                       : AppColor.primaryGreen.of(context)),
@@ -73,7 +77,7 @@ class HomeFlexibleHeader extends StatelessWidget {
             TextSpan(
                 text: '남았어요',
                 style: TextStyle(
-                    fontSize: 18, color: AppColor.defaultBlack.of(context)))
+                    fontSize: 16, color: AppColor.defaultBlack.of(context)))
           ]));
     });
   }
