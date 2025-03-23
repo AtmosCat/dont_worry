@@ -32,7 +32,8 @@ class PersonCard extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => PersonDetailPage(isLending : isLending, person: person)),
+            builder: (context) =>
+                PersonDetailPage(isLending: isLending, person: person)),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -88,8 +89,10 @@ class PersonCard extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 13,
                             color: dDay == null || dDay < 0
-                                ? AppColor.primaryYellow.of(context)
-                                : AppColor.primaryGreen.of(context),
+                                ? isLending
+                                    ? AppColor.primaryYellow.of(context)
+                                    : AppColor.primaryGreen.of(context)
+                                : AppColor.negative.of(context),
                             fontWeight: FontWeight.bold)),
                   ),
                 ],

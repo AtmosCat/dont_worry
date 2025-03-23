@@ -62,7 +62,9 @@ class LoanCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Flexible(child: amountText(remainingAmount, context, totalRepayment)),
+                      Flexible(
+                          child: amountText(
+                              remainingAmount, context, totalRepayment)),
                       RepaymentButton(
                           isLending: isLending, isRepaid: isRepaid, loan: loan),
                     ],
@@ -119,8 +121,10 @@ class LoanCard extends StatelessWidget {
               color: dDay == null
                   ? AppColor.primaryYellow.of(context)
                   : dDay < 0
-                      ? AppColor.primaryYellow.of(context)
-                      : AppColor.primaryGreen.of(context),
+                      ? isLending
+                          ? AppColor.primaryYellow.of(context)
+                          : AppColor.primaryGreen.of(context)
+                      : AppColor.negative.of(context),
               fontWeight: FontWeight.bold)),
     );
   }
