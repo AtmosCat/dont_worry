@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 
-
 // 플렉서블 헤더
 class HomeFlexibleHeader extends StatelessWidget {
   final TabController _tabController;
@@ -20,26 +19,39 @@ class HomeFlexibleHeader extends StatelessWidget {
               final double value = _tabController.animation!.value;
               final int currentIndex = (value + 0.5).floor();
               return Container(
-                padding: EdgeInsets.only(top: 0, left: 20, right: 20),
-                child: Row(
+                padding: EdgeInsets.only(top: 40, left: 20, right: 20),
+                child: Column(
                   children: [
-                    Flexible(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                currentIndex == 0 ? "내가 받아야 할 금액이" : "내가 갚아야 할 금액이",
-                                style: TextStyle(fontSize: 16)),
-                            buildRemainingAmountText(currentIndex)
-                          ],
-                        ),
-                      ),
+                    Center(
+                        child: Lottie.asset(
+                            currentIndex == 0
+                                ? 'lib/assets/lottie/lend.json'
+                                : 'lib/assets/lottie/borrow.json',
+                            height: 160)),
+                    SizedBox(
+                      height: 14,
                     ),
-                      Center(child: Align( alignment: Alignment(0, -0.2),
-                      child: Lottie.asset(currentIndex == 0 ? 'lib/assets/lottie/lend.json' : 'lib/assets/lottie/borrow.json', width:120)))
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                    currentIndex == 0
+                                        ? "내가 받아야 할 금액"
+                                        : "내가 갚아야 할 금액",
+                                    style: TextStyle(fontSize: 16)),
+                                buildRemainingAmountText(currentIndex)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               );
@@ -73,10 +85,10 @@ class HomeFlexibleHeader extends StatelessWidget {
                       ? AppColor.primaryYellow.of(context)
                       : AppColor.primaryGreen.of(context)),
             ),
-            TextSpan(
-                text: '남았어요',
-                style: TextStyle(
-                    fontSize: 16, color: AppColor.defaultBlack.of(context)))
+            // TextSpan(
+            //     text: '남았어요',
+            //     style: TextStyle(
+            //         fontSize: 16, color: AppColor.defaultBlack.of(context)))
           ]));
     });
   }
