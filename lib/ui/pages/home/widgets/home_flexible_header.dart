@@ -34,7 +34,7 @@ class HomeFlexibleHeader extends StatelessWidget {
                       ],
                     ),
                     Spacer(),
-                    Image.asset('lib/assets/lottie/borrow.gif')
+                    Image.asset(currentIndex == 0 ? 'lib/assets/lottie/lend.gif' : 'lib/assets/lottie/borrow.gif')
                     // Lottie.asset('lib/assets/lottie/lend.json', width: 160, height: 160)
                   ],
                 ),
@@ -51,8 +51,8 @@ class HomeFlexibleHeader extends StatelessWidget {
       return Text.rich(TextSpan(
           style: TextStyle(
               color: currentIndex == 0
-                  ? AppColor.primaryBlue.of(context)
-                  : AppColor.primaryRed.of(context)),
+                  ? AppColor.primaryYellow.of(context)
+                  : AppColor.primaryGreen.of(context)),
           children: [
             TextSpan(
                 text: NumberUtils.formatWithCommas(remainingAmounts.fold(
@@ -66,8 +66,8 @@ class HomeFlexibleHeader extends StatelessWidget {
               style: TextStyle(
                   fontSize: 24,
                   color: currentIndex == 0
-                      ? AppColor.primaryBlue.of(context)
-                      : AppColor.primaryRed.of(context)),
+                      ? AppColor.primaryYellow.of(context)
+                      : AppColor.primaryGreen.of(context)),
             ),
             TextSpan(
                 text: '남았어요',

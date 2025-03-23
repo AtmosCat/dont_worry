@@ -76,8 +76,8 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
               ),
               alignment: Alignment.center,
               backgroundColor: widget.isLending
-                  ? AppColor.primaryBlue.of(context)
-                  : AppColor.primaryRed.of(context),
+                  ? AppColor.primaryYellow.of(context)
+                  : AppColor.primaryGreen.of(context),
               foregroundColor: AppColor.onPrimaryWhite.of(context),
               iconColor: AppColor.onPrimaryWhite.of(context),
             ),
@@ -146,7 +146,7 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                               decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                      color: AppColor.primaryBlue.of(context),
+                                      color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                                       width: 2.0),
                                 ),
                                 labelStyle: TextStyle(
@@ -226,7 +226,7 @@ class _RepaymentForPersonButtonState extends State<RepaymentForPersonButton> {
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
-                                      AppColor.primaryBlue.of(context),
+                                      widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(4.0),
                                   ),

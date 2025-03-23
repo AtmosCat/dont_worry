@@ -13,7 +13,7 @@ class DatetimeUtils {
   }
 
   // DatePicker 호출 함수
-  static Future<DateTime?> selectDate({required BuildContext context, DateTime? initialDate}) async {
+  static Future<DateTime?> selectDate({required BuildContext context, DateTime? initialDate, required bool isLending}) async {
 
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -25,8 +25,8 @@ class DatetimeUtils {
       builder: (context, child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            primaryColor: AppColor.primaryBlue.of(context), // 주요 색상 (선택 사항)
-            colorScheme: ColorScheme.light(primary: AppColor.primaryBlue.of(context)),
+            primaryColor: isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context), // 주요 색상 (선택 사항)
+            colorScheme: ColorScheme.light(primary: isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context)),
             buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.primary),
           ),
           child: child!,

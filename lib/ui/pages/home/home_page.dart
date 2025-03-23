@@ -62,20 +62,12 @@ class _HomePageState extends State<HomePage>
             SliverAppBar(
               // #1-1. 상단 앱바
               pinned: true,
-              centerTitle: true,
-              title: Title(
-                  color: AppColor.containerWhite.of(context),
-                  child: Text('돈워리',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900,
-                          color: AppColor.primaryBlue.of(context)))),
               // #1-2. (확장) 플렉서블 헤더 -> 위젯
               flexibleSpace: HomeFlexibleHeader(_tabController),
               expandedHeight: 240.0, //최대 높이
               // #1-3. (축소) 탭바 -> 위젯
               bottom: PreferredSize(
-                preferredSize: const Size.fromHeight(50.0), // 최소 높이
+                preferredSize: const Size.fromHeight(0.0), // 최소 높이
                 child: HomeTabBar(_tabController),
               ),
             ),

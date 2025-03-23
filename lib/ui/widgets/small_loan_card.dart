@@ -59,6 +59,7 @@ class SmallLoanCard extends StatelessWidget {
                   SmallRepaymentButton(
                     context: context,
                     isRepaid: isRepaid,
+                    isLending: isLending,
                     loan: loan,
                     person: person,
                     repaymentAmountController: repaymentAmountController,
@@ -71,7 +72,8 @@ class SmallLoanCard extends StatelessWidget {
                       loan.remainingAmount == 0 || repaymentRate == 0 || repaymentRate >= 1,
                   child: SmallRepaymentProgressIndicator(
                       repaymentRate: repaymentRate,
-                      initialAmount: initialAmount))
+                      initialAmount: initialAmount,
+                      isLending: isLending))
             ],
           ),
           Divider(height: 30, color: AppColor.divider.of(context)),
@@ -109,8 +111,8 @@ class SmallLoanCard extends StatelessWidget {
           style: TextStyle(
               fontSize: 11,
               color: dDay > 0
-                  ? AppColor.primaryBlue.of(context)
-                  : AppColor.primaryRed.of(context),
+                  ? AppColor.primaryYellow.of(context)
+                  : AppColor.primaryGreen.of(context),
               fontWeight: FontWeight.bold)),
     );
   }

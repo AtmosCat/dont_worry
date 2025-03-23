@@ -91,6 +91,7 @@ class LoanDetailRepaymentSection extends StatelessWidget {
         RepaymentProgressIndicator(
           repaymentRate: repaymentRate,
           initialAmount: initialAmount,
+          isLending: isLending
         ),
       ],
     );
@@ -103,13 +104,13 @@ class LoanDetailRepaymentSection extends StatelessWidget {
       children: [
         Icon(
           Icons.check_circle,
-          color: AppColor.primaryBlue.of(context),
+          color: isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
         ),
         SizedBox(width: 10),
         Text(isLending ? '빌려준 금액을 전부 받았어요' : '빌린 금액을 전부 갚았어요',
             style: TextStyle(
                 fontSize: 16,
-                color: AppColor.primaryBlue.of(context),
+                color: isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                 fontWeight: FontWeight.w600)),
       ],
     );

@@ -85,11 +85,11 @@ class _BottomSheet extends StatelessWidget {
             Consumer(
               builder: (context, ref, child) => ListTile(
                   leading: Icon(Icons.delete,
-                      color: AppColor.primaryRed.of(context)),
+                      color: AppColor.negative.of(context)),
                   title: Text(
                     (unitType == UnitType.person) ? '사람 정보 삭제' : '대출 내역 삭제',
                     style: TextStyle(
-                        color: AppColor.primaryRed.of(context),
+                        color: AppColor.negative.of(context),
                         fontWeight: FontWeight.bold),
                   ),
                   onTap: () {

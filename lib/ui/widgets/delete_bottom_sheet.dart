@@ -28,12 +28,12 @@ class _DeleteBottomSheet extends StatelessWidget {
               ListTile(
                 leading: Icon(
                   Icons.task_alt,
-                  color: AppColor.primaryRed.of(context),
+                  color: AppColor.negative.of(context),
                 ),
                 title: Text(
                   '삭제',
                   style: TextStyle(
-                      color: AppColor.primaryRed.of(context),
+                      color: AppColor.negative.of(context),
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () {

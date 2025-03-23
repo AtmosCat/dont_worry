@@ -7,10 +7,12 @@ class RepaymentProgressIndicator extends StatelessWidget {
     super.key,
     required this.repaymentRate,
     required this.initialAmount,
+    required this.isLending,
   });
 
   final double repaymentRate;
   final int initialAmount;
+  final bool isLending;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class RepaymentProgressIndicator extends StatelessWidget {
           value: repaymentRate,
           minHeight: 4,
           borderRadius: BorderRadius.circular(20),
-          color: AppColor.primaryBlue.of(context),
+          color: isLending ? AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
           backgroundColor: AppColor.lightGray20.of(context),
         ),
         SizedBox(height: 10),
@@ -43,7 +45,7 @@ class RepaymentProgressIndicator extends StatelessWidget {
               TextSpan(
                   text: '${(repaymentRate * 100).round().clamp(1, 99)}%',
                   style: TextStyle(
-                      color: AppColor.primaryBlue.of(context),
+                      color: isLending ? AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                       fontWeight: FontWeight.bold)),
               TextSpan(text: '을(를) 받았어요!'),
             ],

@@ -88,8 +88,8 @@ class PersonCard extends StatelessWidget {
                         style: TextStyle(
                             fontSize: 13,
                             color: dDay == null || dDay < 0
-                                ? AppColor.primaryBlue.of(context)
-                                : AppColor.primaryRed.of(context),
+                                ? AppColor.primaryYellow.of(context)
+                                : AppColor.primaryGreen.of(context),
                             fontWeight: FontWeight.bold)),
                   ),
                 ],

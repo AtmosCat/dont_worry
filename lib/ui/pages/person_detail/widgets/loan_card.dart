@@ -74,7 +74,8 @@ class LoanCard extends StatelessWidget {
                           repaymentRate >= 1,
                       child: RepaymentProgressIndicator(
                           repaymentRate: repaymentRate,
-                          initialAmount: initialAmount))
+                          initialAmount: initialAmount,
+                          isLending: isLending))
                 ],
               ),
             ),
@@ -116,10 +117,10 @@ class LoanCard extends StatelessWidget {
           style: TextStyle(
               fontSize: 13,
               color: dDay == null
-                  ? AppColor.primaryBlue.of(context)
+                  ? AppColor.primaryYellow.of(context)
                   : dDay < 0
-                      ? AppColor.primaryBlue.of(context)
-                      : AppColor.primaryRed.of(context),
+                      ? AppColor.primaryYellow.of(context)
+                      : AppColor.primaryGreen.of(context),
               fontWeight: FontWeight.bold)),
     );
   }

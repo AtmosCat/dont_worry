@@ -173,8 +173,8 @@ class _HomeTabViewState extends State<HomeTabView> {
                         fontSize: 22,
                         fontWeight: FontWeight.w900,
                         color: widget.isLending
-                            ? AppColor.primaryBlue.of(context)
-                            : AppColor.primaryRed.of(context),
+                            ? AppColor.primaryYellow.of(context)
+                            : AppColor.primaryGreen.of(context),
                         shadows: [
                           Shadow(
                               offset: Offset(2.0, 2.0),

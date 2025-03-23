@@ -7,8 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SearchPopup extends ConsumerStatefulWidget {
   final Function({required Person person, required bool isCreated}) onSelect;
-
-  const SearchPopup({super.key, required this.onSelect});
+  final bool isLending;
+  
+  const SearchPopup({super.key, required this.onSelect, required this.isLending});
 
   @override
   _SearchPopupState createState() => _SearchPopupState();
@@ -62,7 +63,7 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                     labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: AppColor.primaryBlue.of(context),
+                          color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                           width: 2.0), // 포커스 시 테두리 색상
                     ),
                     border: OutlineInputBorder())),
@@ -87,7 +88,7 @@ class _SearchPopupState extends ConsumerState<SearchPopup> {
                     builder: (context, ref, child) => ElevatedButton(
                           style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all<Color>(
-                                AppColor.primaryBlue.of(context)),
+                                widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context)),
                             padding:
                                 WidgetStateProperty.all<EdgeInsetsGeometry>(
                                     EdgeInsets.symmetric(

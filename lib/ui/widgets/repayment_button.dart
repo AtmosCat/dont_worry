@@ -58,8 +58,8 @@ class _RepaymentButtonState extends State<RepaymentButton> {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           alignment: Alignment.center,
           backgroundColor: widget.isLending
-              ? AppColor.primaryBlue.of(context)
-              : AppColor.primaryRed.of(context),
+              ? AppColor.primaryYellow.of(context)
+              : AppColor.primaryGreen.of(context),
           foregroundColor: AppColor.onPrimaryWhite.of(context),
           iconColor: AppColor.onPrimaryWhite.of(context),
         ),
@@ -93,7 +93,7 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: AppColor.primaryBlue.of(context),
+                                  color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                                   width: 2.0,
                                 ),
                               ),
@@ -128,7 +128,7 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.primaryBlue.of(context),
+                            color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                           ),
                         ),
                       ),
@@ -169,7 +169,7 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: AppColor.primaryBlue.of(context),
+                              color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                             ),
                           ),
                         ),

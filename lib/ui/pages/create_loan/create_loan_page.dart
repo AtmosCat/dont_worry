@@ -61,7 +61,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                       isCreatedPerson = isCreated;
                     });
                     Navigator.pop(context); // 팝업 닫기
-                  },
+                  }, isLending: widget.isLending,
                 ));
       },
     );
@@ -109,7 +109,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: AppColor.primaryBlue.of(context),
+                        color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                         width: 2.0), // 포커스 시 테두리 색상
                   ),
                   suffixIcon: Icon(Icons.search), // 캘린더 아이콘 추가
@@ -144,14 +144,14 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: AppColor.primaryBlue.of(context),
+                        color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                         width: 2.0), // 포커스 시 테두리 색상
                   ),
                   suffixIcon: Icon(Icons.calendar_today), // 캘린더 아이콘 추가
                 ),
                 onTap: () async {
                   final selectedDate = await DatetimeUtils.selectDate(
-                      context: context, initialDate: loanDate);
+                      context: context, initialDate: loanDate, isLending: widget.isLending);
                   if (selectedDate != null) {
                     setState(() {
                       loanDate = selectedDate;
@@ -171,13 +171,13 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: AppColor.primaryBlue.of(context), width: 2.0),
+                        color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context), width: 2.0),
                   ),
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () async {
                   final selectedDate = await DatetimeUtils.selectDate(
-                      context: context, initialDate: dueDate);
+                      context: context, initialDate: dueDate, isLending: widget.isLending);
                   if (selectedDate != null) {
                     if (selectedDate.isBefore(loanDate)) {
                       SnackbarUtil.showToastMessage("상환일은 대출일보다 이전일 수 없습니다");
@@ -196,7 +196,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                     builder: (context, ref, child) => ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(
-                            AppColor.primaryBlue.of(context)),
+                            widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context)),
                         padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                             EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
@@ -277,7 +277,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
         labelStyle: TextStyle(color: AppColor.gray30.of(context)),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-              color: AppColor.primaryBlue.of(context),
+              color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
               width: 2.0), // 포커스 시 테두리 색상
         ),
         suffixIcon: controller.text.isNotEmpty // 텍스트가 있을 때만 X 버튼 표시

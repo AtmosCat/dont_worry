@@ -49,7 +49,7 @@ class _HomeTabBarState extends State<HomeTabBar> {
                             .toString(),
                         style: TextStyle(
                           color: currentIndex == 0
-                              ? AppColor.primaryBlue.of(context)
+                              ? AppColor.primaryYellow.of(context)
                               : AppColor.disabled.of(context), // TabBar 위치 감지
                         ),
                       );
@@ -80,7 +80,7 @@ class _HomeTabBarState extends State<HomeTabBar> {
                             .toString(), //몇 명인지
                         style: TextStyle(
                           color: currentIndex == 1
-                              ? AppColor.primaryRed.of(context)
+                              ? AppColor.primaryGreen.of(context)
                               : AppColor.disabled.of(context), // TabBar 위치 감지
                         ),
                       );
@@ -95,8 +95,8 @@ class _HomeTabBarState extends State<HomeTabBar> {
             indicatorWeight: 3,
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorColor: currentIndex == 0
-                ? AppColor.primaryBlue.of(context)
-                : AppColor.primaryRed.of(context), // TabBar 위치 감지
+                ? AppColor.primaryYellow.of(context)
+                : AppColor.primaryGreen.of(context), // TabBar 위치 감지
           ),
         );
       },

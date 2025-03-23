@@ -29,14 +29,14 @@ class CreateLoanFloatingActionButton extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
                       color: isLending
-                          ? AppColor.primaryBlue.of(context)
-                          : AppColor.primaryRed.of(context),
+                          ? AppColor.primaryYellow.of(context)
+                          : AppColor.primaryGreen.of(context),
                       width: 1), // 외곽선 추가
                   borderRadius: BorderRadius.circular(10),
                 ),
                 foregroundColor: isLending
-                    ? AppColor.primaryBlue.of(context)
-                    : AppColor.primaryRed.of(context),
+                    ? AppColor.primaryYellow.of(context)
+                    : AppColor.primaryGreen.of(context),
                 backgroundColor: AppColor.containerWhite.of(context),
                 elevation: 1,
                 onPressed: () {

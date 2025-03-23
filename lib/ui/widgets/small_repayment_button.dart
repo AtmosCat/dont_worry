@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 class SmallRepaymentButton extends StatefulWidget {
   final BuildContext context;
   final bool isRepaid;
+  final bool isLending;
   final Loan loan;
   final Person person;
   final TextEditingController repaymentAmountController;
@@ -19,6 +20,7 @@ class SmallRepaymentButton extends StatefulWidget {
       {super.key,
       required this.context,
       required this.isRepaid,
+      required this.isLending,
       required this.loan,
       required this.person,
       required this.repaymentAmountController});
@@ -92,7 +94,7 @@ class _RepaymentButtonState extends State<SmallRepaymentButton> {
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                    color: AppColor.primaryBlue.of(context),
+                                    color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                                     width: 2.0),
                               ),
                               labelText: "상환액",
@@ -123,7 +125,7 @@ class _RepaymentButtonState extends State<SmallRepaymentButton> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: AppColor.primaryBlue.of(context),
+                            color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
                           ),
                         ),
                       ),
@@ -163,7 +165,7 @@ class _RepaymentButtonState extends State<SmallRepaymentButton> {
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       color:
-                                          AppColor.primaryBlue.of(context)))))
+                                          widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context)))))
                     ]);
               });
         },
@@ -185,7 +187,7 @@ class _RepaymentButtonState extends State<SmallRepaymentButton> {
             vertical: 5,
           ),
           alignment: Alignment.center,
-          backgroundColor: AppColor.primaryBlue.of(context),
+          backgroundColor: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
           foregroundColor: AppColor.onPrimaryWhite.of(context),
           iconColor: AppColor.onPrimaryWhite.of(context),
         ),

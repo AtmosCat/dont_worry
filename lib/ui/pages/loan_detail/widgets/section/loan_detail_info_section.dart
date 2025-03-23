@@ -99,8 +99,8 @@ class LoanDetailInfoSection extends StatelessWidget {
                                     : '${-dDay}일',
                             style: TextStyle(
                                 color: dDay > 0
-                                    ? AppColor.primaryBlue.of(context)
-                                    : AppColor.primaryRed.of(context),
+                                    ? AppColor.primaryYellow.of(context)
+                                    : AppColor.primaryGreen.of(context),
                                 fontWeight: FontWeight.bold)),
                         TextSpan(
                             text: dDay > 0

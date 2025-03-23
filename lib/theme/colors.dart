@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 enum AppColor {
   //primary
-  primaryBlue, 
-  primaryRed,
+  primaryYellow, 
+  primaryGreen,
+  negative,
   onPrimaryWhite,
   shadowBlack,
   divider,
@@ -39,8 +40,9 @@ class AppColors {
     colors: {
       
       // primary 주요색상 (강조, 버튼 등에 활용)
-      AppColor.primaryBlue: Color(0xFF007AFF), // 중요한 블루
-      AppColor.primaryRed: Color(0xFFF2616A), // 중요한 레드
+      AppColor.primaryYellow: Color(0xFFDEA82F), // 중요한 블루
+      AppColor.primaryGreen: Color(0xFF37C265), // 중요한 레드
+      AppColor.negative: Color(0xFFF2616A),
       AppColor.onPrimaryWhite: Colors.white, // 컬러배경 위에서 쓰이는 흰색 : 다크모드에서도 화이트 유지됨
       AppColor.shadowBlack: Color(0xFF000000), // 그림자로 쓰이는 검정 : 다크모드에서도 유지됨
       AppColor.divider: Colors.grey.withValues(alpha: 0.2),// 디바이더
@@ -76,8 +78,9 @@ class AppColors {
 
   static final darkColorScheme = MyColor(
     colors: {
-      AppColor.primaryBlue: Color(0xFF7CA7D5),
-      AppColor.primaryRed: Color(0xFFDD7980),
+      AppColor.primaryYellow: Color(0xFF7CA7D5),
+      AppColor.primaryGreen: Color(0xFFDD7980),
+      AppColor.negative: Color(0xFFDD7980),
       AppColor.onPrimaryWhite: Colors.white,
       AppColor.shadowBlack: Color(0xFF000000),
       AppColor.divider: Colors.white.withValues(alpha: 0.2),// 디바이더
