@@ -28,7 +28,6 @@ class _HomeTabViewState extends State<HomeTabView> {
     isSortedByUpdate = true;
   }
 
-
   void onSortOptionSelected(String value) {
     setState(() {
       isSortedByUpdate = value == '업데이트 순';
@@ -51,47 +50,55 @@ class _HomeTabViewState extends State<HomeTabView> {
               widget.isLending ? person.isLendPaidOff : person.isBorrowPaidOff)
           .toList();
 
+      // 업데이트 순 정렬
       if (isSortedByUpdate ?? true) {
-        inPaidList.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
-        paidOffList.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+        inPaidList.sort((b, a) => a.updatedAt.compareTo(b.updatedAt));
+        paidOffList.sort((b, a) => a.updatedAt.compareTo(b.updatedAt));
       }
 
       // 높은 가격 순 정렬 (대출 금액 기준)
       else if (widget.isLending) {
         inPaidList.sort(
-            (a, b) => a.remainingLendAmount.compareTo(b.remainingLendAmount));
-        paidOffList.sort(
-            (a, b) => a.repaidLendAmount.compareTo(b.repaidLendAmount));
+            (b, a) => a.remainingLendAmount.compareTo(b.remainingLendAmount));
+        paidOffList
+            .sort((b, a) => a.repaidLendAmount.compareTo(b.repaidLendAmount));
       } else {
-        inPaidList.sort(
-            (a, b) => a.remainingBorrowAmount.compareTo(b.remainingBorrowAmount));
+        inPaidList.sort((b, a) =>
+            a.remainingBorrowAmount.compareTo(b.remainingBorrowAmount));
         paidOffList.sort(
-            (a, b) => a.repaidBorrowAmount.compareTo(b.repaidBorrowAmount));
+            (b, a) => a.repaidBorrowAmount.compareTo(b.repaidBorrowAmount));
       }
 
       return Visibility(
-          visible: statePeople.isNotEmpty,
-          replacement: replacement(context),
-          child: ListView(padding: EdgeInsets.all(4), children: [
-            Offstage(
-                offstage: inPaidList.isEmpty,
-                child: Column(
-                  children: [
-                    ListHeader(
-                        isLending: widget.isLending, unitType: UnitType.person),
-                    personList(
-                        isLending: widget.isLending, peopleState: inPaidList)
-                  ],
-                )),
-            Offstage(
-                offstage: paidOffList.isEmpty,
-                child: Column(children: [
-                  ListHeader(unitType: UnitType.person),
+        visible: statePeople.isNotEmpty,
+        replacement: replacement(context),
+        child: ListView(padding: EdgeInsets.all(4), children: [
+          Offstage(
+              offstage: inPaidList.isEmpty,
+              child: Column(
+                children: [
+                  ListHeader(
+                    isLending: widget.isLending,
+                    unitType: UnitType.person,
+                    onSortOptionSelected: onSortOptionSelected, // ✅ 추가!
+                  ),
                   personList(
-                      isLending: widget.isLending, peopleState: paidOffList)
-                ])),
-            SizedBox(height: 60)
-          ]));
+                      isLending: widget.isLending, peopleState: inPaidList),
+                ],
+              )),
+          Offstage(
+              offstage: paidOffList.isEmpty,
+              child: Column(children: [
+                ListHeader(
+                  unitType: UnitType.person,
+                  onSortOptionSelected: onSortOptionSelected, // ✅ 추가!
+                ),
+                personList(
+                    isLending: widget.isLending, peopleState: paidOffList),
+              ])),
+          SizedBox(height: 60)
+        ]),
+      );
     });
   }
 

@@ -92,7 +92,7 @@ class _ListHeaderState extends State<ListHeader> {
                       },
                       onSelected: (value) {
                         setState(() {
-                          selectedSortOption = value; // 선택된 값으로 업데이트
+                          selectedSortOption = value; 
                         });
                         if (widget.onSortOptionSelected != null) {
                           widget.onSortOptionSelected!(value);
