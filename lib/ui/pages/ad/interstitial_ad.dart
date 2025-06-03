@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 Future<void> showInterstitialAd(BuildContext context, VoidCallback onAdClosed) async {
   InterstitialAd.load(
-    // adUnitId: 'ca-app-pub-8181369336901289/2103455510', // 실제 키
-    adUnitId: 'ca-app-pub-3940256099942544/1033173712', // 테스트 키
+    adUnitId: 'ca-app-pub-8181369336901289/2103455510', // 실제 키
+    // adUnitId: 'ca-app-pub-3940256099942544/1033173712', // 테스트 키
     request: AdRequest(),
     adLoadCallback: InterstitialAdLoadCallback(
       onAdLoaded: (ad) {

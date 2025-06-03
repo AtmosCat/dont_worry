@@ -16,8 +16,8 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   void initState() {
     super.initState();
     _bannerAd = BannerAd(
-      // adUnitId: 'ca-app-pub-8181369336901289/8812334099', // 실제 키
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // 테스트 키
+      adUnitId: 'ca-app-pub-8181369336901289/8812334099', // 실제 키
+      // adUnitId: 'ca-app-pub-3940256099942544/6300978111', // 테스트 키
       size: AdSize.banner,
       request: AdRequest(),
       listener: BannerAdListener(
