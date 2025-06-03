@@ -7,9 +7,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
-
   // 네비게이션 바를 투명하게 설정
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.transparent, // 하단 네비게이션 바 배경 투명
@@ -19,7 +19,8 @@ void main() async {
   // SQL 사용을 위한 세팅
   WidgetsFlutterBinding.ensureInitialized();
   SqlDatabase();
-  debugPaintSizeEnabled = false; 
+  debugPaintSizeEnabled = false;
+  MobileAds.instance.initialize(); // 초기화 코드 필수
   runApp(ProviderScope(child: const MyApp()));
 }
 

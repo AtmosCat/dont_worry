@@ -4,7 +4,7 @@ import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/data/repository/sql_database.dart';
 import 'package:dont_worry/data/shared_preferences/tab_preferences.dart';
-import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/pages/ad/banner_ad_widget.dart';
 import 'package:dont_worry/ui/widgets/create_loan_floating_action_button.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_flexible_header.dart';
 import 'package:dont_worry/ui/pages/home/widgets/home_tab_bar.dart';
@@ -54,7 +54,8 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: CreateLoanFloatingActionButton(tabController: _tabController),
+      floatingActionButton:
+          CreateLoanFloatingActionButton(tabController: _tabController),
       body: NestedScrollView(
         // #1. 확장형 Silver 앱바 세팅
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage>
         ]),
       ),
       // #3. 하단 네비게이션바 -> 위젯
-      // bottomNavigationBar: HomeBottomAppBar(_tabController)
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 

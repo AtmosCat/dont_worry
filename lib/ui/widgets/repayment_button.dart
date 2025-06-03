@@ -2,6 +2,7 @@ import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/repayment.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/pages/ad/interstitial_ad.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,7 +79,8 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                     backgroundColor: AppColor.containerWhite.of(context),
                     title: const Text(
                       "상환할 금액을 입력하세요.",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     content: SizedBox(
                       height: 70,
@@ -89,11 +91,15 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                           TextFormField(
                             controller: repaymentAmountController,
                             keyboardType: TextInputType.number,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
-                                  color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
+                                  color: widget.isLending
+                                      ? AppColor.primaryYellow.of(context)
+                                      : AppColor.primaryGreen.of(context),
                                   width: 2.0,
                                 ),
                               ),
@@ -103,16 +109,17 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                               ),
-                              suffixIcon: repaymentAmountController.text.isNotEmpty
-                                  ? IconButton(
-                                      icon: const Icon(Icons.clear),
-                                      onPressed: () {
-                                        setState(() {
-                                          repaymentAmountController.clear();
-                                        });
-                                      },
-                                    )
-                                  : null,
+                              suffixIcon:
+                                  repaymentAmountController.text.isNotEmpty
+                                      ? IconButton(
+                                          icon: const Icon(Icons.clear),
+                                          onPressed: () {
+                                            setState(() {
+                                              repaymentAmountController.clear();
+                                            });
+                                          },
+                                        )
+                                      : null,
                             ),
                           ),
                         ],
@@ -128,14 +135,17 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
+                            color: widget.isLending
+                                ? AppColor.primaryYellow.of(context)
+                                : AppColor.primaryGreen.of(context),
                           ),
                         ),
                       ),
                       Consumer(
                         builder: (context, ref, child) => TextButton(
                           onPressed: () async {
-                            String inputText = repaymentAmountController.text.replaceAll(',', '');
+                            String inputText = repaymentAmountController.text
+                                .replaceAll(',', '');
                             if (inputText.isEmpty) {
                               SnackbarUtil.showToastMessage("금액을 입력해주세요.");
                               return;
@@ -154,14 +164,22 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                                 amount: repaymentAmount,
                               );
 
-                              await ref.read(appViewModelProvider.notifier).createRepayment(newRepayment);
+                              await ref
+                                  .read(appViewModelProvider.notifier)
+                                  .createRepayment(newRepayment);
                               Navigator.pop(context);
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text("$repaymentAmount 원이 상환 처리되었습니다."),
+                                  content:
+                                      Text("$repaymentAmount 원이 상환 처리되었습니다."),
                                 ),
                               );
+
+                              // 상환 처리 후 광고 띄우기
+                              await showInterstitialAd(context, () {
+                                // 광고 닫힌 뒤 추가 동작이 필요하다면 여기에 작성
+                              });
                             }
                           },
                           child: Text(
@@ -169,7 +187,9 @@ class _RepaymentButtonState extends State<RepaymentButton> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
+                              color: widget.isLending
+                                  ? AppColor.primaryYellow.of(context)
+                                  : AppColor.primaryGreen.of(context),
                             ),
                           ),
                         ),

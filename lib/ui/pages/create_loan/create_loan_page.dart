@@ -3,6 +3,8 @@ import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/loan.dart';
 import 'package:dont_worry/data/model/person.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/pages/ad/banner_ad_widget.dart';
+import 'package:dont_worry/ui/pages/ad/interstitial_ad.dart';
 import 'package:dont_worry/ui/pages/create_loan/search_popup.dart';
 import 'package:dont_worry/utils/datetime_utils.dart';
 import 'package:dont_worry/utils/snackbar_utils.dart';
@@ -48,7 +50,7 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
   void _showSearchModal() {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // 높이 조절 가능
+      isScrollControlled: true,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -60,8 +62,9 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                       selectedPerson = person;
                       isCreatedPerson = isCreated;
                     });
-                    Navigator.pop(context); // 팝업 닫기
-                  }, isLending: widget.isLending,
+                    Navigator.pop(context);
+                  },
+                  isLending: widget.isLending,
                 ));
       },
     );
@@ -93,8 +96,8 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
             ),
           ),
         ),
-        body: Center(
-            child: Padding(
+        bottomNavigationBar: const BannerAdWidget(),
+        body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -103,16 +106,18 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                 onTap: _showSearchModal,
                 controller:
                     TextEditingController(text: selectedPerson?.name ?? ''),
-                readOnly: true, // 직접 입력 방지
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: "이름",
                   labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
-                        width: 2.0), // 포커스 시 테두리 색상
+                        color: widget.isLending
+                            ? AppColor.primaryYellow.of(context)
+                            : AppColor.primaryGreen.of(context),
+                        width: 2.0),
                   ),
-                  suffixIcon: Icon(Icons.search), // 캘린더 아이콘 추가
+                  suffixIcon: Icon(Icons.search),
                 ),
               ),
               SizedBox(height: 10),
@@ -138,20 +143,24 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                 controller: TextEditingController(
                     text:
                         "${loanDate.year}년 ${loanDate.month}월 ${loanDate.day}일"),
-                readOnly: true, // 직접 입력 방지
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: "대출일",
                   labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
-                        width: 2.0), // 포커스 시 테두리 색상
+                        color: widget.isLending
+                            ? AppColor.primaryYellow.of(context)
+                            : AppColor.primaryGreen.of(context),
+                        width: 2.0),
                   ),
-                  suffixIcon: Icon(Icons.calendar_today), // 캘린더 아이콘 추가
+                  suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () async {
                   final selectedDate = await DatetimeUtils.selectDate(
-                      context: context, initialDate: loanDate, isLending: widget.isLending);
+                      context: context,
+                      initialDate: loanDate,
+                      isLending: widget.isLending);
                   if (selectedDate != null) {
                     setState(() {
                       loanDate = selectedDate;
@@ -171,13 +180,18 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   labelStyle: TextStyle(color: AppColor.gray30.of(context)),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                        color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context), width: 2.0),
+                        color: widget.isLending
+                            ? AppColor.primaryYellow.of(context)
+                            : AppColor.primaryGreen.of(context),
+                        width: 2.0),
                   ),
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
                 onTap: () async {
                   final selectedDate = await DatetimeUtils.selectDate(
-                      context: context, initialDate: dueDate, isLending: widget.isLending);
+                      context: context,
+                      initialDate: dueDate,
+                      isLending: widget.isLending);
                   if (selectedDate != null) {
                     if (selectedDate.isBefore(loanDate)) {
                       SnackbarUtil.showToastMessage("상환일은 대출일보다 이전일 수 없습니다");
@@ -189,14 +203,16 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                   }
                 },
               ),
-              Spacer(),
+              SizedBox(height: 20),
               Container(
                   alignment: Alignment.bottomRight,
                   child: Consumer(
                     builder: (context, ref, child) => ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(
-                            widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context)),
+                            widget.isLending
+                                ? AppColor.primaryYellow.of(context)
+                                : AppColor.primaryGreen.of(context)),
                         padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                             EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
@@ -238,11 +254,14 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
                           log('추가한 Loan의 isLending: ${newLoan.isLending}');
                           log('추가한 Loan의 personId: ${newLoan.personId}');
                           SnackbarUtil.showSnackBar(context, "기록이 추가되었습니다.");
-                          Navigator.pop(context);
+
+                          // 광고를 띄우고, 광고가 닫히면 Navigator.pop 실행
+                          await showInterstitialAd(context, () {
+                            Navigator.pop(context);
+                          });
                         }
                       },
                       child: Text(
-                        // "${widget.isLending ? "빌려준 돈" : "빌린 돈"} 기록 추가하기",
                         "추가하기",
                         style: TextStyle(
                           color: AppColor.containerWhite.of(context),
@@ -253,10 +272,11 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
               SizedBox(height: 20),
             ],
           ),
-        )),
+        ),
       ),
     );
   }
+
 
   TextFormField CreateLoanPageTextFormField(
     BuildContext context,
@@ -277,7 +297,9 @@ class _CreateLoanPageState extends State<CreateLoanPage> {
         labelStyle: TextStyle(color: AppColor.gray30.of(context)),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-              color: widget.isLending ?  AppColor.primaryYellow.of(context) : AppColor.primaryGreen.of(context),
+              color: widget.isLending
+                  ? AppColor.primaryYellow.of(context)
+                  : AppColor.primaryGreen.of(context),
               width: 2.0), // 포커스 시 테두리 색상
         ),
         suffixIcon: controller.text.isNotEmpty // 텍스트가 있을 때만 X 버튼 표시

@@ -1,5 +1,6 @@
 import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/theme/colors.dart';
+import 'package:dont_worry/ui/pages/ad/banner_ad_widget.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_info_section.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_repayment_section.dart';
 import 'package:dont_worry/ui/pages/loan_detail/widgets/section/loan_detail_summary_section.dart';
@@ -44,6 +45,7 @@ class LoanDetailPage extends StatelessWidget {
         // #1. 상단 앱바
         appBar: DetailAppBar(
             isLending: isLending, unitType: UnitType.loan, loan: loan),
+        bottomNavigationBar: const BannerAdWidget(),
         body: ListView(
           children: [
             Container(

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dont_worry/data/app_view_model.dart';
 import 'package:dont_worry/data/model/person.dart';
+import 'package:dont_worry/ui/pages/ad/banner_ad_widget.dart';
 import 'package:dont_worry/ui/widgets/create_loan_floating_action_button.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/loan_card.dart';
 import 'package:dont_worry/ui/pages/person_detail/widgets/person_detail_header.dart';
@@ -47,6 +48,7 @@ class _PersonDetailPageState extends State<PersonDetailPage> {
         unitType: UnitType.person,
         person: widget.person,
       ),
+      bottomNavigationBar: const BannerAdWidget(),
       body: ListView(
         children: [
           // #2. 헤더
@@ -57,8 +59,10 @@ class _PersonDetailPageState extends State<PersonDetailPage> {
                 state.loans.where((loan) =>
                     loan.personId == widget.person.personId &&
                     loan.isLending == widget.isLending)));
-            var inPaidList = stateLoans.where((loan) => !loan.isPaidOff).toList();
-            var paidOffList = stateLoans.where((loan) => loan.isPaidOff).toList();
+            var inPaidList =
+                stateLoans.where((loan) => !loan.isPaidOff).toList();
+            var paidOffList =
+                stateLoans.where((loan) => loan.isPaidOff).toList();
 
             // 업데이트 순 정렬
             if (isSortedByUpdate ?? true) {
@@ -68,15 +72,15 @@ class _PersonDetailPageState extends State<PersonDetailPage> {
 
             // 높은 가격 순 정렬 (대출 금액 기준)
             else if (widget.isLending) {
-              inPaidList.sort((b, a) =>
-                  a.remainingAmount.compareTo(b.remainingAmount));
+              inPaidList.sort(
+                  (b, a) => a.remainingAmount.compareTo(b.remainingAmount));
               paidOffList.sort(
                   (b, a) => a.remainingAmount.compareTo(b.remainingAmount));
             } else {
-              inPaidList.sort((b, a) =>
-                  a.remainingAmount.compareTo(b.remainingAmount));
-              paidOffList.sort((b, a) =>
-                  a.remainingAmount.compareTo(b.remainingAmount));
+              inPaidList.sort(
+                  (b, a) => a.remainingAmount.compareTo(b.remainingAmount));
+              paidOffList.sort(
+                  (b, a) => a.remainingAmount.compareTo(b.remainingAmount));
             }
 
             return Visibility(

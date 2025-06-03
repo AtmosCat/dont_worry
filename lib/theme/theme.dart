@@ -11,9 +11,9 @@ final ThemeData lightTheme = ThemeData(
     thickness: 1,
   ),
 
-  tabBarTheme: TabBarTheme(
-    dividerColor: Colors.grey.withValues(alpha: 0.2),
-  ),
+  // tabBarTheme: TabBarTheme(
+  //   dividerColor: Colors.grey.withValues(alpha: 0.2),
+  // ),
 
   // 앱 바 설정
   appBarTheme: AppBarTheme(
@@ -29,13 +29,13 @@ final ThemeData lightTheme = ThemeData(
       labelTextStyle:
           WidgetStateProperty.all(TextStyle(color: Color(0xFF333333)))),
 
-  // 카드 설정
-  cardTheme: CardTheme(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(0),
-      ),
-      clipBehavior: Clip.none),
+  // // 카드 설정
+  // cardTheme: CardTheme(
+  //     color: Colors.white,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(0),
+  //     ),
+  //     clipBehavior: Clip.none),
 
   // 바텀시트 설정
   bottomSheetTheme: BottomSheetThemeData(
@@ -90,9 +90,9 @@ final ThemeData darkTheme = ThemeData(
     thickness: 1,
   ),
 
-  tabBarTheme: TabBarTheme(
-    dividerColor: Colors.grey.withValues(alpha: 0.2),
-  ),
+  // tabBarTheme: TabBarTheme(
+  //   dividerColor: Colors.grey.withValues(alpha: 0.2),
+  // ),
 
   // 앱 바 설정
   appBarTheme: AppBarTheme(
@@ -108,9 +108,9 @@ final ThemeData darkTheme = ThemeData(
       labelTextStyle: WidgetStateProperty.all(TextStyle(color: Colors.white))),
 
   // 카드 설정
-  cardTheme: CardTheme(
-    color: Color(0xFF1E1E1E),
-  ),
+  // cardTheme: CardTheme(
+  //   color: Color(0xFF1E1E1E),
+  // ),
 
   // 바텀시트 설정
   bottomSheetTheme: BottomSheetThemeData(
