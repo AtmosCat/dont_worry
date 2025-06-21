@@ -1,5 +1,4 @@
-<img src="![KakaoTalk_Photo_2025-03-23-16-17-48](https://github.com/user-attachments/assets/6a2b673c-00b9-462e-b8b7-1c037022b16c)
-" alt="icon" width="400"/>
+<img src="https://github.com/user-attachments/assets/6a2b673c-00b9-462e-b8b7-1c037022b16c" alt="icon" width="400"/>
 
 # 📱 빌린 돈, 빌려준 돈 전용 기록장 **돈워리**
 
@@ -50,8 +49,7 @@
 
 ## 🎨 UI/UX 디자인
 
-<img src="<img width="766" alt="image" src="https://github.com/user-attachments/assets/e2c1f843-a7be-4f83-b63e-2bd874e74b1b" />
-" alt="UI" width="600"/>
+<img src="https://github.com/user-attachments/assets/e2c1f843-a7be-4f83-b63e-2bd874e74b1b" alt="UI" width="600"/>
 
 ---
 
@@ -77,24 +75,16 @@
 
 <table>
   <tr>
-    <td><img src="![0x0ss (1)](https://github.com/user-attachments/assets/b23f03f5-d055-4bef-9775-190980773f0c)
-" width="200"/></td>
-    <td><img src="![0x0ss (2)](https://github.com/user-attachments/assets/c9072091-2f64-434f-96bf-481837a49361)
-" width="200"/></td>
-    <td><img src="![0x0ss (3)](https://github.com/user-attachments/assets/67e54154-6d34-4fac-92d1-2cf113087491)
-" width="200"/></td>
-    <td><img src="![0x0ss (4)](https://github.com/user-attachments/assets/d73e085b-d031-43e3-99da-ec8c464b10d1)
-" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/b23f03f5-d055-4bef-9775-190980773f0c" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/c9072091-2f64-434f-96bf-481837a49361" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/67e54154-6d34-4fac-92d1-2cf113087491" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/d73e085b-d031-43e3-99da-ec8c464b10d1" width="200"/></td>
   </tr>
   <tr>
-    <td><img src="![0x0ss (5)](https://github.com/user-attachments/assets/cc9fcae0-ee75-4166-92ae-c8304bad444c)
-" width="200"/></td>
-    <td><img src="![0x0ss (6)](https://github.com/user-attachments/assets/bec96d3b-58ad-453b-865a-266f5c966036)
-" width="200"/></td>
-    <td><img src="![0x0ss (7)](https://github.com/user-attachments/assets/d7468ac4-9b36-4085-a2e1-0719c59f1a6b)
-" width="200"/></td>
-    <td><img src="![0x0ss (8)](https://github.com/user-attachments/assets/ba4f2129-548a-485d-9466-644e93dacef2)
-" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/cc9fcae0-ee75-4166-92ae-c8304bad444c" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/bec96d3b-58ad-453b-865a-266f5c966036" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/d7468ac4-9b36-4085-a2e1-0719c59f1a6b" width="200"/></td>
+    <td><img src="https://github.com/user-attachments/assets/ba4f2129-548a-485d-9466-644e93dacef2" width="200"/></td>
   </tr>
 </table>
 
