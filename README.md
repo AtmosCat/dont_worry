@@ -115,8 +115,7 @@
 ---
 
 ## 📲 다운로드
-
-- [![App Store](https://img.shields.io/badge/App%20Store-%230078D6?style=for-the-badge&logo=apple&logoColor=white)]([<!-- 앱스토어 링크 -->](https://apps.apple.com/kr/app/%EB%8F%88%EC%9B%8C%EB%A6%AC-%EB%B9%8C%EB%A0%A4%EC%A4%80-%EB%8F%88-%EB%B9%8C%EB%A6%B0-%EB%8F%88-%EA%B8%B0%EB%A1%9D/id6744556730))
+[![App Store](https://img.shields.io/badge/App%20Store-%230078D6?style=for-the-badge&logo=apple&logoColor=white)](https://apps.apple.com/kr/app/%EB%8F%88%EC%9B%8C%EB%A6%AC-%EB%B9%8C%EB%A0%A4%EC%A4%80-%EB%8F%88-%EB%B9%8C%EB%A6%B0-%EB%8F%88-%EA%B8%B0%EB%A1%9D/id6744556730)
 
 ---
 
